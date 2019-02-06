@@ -1,0 +1,5 @@
+
+#' @export
+Structure <- function() {
+
+}
