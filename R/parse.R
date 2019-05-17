@@ -68,3 +68,20 @@ parse_data <- function(src) {
   rownames(p) <- NULL
   p
 }
+
+#' Pre-processing of source file
+#'
+#' Expand source files.
+#' @noRd
+preprocess <- function() {
+
+	find_src <- function() {
+
+	}
+
+	create_file <- function() {
+
+	}
+
+}
+
