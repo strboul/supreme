@@ -1,6 +1,4 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # supreme
 
 Structure robust Shiny applications with modules
@@ -15,7 +13,8 @@ devtools::install_github("strboul/supreme")
 ## Usage
 
 ``` r
-supreme::Structure("tests/testthat/test-app.R")
+file <- system.file(file.path("examples", "sample-module-app.R"), package = "supreme")
+supreme::module_tree(file)
 ```
 
 ## License
