@@ -1,39 +1,41 @@
 
-#' Wrapper around cat for tree printing
-#' @noRd
-tree_cat <- function(...) {
-  cat(paste(..., sep = ""), "\n")
-}
-
-#' Checks if an object is a list
-#' @noRd
-is_list <- function(x) {
-  inherits(x, "list")
-}
-
 #' Get server block
 #'
 #' @param app.body parsed body separated into lists.
 #' @return returns the index of the server from the body.
 #' @noRd
 get_server_block <- function(lbody) {
-  find_block(lbody, "server")
+  get_block(lbody, "server")
 }
 
 #' Find a function block with its assignment name
 #'
 #' @param name variable name used in assignment.
 #' @noRd
-find_block <- function(lbody, name) {
+get_block <- function(lbody, name) {
   for (i in seq_along(lbody)) {
     lbody.sub <- lbody[[i]]
-    lbody.sub.name <- lbody.sub[[2L]]
-    if (lbody.sub.name == name) {
-      result <- lbody.sub[[3L]]
-      return(result)
+    lbody.sub.symbol <- lbody.sub[[1L]]
+    if (lbody.sub.symbol == "<-") {
+      lbody.sub.name <- lbody.sub[[2L]]
+      if (lbody.sub.name == name) {
+        result <- lbody.sub[[3L]]
+        return(result)
+      }
     }
   }
-  stop(paste("cannot find block:", name), call. = FALSE)
+  ncstopf("cannot find block: %s", name)
+}
+
+get_object <- function(lbody, name) {
+  for (i in seq_along(lbody)) {
+    lbody.sub <- lbody[[i]]
+    lbody.sub.name <- lbody.sub[[1L]]
+    if (lbody.sub.name == name) {
+      return(lbody.sub)
+    }
+  }
+  ncstopf("cannot find object: %s", name)
 }
 
 #' Get modules from a function block
@@ -43,6 +45,7 @@ get_modules <- function(lbody) {
   res <- list()
   for (i in seq_along(lbody.sub)) {
     lbody.sub.elem <- lbody.sub[[i]]
+  # TODO get sub modules
     if (any(grepl("callModule", as.character(lbody.sub.elem)))) {
       res[[length(res) + 1L]] <- lbody.sub.elem
     }
@@ -68,48 +71,53 @@ extract_module_names <- function(modules) {
 
 #' Create a module tree
 #'
-#' @param x an R file name containing a Shiny application.
-#' @examples \dontrun{
-#' }
+#' @param file an R file name containing a Shiny application.
+#' @rdname module_tree
 #' @export
-module_tree <- function(x) {
+module_tree <- function(file) {
 
-  file <- read_srcfile(x)
-  src <- parse(text = file)
+  browser()
+  src <- read_srcfile(file)
   body <- as.list(src)
 
-  cat("server", "\n")
+  ## do not proceed if that Shiny app object not found:
+  tryCatch(get_object(body, "shinyApp"),
+           error = function(e)
+             ncstopf("A shinyApp object not found: `shinyApp(ui, server)`"))
 
-  server <- get_server_block(body)
-  server.modules <- get_modules(server)
+  ## create an empty list to keep module tree:
+  L <- list()
 
-  .tree_recur(server, body, level = 1, module = 0)
+  ## the root of the tree is server:
+  L[[1]] <- "server"
+
+  server.block <- get_server_block(body)
+  server.modules <- get_modules(server.block)
+
+  server.module.names <- extract_module_names(server.modules)
+
+  sub.module.names <- vector("list", length(server.module.names))
+  for (i in seq_along(server.module.names)) {
+    sub.module.block <- get_block(body, server.module.names[i])
+    sub.module <- get_modules(sub.module.block)
+    sub.module.names <- extract_module_names(sub.module)
+  }
 }
 
+
+.recur <- function(body, names, level) {
+
+  block <- vector("list", length(names))
+  for (n in seq_along(names)) {
+    block[[n]] <- get_block(body, names[n])
+  }
+
+}
+
+#' TODO
+#' @rdname module_tree
 module_tree.print <- function(x) {
-  # TODO
-  sym <- supreme.symbols()
+  sym <- supreme.shapes()
   tree_cat(paste(rep(" ", level-1L), collapse = ""), sym$arrow$Vup.Hright, sym$arrow$H, name)
 }
 
-.tree_recur <- function(x, body, level, module) {
-
-  module.names <- vector()
-
-  module <- get_modules(x)
-
-  if (length(module) == 0) {
-    return(invisible())
-  }
-
-  module.names <- c(module.names, get_module_names(module))
-
-  name <- character()
-  for (i in seq_along(module.names)) {
-    name <- module.names[i]
-  }
-
-  x <- find_block(body, name)
-
-  Recall(x, body, level + 1L, module)
-}

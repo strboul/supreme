@@ -1,9 +1,10 @@
 
 #' Read src file
 #'
-#' @param fname a file name.
 #' A small subset of \code{getSrcLines} call.
 #'
+#' @param fname a file name.
+#' @return A parsed expression.
 #' @noRd
 read_srcfile <- function(fname) {
 
@@ -22,5 +23,7 @@ read_srcfile <- function(fname) {
   if (!is.null(Enc) && !(Enc %in% c("unknown", "native.enc"))) {
     lines <- iconv(lines, "", Enc)
   }
-  lines
+
+  parse(text = lines)
 }
+
