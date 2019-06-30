@@ -3,12 +3,6 @@
 ### OBJECT CHECKS ----
 ### ----------------------------------------------------------------- ###
 
-stop_if_not_parsable <- function(x) {
-  if (!is.call(x)) {
-    ncstopf("cannot parse type: '%s'", typeof(x))
-  }
-}
-
 is_left_assign <- function(x) {
   is.symbol(x) && identical(x, quote(`<-`))
 }
@@ -28,6 +22,18 @@ is_callModule <- function(x) {
 ### ----------------------------------------------------------------- ###
 ### PARSE CALLS ----
 ### ----------------------------------------------------------------- ###
+
+#' Segment an expression into sub-divisions
+#'
+#' @param x an \R expression, or a list holding an \R expression.
+#' @noRd
+divide_expr <- function(x) {
+  if (is.language(x)) {
+    as.list(x)
+  } else {
+    ncstopf("cannot handle input: `%s`", typeof(x))
+  }
+}
 
 #' Find code a block
 #'
@@ -53,7 +59,6 @@ find_block <- function(x, bname) {
 }
 
 get_server_block <- function(x) {
-  stop_if_not_parsable(x)
   server <- find_block(x, "server")
   if (length(server) > 1) {
     ncstopf("supreme cannot proceed because 'server' is defined multiple times")
@@ -63,9 +68,8 @@ get_server_block <- function(x) {
 
 get_modules_from_block <- function(block) {
 
-  stop_if_not_parsable(block)
-
   .get_modules_from_block <- function(x) {
+
     if (is.call(x)) {
       if (is.symbol(x[[1]])) {
         if (is_func(x[[1]])) {
@@ -77,7 +81,12 @@ get_modules_from_block <- function(block) {
             if (is_callModule(x[[i]][[1]])) {
               mod.names <- names(x[[i]])
               mod.names.inds <- if (!is.null(mod.names)) {
-                which(mod.names == "module")
+                module <- which(mod.names == "module")
+                if (!length(module) == 0L) {
+                  module
+                } else {
+                  2L
+                }
               } else {
                 2L
               }
@@ -89,7 +98,12 @@ get_modules_from_block <- function(block) {
         } else if (is_callModule(x[[1]])) {
           mod.names <- names(x)
           mod.names.inds <- if (!is.null(mod.names)) {
-            which(mod.names == "module")
+            module <- which(mod.names == "module")
+            if (!length(module) == 0L) {
+              module
+            } else {
+              2L
+            }
           } else {
             2L
           }
@@ -120,11 +134,20 @@ get_modules_from_block <- function(block) {
 #' @export
 module_tree <- function(x) {
 
-  # src <- read_srcfile(file)
-  body <- as.list(x)
+  src <- if (file.exists(as.character(x))) {
+    read_srcfile(x)
+  } else if (is.language(x)) {
+    x
+  } else {
+    ncstopf("cannot handle input: `%s`", typeof(x))
+  }
 
-  get_modules_from_block(body)
+  body <- divide_expr(src)
 
+  server.block <- get_server_block(body[[1]])
+  server.block.modules <- get_modules_from_block(server.block[[1]])
+
+  list(server = unlist(server.block.modules))
 }
 
 

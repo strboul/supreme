@@ -7,12 +7,8 @@
 module_tree(x)
 }
 \arguments{
-\item{x}{an R file name containing a Shiny application.}
+\item{x}{an \R expression or a file name that contain a (valid) Shiny application.}
 }
 \description{
 Create a module tree
-}
-\examples{
-\dontrun{
-}
 }
