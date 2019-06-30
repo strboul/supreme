@@ -1,7 +1,7 @@
 
 context("test-supreme")
 
-test_that("A nested server side test", {
+test_that("nested server side test", {
 
   nested.server.test <- expression({
 
@@ -86,7 +86,7 @@ test_that("A nested server side test", {
 
 })
 
-test_that("When there's multiple symbols of 'server'", {
+test_that("when there's multiple symbols of 'server'", {
 
   multiple.server.symbols <- expression({
 
@@ -107,9 +107,49 @@ test_that("When there's multiple symbols of 'server'", {
     shinyApp(ui, server)
   })
 
-  #TODO server.blocks <- find_block(multiple.server.symbols, "server")
+  server.blocks <- find_block(multiple.server.symbols, "server")
+
+  expect_equal(deparse(server.blocks), {
+    c(
+      "list(function(input, output, session) {",
+      "    output$table <- renderTable({",
+      "        head(iris)",
+      "    })",
+      "}, function(input, output, session) {",
+      "    output$plot <- renderPlot({",
+      "        plot(iris)",
+      "    })",
+      "})"
+    )
+  })
+
   expect_error(
     get_server_block(multiple.server.symbols[[1]])
   )
+})
+
+test_that("module arg names", {
+
+  module.arg.names <- expression({
+    library(shiny)
+
+    server <- function(input, output, session) {
+
+      callModule(
+        CustomerListPanelServer,
+        "CustomerListPanel",
+        data = bigData,
+        input.value = TRUE
+      )
+
+    }
+
+    shinyApp(ui, server)
+  })
+
+  s <- get_server_block(module.arg.names)
+
+  expect_equal(get_modules_from_block(s[[1]]), list("CustomerListPanelServer"))
+
 })
 
