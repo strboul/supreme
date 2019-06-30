@@ -29,7 +29,8 @@ is_list <- function(x) {
   is.list(x) && !is.data.frame(x)
 }
 
-#' A wrappter: No call stop format
+#' A wrapper: No call stop format
+#' @noRd
 ncstopf <- function(...) {
   stop(sprintf(...), call. = FALSE)
 }
