@@ -24,6 +24,9 @@ read_srcfile <- function(fname) {
     lines <- iconv(lines, "", Enc)
   }
 
+  ## Wrap`{`, `}` quotes in between as the system is designed around exprs"
+  lines <- paste("{", paste(lines, collapse = "\n"), "}")
+
   parse(text = lines)
 }
 
