@@ -1,6 +1,8 @@
 
 # supreme
 
+[![Travis build status](https://travis-ci.org/strboul/supreme.svg?branch=master)](https://travis-ci.org/strboul/supreme)
+
 Structure robust Shiny applications with modules
 
 ## Installation
