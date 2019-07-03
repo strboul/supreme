@@ -60,27 +60,41 @@ is_callModule_sym <- function(x) {
 #'
 #' @param x an \R expression, or a list holding an \R expression.
 #' @noRd
-divide_expr <- function(x) {
-  if (is.language(x)) {
-    as.list(x)
+subset_expr <- function(x) {
+  if (is_expression(x) || is_list(x)) {
+    if (length(x) == 1L) {
+      x[[1L]]
+    } else {
+      ncstopf("length greater than one: %s",
+              length(x),
+              internal = TRUE)
+    }
   } else {
-    ncstopf("cannot handle input: `%s`", typeof(x))
+    ncstopf("input not an expression, instead: `%s`",
+            typeof(x),
+            internal = TRUE)
   }
 }
 
+### ----------------------------------------------------------------- ###
+### FIND CALLS ----
+### ----------------------------------------------------------------- ###
+
 #' Find code a block
 #'
-#' @param x expression.
-#' @param bname block name to look for.
+#' @param x an expression.
+#' @param bname the block name to look for.
 #' @noRd
 find_block <- function(x, bname) {
   res <- list()
-  if (is_expr(x[[1]])) {
-    for (i in seq(2L, length(x))) {
-      if (is_left_assign(x[[i]][[1]])) {
-        if (is.symbol(x[[i]][[2]])) {
-          if (x[[i]][[2]] == bname) {
-            res[[length(res)+1]] <- x[[i]][[3]]
+  if (is.call(x)) {
+    if (is_expr_sym(x[[1]])) {
+      for (i in seq(2L, length(x))) {
+        if (is_left_assign_sym(x[[i]][[1]])) {
+          if (is.symbol(x[[i]][[2]])) {
+            if (x[[i]][[2]] == bname) {
+              res[[length(res)+1]] <- x[[i]][[3]]
+            }
           }
         }
       }
@@ -91,27 +105,39 @@ find_block <- function(x, bname) {
   res
 }
 
+### ----------------------------------------------------------------- ###
+### GET CALLS ----
+### ----------------------------------------------------------------- ###
+
 get_server_block <- function(x) {
+  x <- subset_expr(x)
   server <- find_block(x, "server")
+  if (is.null(server)) {
+    ncstopf("cannot find server")
+  }
   if (length(server) > 1) {
-    ncstopf("supreme cannot proceed because 'server' is defined multiple times")
+    ncstopf("cannot proceed because 'server' is defined multiple times")
   }
   server
 }
 
+#' @param x an expression.
+#' @param modname the module name to look form.
+# TODO get_module_block <- function(x, modname)
+
 get_modules_from_block <- function(block) {
 
-  .get_modules_from_block <- function(x) {
+  .find_modules_from_block <- function(x) {
 
     if (is.call(x)) {
       if (is.symbol(x[[1]])) {
-        if (is_func(x[[1]])) {
+        if (is_func_sym(x[[1]])) {
           Recall(x[[3]])
-        } else if (is_left_assign(x[[1]])) {
+        } else if (is_left_assign_sym(x[[1]])) {
           Recall(x[[3]])
-        } else if (is_expr(x[[1]])) {
+        } else if (is_expr_sym(x[[1]])) {
           for (i in seq(2L, length(x))) {
-            if (is_callModule(x[[i]][[1]])) {
+            if (is_callModule_sym(x[[i]][[1]])) {
               mod.names <- names(x[[i]])
               mod.names.inds <- if (!is.null(mod.names)) {
                 module <- which(mod.names == "module")
@@ -128,7 +154,7 @@ get_modules_from_block <- function(block) {
               Recall(x[[i]])
             }
           }
-        } else if (is_callModule(x[[1]])) {
+        } else if (is_callModule_sym(x[[1]])) {
           mod.names <- names(x)
           mod.names.inds <- if (!is.null(mod.names)) {
             module <- which(mod.names == "module")
@@ -152,9 +178,14 @@ get_modules_from_block <- function(block) {
     }
   }
 
+  block <- subset_expr(block)
   res <- list()
-  .get_modules_from_block(block)
-  res
+  .find_modules_from_block(block)
+  if (length(res) > 0) {
+    res
+  } else {
+    NULL
+  }
 }
 
 ### ----------------------------------------------------------------- ###
@@ -164,28 +195,35 @@ get_modules_from_block <- function(block) {
 #' Create a module tree
 #'
 #' @param x an \R expression or a file name that contain a (valid) Shiny application.
+#' @importFrom tools file_path_as_absolute
 #' @export
-module_tree <- function(x) {
+tree_app <- function(x) {
 
-  src <- if (file.exists(as.character(x))) {
-    read_srcfile(x)
-  } else if (is.language(x)) {
+  body <- if (file.exists(as.character(x))) {
+    fullp <- tools::file_path_as_absolute(x)
+    read_srcfile(fullp)
+  } else if (is_expression(x)) {
     x
   } else {
     ncstopf("cannot handle input: `%s`", typeof(x))
   }
 
-  body <- divide_expr(src)
-
-  server.block <- get_server_block(body[[1]])
-  server.block.modules <- get_modules_from_block(server.block[[1]])
+  server.block <- get_server_block(body)
+  server.block.modules <- get_modules_from_block(server.block)
 
   list(server = unlist(server.block.modules))
 }
 
 
-#' @export
-module_tree.print <- function(x) {
+### ----------------------------------------------------------------- ###
+### S3 METHODS ----
+### ----------------------------------------------------------------- ###
+
+tree_app.plot <- function(x) {
+
+}
+
+tree_app.print <- function(x) {
   sym <- supreme.shapes()
   tree_cat(paste(rep(" ", level-1L), collapse = ""), sym$arrow$Vup.Hright, sym$arrow$H, name)
 }
