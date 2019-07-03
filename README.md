@@ -3,22 +3,22 @@
 
 [![Travis build status](https://travis-ci.org/strboul/supreme.svg?branch=master)](https://travis-ci.org/strboul/supreme)
 
-Structure robust Shiny applications with modules
+Structure robust Shiny applications with modules (WIP!)
 
 ## Installation
 
-``` r
-# install.packages("supreme")
+```r
 devtools::install_github("strboul/supreme")
 ```
 
 ## Usage
 
 ``` r
-file <- system.file(file.path("examples", "sample-module-app.R"), package = "supreme")
-supreme::module_tree(file)
+files <- list.files(system.file("examples", package = "supreme"), pattern = "\\.R$")
+supreme::tree_app(files)
 ```
 
 ## License
 
 GPL-2.0
+
