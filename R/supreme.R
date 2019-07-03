@@ -1,21 +1,54 @@
 
+
+
 ### ----------------------------------------------------------------- ###
-### OBJECT CHECKS ----
+### OBJECT AND SYMBOL CHECKS ----
 ### ----------------------------------------------------------------- ###
 
-is_left_assign <- function(x) {
+#' Check objects
+#'
+#' @param x a valid \R expression.
+#'
+#' @name objcheck
+#' @noRd
+NULL
+
+#' Checks if an object is a list (but not a data.frame)
+#' @rdname objcheck
+is_list <- function(x) {
+  is.list(x) && !is.data.frame(x)
+}
+
+#' @rdname objcheck
+is_expression <- function(x) {
+  is.expression(x) && is.language(x)
+}
+
+#' Checks the symbol of a call (the first element)
+#'
+#' @param x a valid \R expression.
+#'
+#' @name objsymcheck
+#' @noRd
+NULL
+
+#' @rdname objsymcheck
+is_left_assign_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`<-`))
 }
 
-is_expr <- function(x) {
+#' @rdname objsymcheck
+is_expr_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`{`))
 }
 
-is_func <- function(x) {
+#' @rdname objsymcheck
+is_func_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`function`))
 }
 
-is_callModule <- function(x) {
+#' @rdname objsymcheck
+is_callModule_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`callModule`))
 }
 
