@@ -1,28 +1,4 @@
 
-#' Unicode characters
-#' @noRd
-supreme.shapes <- function() {
-
-  # Symbols to draw a Unicode tree
-  # https://atom.io/packages/ascii-tree
-  arrow <- list(
-    H = "─",
-    V = "│",
-    Vup.Vdown.Hright = "├",
-    Vup.Hright = "└"
-  )
-
-  list(
-    arrow = arrow
-  )
-}
-
-#' Wrapper around cat for tree printing
-#' @noRd
-tree_cat <- function(...) {
-  cat(paste(..., sep = ""), "\n")
-}
-
 #' ncstopf: No call stop format
 #'
 #' Differentiate the errors by selecting internal:
