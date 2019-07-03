@@ -1,12 +1,12 @@
 
-context("module_tree")
+context("tree_app")
 
 test_that("example module-output", {
 
   file <- file.path("data", "module-output.Rtest")
 
   # TODO
-  module_tree(file)
+  tree_app(file)
 
 })
 
