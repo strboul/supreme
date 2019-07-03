@@ -14,12 +14,16 @@
 NULL
 
 #' Checks if an object is a list (but not a data.frame)
+#'
+#' @param x an R object.
 #' @rdname objcheck
+#' @noRd
 is_list <- function(x) {
   is.list(x) && !is.data.frame(x)
 }
 
 #' @rdname objcheck
+#' @noRd
 is_expression <- function(x) {
   is.expression(x) && is.language(x)
 }
@@ -33,21 +37,25 @@ is_expression <- function(x) {
 NULL
 
 #' @rdname objsymcheck
+#' @noRd
 is_left_assign_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`<-`))
 }
 
 #' @rdname objsymcheck
+#' @noRd
 is_expr_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`{`))
 }
 
 #' @rdname objsymcheck
+#' @noRd
 is_func_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`function`))
 }
 
 #' @rdname objsymcheck
+#' @noRd
 is_callModule_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`callModule`))
 }
@@ -70,7 +78,7 @@ subset_expr <- function(x) {
               internal = TRUE)
     }
   } else {
-    ncstopf("input not an expression, instead: `%s`",
+    ncstopf("input not valid: `%s`",
             typeof(x),
             internal = TRUE)
   }
@@ -220,11 +228,10 @@ tree_app <- function(x) {
 ### ----------------------------------------------------------------- ###
 
 tree_app.plot <- function(x) {
-
+  # TODO
 }
 
 tree_app.print <- function(x) {
-  sym <- supreme.shapes()
-  tree_cat(paste(rep(" ", level-1L), collapse = ""), sym$arrow$Vup.Hright, sym$arrow$H, name)
+  # TODO
 }
 
