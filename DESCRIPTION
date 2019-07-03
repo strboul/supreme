@@ -2,15 +2,13 @@ Package: supreme
 Title: Structure better Shiny applications
 Description: What the package does (one paragraph).
 Authors@R: 
-    person(given = "Metin",
-           family = "Yazici",
-           role = c("aut", "cre"),
-           email = "first.last@example.com")
+    person("Metin", "Yazici", email = "stradivariusboul+r@gmail.com", role = c("aut", "cre", "cph"))
 Version: 0.0.0.9000
-License: GPL-2.0
-Encoding: UTF-8
-LazyData: true
+License: GPL-2
 Suggests: 
     testthat
+Language: en-US
+LazyData: true
+Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
