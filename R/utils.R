@@ -14,11 +14,15 @@ ncstopf <- function(..., internal = FALSE) {
     calls.len <- length(calls)
     calls.len.minus <- calls.len - 1L
     dps <- sapply(seq(calls.len.minus), function(i) deparse(calls[[i]]))
+
+    truncate.lim <- 4L
     out <- vector("character", calls.len.minus)
-    for (i in seq(calls.len.minus)) {
+    for (i in pmin(truncate.lim, seq(calls.len.minus))) {
       spc <- paste(rep(" ", (i - 1L)*2), collapse = "")
-      out[i] <- paste0(spc, " - ", dps[i], "\n")
+      out[i] <- paste0(spc, " + ", dps[i], "\n")
     }
+    if (length(out) > truncate.lim)
+      out[truncate.lim+1L] <- paste(paste(rep(" ", (truncate.lim)*2), collapse = ""), "...")
     stop(paste0("[supreme (.INTERNAL)] ",
                sprintf(...),
                ":\n",
