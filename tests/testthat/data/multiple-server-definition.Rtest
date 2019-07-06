@@ -1,0 +1,15 @@
+library(shiny)
+
+ui <- fluidPage(
+  p("Multiple server side functions defined!")
+)
+
+server <- function(input, output, session) {
+  output$table <- renderTable({ head(iris) })
+}
+
+server <- function(input, output, session) {
+  output$plot <- renderPlot({ plot(iris) })
+}
+
+shinyApp(ui, server)
