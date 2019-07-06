@@ -4,7 +4,6 @@
 #' @param x file name containing a (valid) Shiny application.
 #' @param expr an \R expression.
 #'
-#' @importFrom tools file_path_as_absolute
 #' @export
 supreme <- function(x, expr = NULL) {
 
