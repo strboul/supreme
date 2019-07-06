@@ -1,7 +1,7 @@
 
 #' Read src file
 #'
-#' A small subset of \code{getSrcLines} call.
+#' A small subset of [base::getSrcLines].
 #'
 #' @param fname a file name.
 #' @return A parsed expression.
@@ -30,6 +30,7 @@ read_srcfile <- function(fname) {
   parse(text = lines)
 }
 
+#' @importFrom tools file_path_as_absolute
 src_file <- function(x) {
   tryCatch({ file <- file.exists(as.character(x)) }, error = function(e)
     ncstopf("cannot read file: %s", conditionMessage(e)))
