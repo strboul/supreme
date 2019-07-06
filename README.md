@@ -18,6 +18,13 @@ files <- list.files(system.file("examples", package = "supreme"), pattern = "\\.
 supreme::tree_app(files)
 ```
 
+You can also use pipes from *magrittr* package:
+```r
+f <- example_app_path()
+supreme(f) %>% 
+  graph(focus = <x>)
+```
+
 ## Contribution
 
 This package is still on progress. PRs and issues are much appreciated.
