@@ -1,4 +1,24 @@
 
+#' Segment an expression into sub-divisions
+#'
+#' @param x an \R expression, or a list holding an \R expression.
+#' @noRd
+subset_expr <- function(x) {
+  if (is_expression(x) || is_list(x)) {
+    if (length(x) == 1L) {
+      x[[1L]]
+    } else {
+      ncstopf("length greater than one: %s",
+              length(x),
+              internal = TRUE)
+    }
+  } else {
+    ncstopf("input not valid: `%s`",
+            typeof(x),
+            internal = TRUE)
+  }
+}
+
 #' ncstopf: No call stop format
 #'
 #' Differentiate the errors by selecting internal:
