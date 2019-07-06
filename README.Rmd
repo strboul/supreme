@@ -1,24 +1,36 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  eval = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+
 # supreme
 
-[![Travis build
-status](https://travis-ci.org/strboul/supreme.svg?branch=master)](https://travis-ci.org/strboul/supreme)
+[![Travis build status](https://travis-ci.org/strboul/supreme.svg?branch=master)](https://travis-ci.org/strboul/supreme)
 
-Structure robust Shiny applications with modules
+Structure robust Shiny applications with modules 
 
 ## Installation
 
-``` r
+```{r}
 devtools::install_github("strboul/supreme")
 ```
 
 ## Usage
 
 Create a supreme object:
-
-``` r
+```{r}
 library(supreme)
 fs <- example_app_path()
 s <- supreme(fs)
@@ -26,21 +38,19 @@ s
 ```
 
 You can visualize the module structure:
-
-``` r
+```{r}
 graph(s)
 ```
 
-Possible to focus on a particular module to make particular modules’
-parent and child modules explicit:
+Possible to focus on a particular module to make particular modules' parent and child
+modules explicit:
 
-``` r
+```{r}
 graph(s, focus = "module1")
 ```
 
 You can also use pipes from *magrittr* package:
-
-``` r
+```{r}
 fs <- example_app_path()
 supreme(fs) %>% 
   graph(focus = "module1")
@@ -53,3 +63,4 @@ This package is still on progress. PRs and issues are much appreciated.
 ## License
 
 GPL-2.0
+
