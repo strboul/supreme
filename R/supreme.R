@@ -1,23 +1,60 @@
 
-#' Create a module tree
+#' Create a supreme object
 #'
-#' @param x an \R expression or a file name that contain a (valid) Shiny application.
+#' @param x file name containing a (valid) Shiny application.
+#' @param expr an \R expression.
+#'
 #' @importFrom tools file_path_as_absolute
 #' @export
-tree_app <- function(x) {
+supreme <- function(x, expr = NULL) {
 
-  body <- if (file.exists(as.character(x))) {
-    fullp <- tools::file_path_as_absolute(x)
-    read_srcfile(fullp)
-  } else if (is_expression(x)) {
-    x
+  body <- if (missing(x)) {
+    x <- NULL
+    if (!is.null(expr)) {
+      src_expr(expr)
+    } else {
+      ncstopf("provide an input")
+    }
   } else {
-    ncstopf("cannot handle input: `%s`", typeof(x))
+    src_file(x)
   }
 
-  server.block <- get_server_block(body)
-  server.block.modules <- get_modules_from_block(server.block)
+  ## server:
+  server <- get_server_block(body)
+  server.modules <- get_block_modules(server)
 
-  list(server = unlist(server.block.modules))
+  ret <- list(
+    data = list(
+      body = body
+    ),
+    components = list(
+      server = NULL,
+      modules = list(
+        server_modules,
+        ui_modules
+      )
+    ),
+    metadata = list(
+      x = x,
+      expr = expr
+    )
+  )
+
+  structure(ret, class = "supreme")
 }
 
+#' @export
+print.supreme <- function(x, ...) {
+  cat(
+    paste(
+      "<supreme> object",
+      # TODO supreme_summary
+      sep = "\n"
+      ),
+    "\n"
+  )
+}
+
+is_supreme <- function(x) {
+  inherits(x, "supreme")
+}
