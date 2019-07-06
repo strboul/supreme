@@ -30,3 +30,22 @@ read_srcfile <- function(fname) {
   parse(text = lines)
 }
 
+src_file <- function(x) {
+  tryCatch({ file <- file.exists(as.character(x)) }, error = function(e)
+    ncstopf("cannot read file: %s", conditionMessage(e)))
+  if (file) {
+    fullp <- tools::file_path_as_absolute(x)
+    read_srcfile(fullp)
+  } else {
+    ncstopf("cannot read file: `%s`", x)
+  }
+}
+
+src_expr <- function(x) {
+  if (is_expression(x)) {
+    x
+  } else {
+    ncstopf("cannot read expression: `%s`", x)
+  }
+}
+
