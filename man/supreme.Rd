@@ -7,7 +7,7 @@
 supreme(x, expr = NULL)
 }
 \arguments{
-\item{x}{file name containing a (valid) Shiny application.}
+\item{x}{file name(s) containing valid Shiny application(s).}
 
 \item{expr}{an \R expression.}
 }
