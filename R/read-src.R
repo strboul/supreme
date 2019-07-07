@@ -3,46 +3,46 @@
 #'
 #' A small subset of [base::getSrcLines].
 #'
-#' @param fname a file name.
+#' @param x a file name.
 #' @return A parsed expression.
 #' @noRd
-read_srcfile <- function(fname) {
+read_srcfile <- function(x) {
 
-  stopifnot(is.character(fname))
-  stopifnot(identical(length(fname), 1L))
+  ljnen <- lapply(seq_along(x), function(i) {
+    fname <- x[i]
+    srcfile <- srcfile(fname)
+    if (!.isOpen(srcfile)) {
+      on.exit(close(srcfile))
+    }
+    first <- 1L
+    conn <- open(srcfile, first)
+    lines <- readLines(conn, warn = FALSE)
+    # encoding stuff:
+    Enc <- srcfile$Enc
+    if (!is.null(Enc) && !(Enc %in% c("unknown", "native.enc"))) {
+      lines <- iconv(lines, "", Enc)
+    }
+    lines
+  })
 
-  srcfile <- srcfile(fname)
-  if (!.isOpen(srcfile)) {
-    on.exit(close(srcfile))
-  }
-  first <- 1L
-  conn <- open(srcfile, first)
-  lines <- readLines(conn, warn = FALSE)
-  # encoding stuff:
-  Enc <- srcfile$Enc
-  if (!is.null(Enc) && !(Enc %in% c("unknown", "native.enc"))) {
-    lines <- iconv(lines, "", Enc)
-  }
+  ljnen <- unlist(ljnen)
 
   ## Wrap`{`, `}` quotes in between as the system is designed around exprs"
-  lines <- paste("{", paste(lines, collapse = "\n"), "}")
+  lines <- paste("{", paste(ljnen, collapse = "\n"), "}")
 
   parse(text = lines)
 }
 
-#' @importFrom tools file_path_as_absolute
 src_file <- function(x) {
-  tryCatch({ file <- file.exists(as.character(x)) }, error = function(e)
+  tryCatch({ file.exists(as.character(x)) }, error = function(e)
     ncstopf("cannot read file: %s", conditionMessage(e)))
-  if (file) {
-    fullp <- tools::file_path_as_absolute(x)
-    read_srcfile(fullp)
-  } else {
-    ncstopf("cannot read file: `%s`", x)
-  }
+  read_srcfile(x)
 }
 
 src_expr <- function(x) {
+  if (!length(x) == 1L) {
+    ncstopf("expression length must be one, instead of: %s", length(x))
+  }
   if (is_expression(x)) {
     x
   } else {
