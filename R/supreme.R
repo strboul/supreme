@@ -1,7 +1,7 @@
 
 #' Create a supreme object
 #'
-#' @param x file name containing a (valid) Shiny application.
+#' @param x file name(s) containing valid Shiny application(s).
 #' @param expr an \R expression.
 #'
 #' @export
@@ -16,26 +16,26 @@ supreme <- function(x, expr = NULL) {
     }
   } else {
     src_file(x)
-  }
+    }
 
   ## server:
   server <- get_server_block(body)
-  server.modules <- get_block_modules(server)
+  server.module.names <- get_block_modules(server)
+  server.child <-
 
   ret <- list(
-    data = list(
-      body = body
-    ),
     components = list(
-      server = NULL,
-      modules = list(
-        server_modules,
-        ui_modules
-      )
+      server_side = list(
+        server = server.modules
+      ),
+      ui_side = "TODO"
     ),
-    metadata = list(
-      x = x,
-      expr = expr
+    data = list(
+      body = body,
+      meta = list(
+        x = x,
+        expr = expr
+      )
     )
   )
 
@@ -46,7 +46,7 @@ supreme <- function(x, expr = NULL) {
 print.supreme <- function(x, ...) {
   cat(
     paste(
-      "<supreme> object",
+      "A supreme object",
       # TODO supreme_summary
       sep = "\n"
       ),
