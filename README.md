@@ -38,11 +38,12 @@ parent and child modules explicit:
 graph(s, focus = "module1")
 ```
 
-You can also use pipes from *magrittr* package:
+You can also use `%>%` pipes from the
+[magrittr](https://cran.r-project.org/package=magrittr) package:
 
 ``` r
 fs <- example_app_path()
-supreme(fs) %>% 
+supreme(fs) %>%
   graph(focus = "module1")
 ```
 
