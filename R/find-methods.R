@@ -1,7 +1,7 @@
 
 #' Find code a block
 #'
-#' @param x an expression.
+#' @param x an \R expression.
 #' @param bname the block name to look for.
 #' @noRd
 find_block <- function(x, bname) {
@@ -24,6 +24,27 @@ find_block <- function(x, bname) {
   res
 }
 
+#' Find modules from a code block
+#'
+#' @param x an \R expression.
+#'
+#' @details
+#' What a `callModule` call can get:
+#'
+#' + name: the name for the Shiny module server function,
+#'
+#' + id: corresponding id with the module UI's function,
+#'
+#'  and various arguments to be passed onto module function.
+#'
+#' What a Shiny module (*the server part*) can get:
+#'
+#' + symbol.name: the function name for the server-side of a module
+#'
+#' + arguments: arguments are passed into the module function (`input`, `output`,
+#' `session` are always the default)
+#'
+#' @noRd
 find_block_modules <- function(x) {
 
   .find_modules_from_block <- function(x) {
