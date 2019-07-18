@@ -106,3 +106,20 @@ find_block_modules <- function(x) {
     NULL
   }
 }
+
+#' Find arguments of a function body
+#'
+#' @param x an \R expression.
+#' @noRd
+find_arguments <- function(x) {
+  if (is.call(x)) {
+    if (is_func_sym(x[[1]])) {
+      if (is.pairlist(x[[2]])) {
+        return(names(x[[2]]))
+      }
+    }
+  } else {
+    unlist(lapply(x, find_arguments))
+  }
+}
+
