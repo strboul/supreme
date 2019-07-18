@@ -1,5 +1,4 @@
 
-
 #' Check objects
 #'
 #' @param x a valid \R expression.
