@@ -55,3 +55,17 @@ is_callModule_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`callModule`))
 }
 
+#' Shiny expression checkers
+#'
+#' @param x a valid \R expression, a Shiny function body.
+#' @name shinyexprcheck
+#' @noRd
+NULL
+
+#' @rdname shinyexprcheck
+#' @noRd
+is_shiny_server_component <- function(x) {
+  args <- find_arguments(x)
+  all(c("input", "output", "session") %in% args)
+}
+
