@@ -2,6 +2,10 @@
 #' Turn supreme data into a data frame
 #'
 #' @param x a supreme object
+#' @examples
+#' paths <- example_app_path()
+#' Object <- supreme(src_file(paths))
+#' as.data.frame(Object)
 #' @export
 as.data.frame.supreme <- function(x, ...) {
   if (!is_supreme(x)) {
