@@ -1,21 +1,45 @@
 
 #' Read yaml model
 #'
-#' @param path file path to a yaml file.
-#' @param verify should the loaded yaml list be verified against the supreme object
-#'   model?
+#' @param file file path to a yaml file.
+#' @param text a YAML formatted character string.
 #'
 #' @examples
 #' file <- file.path("yaml-test", "example-model-1.yaml")
-#' supreme(src_yaml(file))
+#' src_yaml(file)
 #'
-#' @importFrom yaml yaml.load_file
+#' model <- "
+#' - type: module
+#'   name: childModuleA
+#'   input: [input.data, reactive]
+#'   calling_modules: grandChildModule1
+#'
+#' - type: module
+#'   name: childModuleB
+#'   input: selected.model
+#' "
+#' src_yaml(text = model)
+#'
+#' @importFrom yaml yaml.load_file yaml.load
 #' @export
-src_yaml <- function(path, verify = TRUE) {
-  obj <- yaml::yaml.load_file(path)
-  if (verify) {
-    verify_yaml(obj)
+src_yaml <- function(file = NULL, text = NULL) {
+  if (is.null(file) && is.null(text)) {
+    ncstopf("Provide a file or text.")
   }
+  if (is.null(file)) {
+    if (is.null(text)) {
+      ncstopf("Provide a file or text, not both.")
+    } else {
+      obj <- yaml::yaml.load(text)
+    }
+  } else {
+    if (is.null(text)) {
+      obj <- yaml::yaml.load_file(file)
+    } else {
+      ncstopf("Provide a file or text, not both.")
+    }
+  }
+  verify_yaml(obj)
   structure(obj, class = "src_yaml")
 }
 
@@ -26,7 +50,7 @@ print.src_yaml <- function(x, ...) {
 
 #' Verify yaml object for supreme
 #'
-#' The loaded yaml model can be verified according to the structure of an supreme
+#' The loaded yaml model can be verified against the structure of an supreme
 #' object model. The errors catched during the parsing of yaml file will be handled
 #' by the *yaml* package.
 #'
