@@ -22,7 +22,9 @@ test_that("multiple server definition in a file", {
   f <- file.path("data", "multiple-server-definition.Rtest")
   p <- read_srcfile(f)
 
-  expect_error(
-    get_server_block(p)
-  )
+  ## Here, this function is permissive that will return the multiple definitions of
+  ## server.
+  server <- get_server_block(p)
+  expect_length(server, 2)
 })
+
