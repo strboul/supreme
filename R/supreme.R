@@ -1,53 +1,51 @@
 
 #' Create a supreme object
 #'
-#' @param x file name(s) containing valid Shiny application(s).
-#' @param expr an \R expression.
-#'
 #' @export
-supreme <- function(x, expr = NULL) {
-
-  body <- if (missing(x)) {
-    x <- NULL
-    if (!is.null(expr)) {
-      src_expr(expr)
-    } else {
-      ncstopf("provide an input")
-    }
-  } else {
-    src_file(x)
-    }
-
-  ## server:
-  server <- get_server_block(body)
-  server.module.names <- get_block_modules(server)
-  server.child <-
-
+supreme <- function(x) {
+  if(!supreme_is_valid_input(x)) {
+    ncstopf("the provided input cannot be turned into a supreme object")
+  }
   ret <- list(
     components = list(
-      server_side = list(
-        server = server.modules
-      ),
-      ui_side = "TODO"
+      server_side = NULL,
+      ui_side = NULL
     ),
     data = list(
-      body = body,
-      meta = list(
-        x = x,
-        expr = expr
-      )
-    )
+      x
+    ),
+    source_input = class(x)
   )
-
   structure(ret, class = "supreme")
+}
+
+# TODO finish the other srcs
+supreme_is_valid_input <- function(x) {
+  switch (class(x),
+          "src_yaml" = TRUE,
+          "src_env" = TRUE,
+          "src_pkg" = TRUE,
+          "src_file" = TRUE,
+          "src_pkg" = TRUE,
+          FALSE
+  )
 }
 
 #' @export
 print.supreme <- function(x, ...) {
+  dta <- x$data[[1]]
+  nms <- vapply(seq_along(dta), function(i) dta[[i]][["name"]], character(1))
+  nms.disp <- if (length(nms) > 4L) {
+    c(nms[seq(4L)], "...")
+  } else {
+    nms
+  }
   cat(
     paste(
-      "A supreme object",
-      # TODO supreme_summary
+      "A supreme model object",
+      paste(length(dta), "entity:",
+            paste(nms.disp, collapse = ", ")
+      ),
       sep = "\n"
       ),
     "\n"
