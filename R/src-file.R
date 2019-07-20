@@ -1,4 +1,10 @@
 
+src_file <- function(x) {
+  tryCatch({ file.exists(as.character(x)) }, error = function(e)
+    ncstopf("cannot read file: %s", conditionMessage(e)))
+  read_srcfile(x)
+}
+
 #' Read src file
 #'
 #' A small subset of [base::getSrcLines].
@@ -31,22 +37,5 @@ read_srcfile <- function(x) {
   lines <- paste("{", paste(ljnen, collapse = "\n"), "}")
 
   parse(text = lines)
-}
-
-src_file <- function(x) {
-  tryCatch({ file.exists(as.character(x)) }, error = function(e)
-    ncstopf("cannot read file: %s", conditionMessage(e)))
-  read_srcfile(x)
-}
-
-src_expr <- function(x) {
-  if (!length(x) == 1L) {
-    ncstopf("expression length must be one, instead of: %s", length(x))
-  }
-  if (is_expression(x)) {
-    x
-  } else {
-    ncstopf("cannot read expression: `%s`", x)
-  }
 }
 
