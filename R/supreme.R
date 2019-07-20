@@ -26,7 +26,7 @@ supreme_is_valid_input <- function(x) {
           "src_env" = TRUE,
           "src_pkg" = TRUE,
           "src_file" = TRUE,
-          "src_pkg" = TRUE,
+          "src_expr" = TRUE,
           FALSE
   )
 }
