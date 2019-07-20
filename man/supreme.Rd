@@ -4,12 +4,7 @@
 \alias{supreme}
 \title{Create a supreme object}
 \usage{
-supreme(x, expr = NULL)
-}
-\arguments{
-\item{x}{file name(s) containing valid Shiny application(s).}
-
-\item{expr}{an \R expression.}
+supreme(x)
 }
 \description{
 Create a supreme object
