@@ -1,4 +1,8 @@
 
+#' Read an R file containing Shiny application
+#'
+#' @param x a file path.
+#' @export
 src_file <- function(x) {
   tryCatch({ file.exists(as.character(x)) }, error = function(e)
     ncstopf("cannot read file: %s", conditionMessage(e)))
@@ -13,8 +17,7 @@ src_file <- function(x) {
 #' @return A parsed expression.
 #' @noRd
 read_srcfile <- function(x) {
-
-  ljnen <- lapply(seq_along(x), function(i) {
+  lijnen <- lapply(seq_along(x), function(i) {
     fname <- x[i]
     srcfile <- srcfile(fname)
     if (!.isOpen(srcfile)) {
@@ -30,12 +33,9 @@ read_srcfile <- function(x) {
     }
     lines
   })
-
-  ljnen <- unlist(ljnen)
-
+  lijnen <- unlist(lijnen)
   ## Wrap`{`, `}` quotes in between as the system is designed around exprs"
-  lines <- paste("{", paste(ljnen, collapse = "\n"), "}")
-
+  lines <- paste("{", paste(lijnen, collapse = "\n"), "}")
   parse(text = lines)
 }
 
