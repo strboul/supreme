@@ -15,6 +15,7 @@ src_yaml(file = NULL, text = NULL)
 Read yaml model
 }
 \examples{
+\dontrun{
 file <- file.path("yaml-test", "example-model-1.yaml")
 src_yaml(file)
 
@@ -29,5 +30,5 @@ model <- "
   input: selected.model
 "
 src_yaml(text = model)
-
+}
 }

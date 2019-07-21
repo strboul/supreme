@@ -6,6 +6,9 @@
 \usage{
 supreme(x)
 }
+\arguments{
+\item{x}{a valid source input.}
+}
 \description{
 Create a supreme object
 }
