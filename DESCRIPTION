@@ -4,11 +4,19 @@ Description: What the package does (one paragraph).
 Authors@R: 
     person("Metin", "Yazici", email = "stradivariusboul+r@gmail.com", role = c("aut", "cre", "cph"))
 Version: 0.0.0.9000
-License: GPL-2
+License: file LICENSE
+Imports:
+    yaml,
+    nomnoml,
+    mmy
 Suggests: 
-    testthat
+    testthat,
+    covr,
+    knitr,
+    rmarkdown
 Language: en-US
 LazyData: true
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
+VignetteBuilder: knitr
