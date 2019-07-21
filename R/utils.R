@@ -19,7 +19,7 @@ subset_expr <- function(x) {
   }
 }
 
-#' ncstopf: No call stop format
+#' ncstopf: 'N'o 'c'all stop 'f'ormat
 #'
 #' Differentiate the errors by selecting internal:
 #'
@@ -27,6 +27,8 @@ subset_expr <- function(x) {
 #' 2. and errors caused by internal errors, which are more likely to be bug, are
 #' 'internal' which they can be copied and pasted to diagnose the error.
 #'
+#' @param ... arguments to be passed to the `sprintf` function.
+#' @param internal value selected showing this error as internal style
 #' @noRd
 ncstopf <- function(..., internal = FALSE) {
   desc <- if (internal) {
@@ -43,13 +45,21 @@ ncstopf <- function(..., internal = FALSE) {
     }
     if (length(out) > truncate.lim)
       out[truncate.lim+1L] <- paste(paste(rep(" ", (truncate.lim)*2), collapse = ""), "...")
-    stop(paste0("[supreme (.INTERNAL)] ",
+    stop(paste0("[supreme internal error] ",
                sprintf(...),
-               ":\n",
+               "\n",
                paste(paste(out, collapse = ""))),
          call. = FALSE)
   } else {
     stop(paste("[supreme]", sprintf(...)), call. = FALSE)
   }
 }
+
+#' Paste by separating new lines
+#' @noRd
+pasten <- function(...) paste(..., sep = "\n")
+
+#' Paste by separating new lines and collapsing empty string
+#' @noRd
+pastenc <- function(...) paste(..., sep = "\n", collapse = "")
 
