@@ -21,6 +21,7 @@
 #' src_yaml(text = model)
 #'
 #' @importFrom yaml yaml.load_file yaml.load
+#' @importFrom mmy text_trunc
 #' @export
 src_yaml <- function(file = NULL, text = NULL) {
   if (is.null(file) && is.null(text)) {
@@ -33,10 +34,18 @@ src_yaml <- function(file = NULL, text = NULL) {
       obj <- yaml::yaml.load(text)
     }
   } else {
-    if (is.null(text)) {
-      obj <- yaml::yaml.load_file(file)
+    if (file.exists(file)) {
+      if (is.null(text)) {
+        obj <- yaml::yaml.load_file(file)
+      } else {
+        ncstopf("Provide a file or text, not both.")
+      }
     } else {
-      ncstopf("Provide a file or text, not both.")
+      ncstopf(
+        "File not found: `%s`",
+        mmy::text_trunc(file, value = 35L, sep = " "),
+        single.line = TRUE
+      )
     }
   }
   verify_yaml(obj)
