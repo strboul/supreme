@@ -4,16 +4,20 @@
 \alias{as.data.frame.supreme}
 \title{Turn supreme data into a data frame}
 \usage{
-\method{as.data.frame}{supreme}(x)
+\method{as.data.frame}{supreme}(x, ...)
 }
 \arguments{
 \item{x}{a \code{supreme} object.}
+
+\item{...}{additional arguments to be passed to or from methods.}
 }
 \description{
 Turn supreme data into a data frame
 }
 \examples{
+\dontrun{
 paths <- example_app_path()
 Object <- supreme(src_file(paths))
 as.data.frame(Object)
+}
 }
