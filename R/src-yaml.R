@@ -4,7 +4,7 @@
 #' @param file file path to a yaml file.
 #' @param text a YAML formatted character string.
 #'
-#' @examples
+#' @examples \dontrun{
 #' file <- file.path("yaml-test", "example-model-1.yaml")
 #' src_yaml(file)
 #'
@@ -19,7 +19,7 @@
 #'   input: selected.model
 #' "
 #' src_yaml(text = model)
-#'
+#' }
 #' @importFrom yaml yaml.load_file yaml.load
 #' @importFrom mmy text_trunc
 #' @export

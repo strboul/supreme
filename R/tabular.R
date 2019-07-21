@@ -2,12 +2,14 @@
 #' Turn supreme data into a data frame
 #'
 #' @param x a `supreme` object.
-#' @examples
+#' @param ... additional arguments to be passed to or from methods.
+#' @examples \dontrun{
 #' paths <- example_app_path()
 #' Object <- supreme(src_file(paths))
 #' as.data.frame(Object)
+#' }
 #' @export
-as.data.frame.supreme <- function(x) {
+as.data.frame.supreme <- function(x, ...) {
   if (!is_supreme(x)) {
     ncstopf("cannot coerce a non-supreme object")
   }
