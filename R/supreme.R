@@ -1,6 +1,7 @@
 
 #' Create a supreme object
 #'
+#' @param x a valid source input.
 #' @export
 supreme <- function(x) {
   if(!supreme_is_valid_input(x)) {
