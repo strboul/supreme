@@ -11,9 +11,8 @@ test_that("can find arguments", {
     c("input", "output", "session", "data", "left", "right")
   )
 
-  expect_error(
-    find_arguments(quote(`{`)),
-    regexp = "evaluation nested too deeply: infinite recursion"
+  expect_null(
+    find_arguments(quote(`{`))
   )
 
 })

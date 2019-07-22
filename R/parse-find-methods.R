@@ -107,19 +107,22 @@ find_block_modules <- function(x) {
   }
 }
 
-#' Find arguments of a function body
+#' Find arguments from a function body
 #'
 #' @param x an \R expression.
+#' @return returns `NULL` if the given expression is not a function body.
 #' @noRd
 find_arguments <- function(x) {
   if (is.call(x)) {
-    if (is_func_sym(x[[1]])) {
-      if (is.pairlist(x[[2]])) {
-        return(names(x[[2]]))
+      if (is_func_sym(x[[1]])) {
+        if (is.pairlist(x[[2]])) {
+          return(names(x[[2]]))
+        }
+      } else if (is_left_assign_sym(x[[1]])) {
+        Recall(x[[3]])
       }
-    } else if (is_left_assign_sym(x[[1]])) {
-      Recall(x[[3]])
-    }
+  } else if (is_expr_sym(x)) {
+    invisible(NULL)
   } else {
     unlist(lapply(x, find_arguments))
   }
