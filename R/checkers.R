@@ -64,7 +64,11 @@ NULL
 #' @rdname shinyexprcheck
 #' @noRd
 is_shiny_server_component <- function(x) {
-  args <- find_arguments(x)
-  all(c("input", "output", "session") %in% args)
+  if (is.language(x)) {
+    args <- find_arguments(x)
+    all(c("input", "output", "session") %in% args)
+  } else {
+    FALSE
+  }
 }
 

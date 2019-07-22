@@ -117,6 +117,8 @@ find_arguments <- function(x) {
       if (is.pairlist(x[[2]])) {
         return(names(x[[2]]))
       }
+    } else if (is_left_assign_sym(x[[1]])) {
+      Recall(x[[3]])
     }
   } else {
     unlist(lapply(x, find_arguments))
