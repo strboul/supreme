@@ -18,6 +18,8 @@ find_block <- function(x, bname) {
         }
       }
     }
+  } else if (is_list(x)) {
+    invisible(NULL)
   } else {
     res <- unlist(lapply(x, function(b) find_block(b, bname)))
   }
@@ -101,7 +103,7 @@ find_block_modules <- function(x) {
   res <- list()
   .find_modules_from_block(x)
   if (length(res) > 0) {
-    res
+    unlist(res)
   } else {
     NULL
   }
@@ -125,6 +127,21 @@ find_arguments <- function(x) {
     invisible(NULL)
   } else {
     unlist(lapply(x, find_arguments))
+  }
+}
+
+#' Find assignment name of a function body
+#'
+#' @param x an \R expression.
+#' @returns returns the assigned name of the function body as character vector.
+#' @noRd
+find_block_assignment_name <- function(x) {
+  if (is.call(x)) {
+    if (is_left_assign_sym(x[[1]])) {
+      return(as.character(x[[2]]))
+    } else {
+      unlist(lapply(x, find_block_assignment_name))
+    }
   }
 }
 
