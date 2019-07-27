@@ -1,15 +1,23 @@
 
-#' Example app path for `supreme`
+#' Get paths to `supreme` example
 #'
+#' Contains the paths of the Shiny application that is a fully-fledged example
+#' endeavors to demonstrate all the features `supreme` has.
+#'
+#' @param file file names. If no file names are put (which `path` is `NULL`), then
+#'   all the example file paths will be listed.
+#'
+#' @examples
+#' supreme_example()
+#' supreme_example(c("app.R", "module-customers.R"))
 #' @export
-example_app_path <- function() {
-  pkg <- system.file("examples", package = "supreme", mustWork = TRUE)
-  app <- list.files(pkg,
-                    pattern = "app\\.R$",
-                    full.names = TRUE)
-  modules <- list.files(pkg,
-                        pattern = "^module.*\\.R$",
-                        full.names = TRUE)
-  c(app, modules)
+supreme_example <- function(file = NULL) {
+  pkg <- system.file("extdata", package = "supreme", mustWork = TRUE)
+  files <- list.files(pkg, full.names = TRUE)
+  if (is.null(file)) {
+    files
+  } else {
+    files[basename(files) %in% file]
+  }
 }
 
