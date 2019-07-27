@@ -50,7 +50,6 @@ find_block <- function(x, bname) {
 find_block_modules <- function(x) {
 
   .find_modules_from_block <- function(x) {
-
     if (is.call(x)) {
       if (is.symbol(x[[1]])) {
         if (is_func_sym(x[[1]])) {
@@ -58,22 +57,31 @@ find_block_modules <- function(x) {
         } else if (is_left_assign_sym(x[[1]])) {
           Recall(x[[3]])
         } else if (is_expr_sym(x[[1]])) {
+          if (!length(x) > 1) {
+            return(NULL)
+          }
           for (i in seq(2L, length(x))) {
-            if (is_callModule_sym(x[[i]][[1]])) {
-              mod.names <- names(x[[i]])
-              mod.names.inds <- if (!is.null(mod.names)) {
-                module <- which(mod.names == "module")
-                if (!length(module) == 0L) {
-                  module
+            if (is.call(x[[i]])) {
+              if (is_callModule_sym(x[[i]][[1]])) {
+                mod.names <- names(x[[i]])
+                mod.names.inds <- if (!is.null(mod.names)) {
+                  module <- which(mod.names == "module")
+                  if (!length(module) == 0L) {
+                    module
+                  } else {
+                    2L
+                  }
                 } else {
                   2L
                 }
+                res[[length(res)+1]] <<- as.character(x[[i]][[mod.names.inds]])
               } else {
-                2L
+                if (is.call(x[[i]])) {
+                  Recall(x[[i]])
+                }
               }
-              res[[length(res)+1]] <<- as.character(x[[i]][[mod.names.inds]])
             } else {
-              Recall(x[[i]])
+              return(NULL)
             }
           }
         } else if (is_callModule_sym(x[[1]])) {
@@ -93,6 +101,8 @@ find_block_modules <- function(x) {
           if (length(x) >= 2) {
             if (is.call(x[[2]])) {
               Recall(x[[2]])
+            } else {
+              return(NULL)
             }
           }
         }
