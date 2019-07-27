@@ -78,7 +78,7 @@ test_that("find block modules", {
   )
 
 
-  file1 <- read_srcfile("tests/testthat/data/without-any-calling-module.Rtest")
+  file1 <- read_srcfile("data/without-any-calling-module.Rtest")
   expect_null(find_block_calling_modules(file1[[1]]))
 
 })
