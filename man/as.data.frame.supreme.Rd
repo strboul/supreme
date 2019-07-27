@@ -16,7 +16,7 @@ Turn supreme data into a data frame
 }
 \examples{
 \dontrun{
-paths <- supreme_example()
+paths <- example_app_path()
 Object <- supreme(src_file(paths))
 as.data.frame(Object)
 }
