@@ -42,3 +42,44 @@ test_that("test is_shiny_server_component", {
 
 })
 
+test_that("find block modules", {
+
+  expr1 <- expression({
+
+    moduleA <- function(input, output, session, data) {
+      observe({
+        req(data())
+        callModule(childModule1Server, "childModule1UI")
+      })
+      callModule(childModule2Server, "childModule2UI")
+    }
+
+    moduleB <- function(input, output, session) {
+      callModule(someModule, "someModuleUI")
+    }
+
+    emptyModuleFunction <- function(input, output, session) {
+    }
+
+    moduleWithoutAnyCallingModules <- function(input, output, session) {
+      meann <- data.frame(mean = tapply(iris$Sepal.Length, iris$Species, mean))
+      output$tbl <- renderTable({
+        meann
+      })
+    }
+
+    normalFunction <- function(x) x + 2
+
+  })
+
+  expect_equal(
+    find_block_modules(expr1[[1]]),
+    c("childModule1Server", "childModule2Server", "someModule")
+  )
+
+
+  file1 <- read_srcfile("tests/testthat/data/without-any-calling-module.Rtest")
+  expect_null(find_block_modules(file1[[1]]))
+
+})
+
