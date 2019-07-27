@@ -64,7 +64,7 @@ make_module_entities <- function(x) {
     for (c in which.components) {
       f.body <- entity.body[[c]]
       name <- find_block_assignment_name(f.body)
-      calling_modules <- find_block_modules(f.body)
+      calling_modules <- find_block_calling_modules(f.body)
       out <- list(
         type = "module",
         name = name,
