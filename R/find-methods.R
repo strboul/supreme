@@ -143,7 +143,7 @@ find_arguments <- function(x) {
 #' Find assignment name of a function body
 #'
 #' @param x an \R expression.
-#' @returns returns the assigned name of the function body as character vector.
+#' @return returns the assigned name of the function body as character vector.
 #' @noRd
 find_block_assignment_name <- function(x) {
   if (is.call(x)) {

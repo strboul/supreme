@@ -12,3 +12,7 @@ src_file(x)
 \description{
 Read an R file containing Shiny application
 }
+\examples{
+paths <- example_app_path()
+s <- supreme(src_file(paths))
+}
