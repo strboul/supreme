@@ -73,13 +73,13 @@ test_that("find block modules", {
   })
 
   expect_equal(
-    find_block_modules(expr1[[1]]),
+    find_block_calling_modules(expr1[[1]]),
     c("childModule1Server", "childModule2Server", "someModule")
   )
 
 
   file1 <- read_srcfile("tests/testthat/data/without-any-calling-module.Rtest")
-  expect_null(find_block_modules(file1[[1]]))
+  expect_null(find_block_calling_modules(file1[[1]]))
 
 })
 

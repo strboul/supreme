@@ -47,7 +47,7 @@ find_block <- function(x, bname) {
 #' `session` are always the default)
 #'
 #' @noRd
-find_block_modules <- function(x) {
+find_block_calling_modules <- function(x) {
 
   .find_modules_from_block <- function(x) {
     if (is.call(x)) {
