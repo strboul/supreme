@@ -3,7 +3,7 @@
 #'
 #' @param x a file path.
 #' @examples
-#' paths <- supreme_example()
+#' paths <- example_app_path()
 #' s <- supreme(src_file(paths))
 #' @export
 src_file <- function(x) {
@@ -44,7 +44,8 @@ read_srcfile <- function(x) {
 }
 
 #' Workhorse for the `src_file()` call
-#' @param x
+#'
+#' @param x file paths.
 #' @noRd
 make_module_entities <- function(x) {
   modules <- lapply(seq_along(x), function(i) {

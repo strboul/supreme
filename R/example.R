@@ -8,10 +8,10 @@
 #'   all the example file paths will be listed.
 #'
 #' @examples
-#' supreme_example()
-#' supreme_example(c("app.R", "module-customers.R"))
+#' example_app_path()
+#' example_app_path(c("app.R", "module-customers.R"))
 #' @export
-supreme_example <- function(file = NULL) {
+example_app_path <- function(file = NULL) {
   pkg <- system.file("extdata", package = "supreme", mustWork = TRUE)
   files <- list.files(pkg, full.names = TRUE)
   if (is.null(file)) {
