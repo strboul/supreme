@@ -4,7 +4,7 @@
 #' @param x a `supreme` object.
 #' @param ... additional arguments to be passed to or from methods.
 #' @examples \dontrun{
-#' paths <- example_app_path()
+#' paths <- supreme_example()
 #' Object <- supreme(src_file(paths))
 #' as.data.frame(Object)
 #' }
