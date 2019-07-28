@@ -35,8 +35,10 @@ supreme_is_valid_input <- function(x) {
 #' @export
 print.supreme <- function(x, ...) {
   dta <- x$data[[1]]
+  len.dta <- length(dta)
   nms <- vapply(seq_along(dta), function(i) dta[[i]][["name"]], character(1))
-  nms.disp <- if (length(nms) > 4L) {
+  len.nms <- length(nms)
+  nms.disp <- if (len.nms > 4L) {
     c(nms[seq(4L)], "...")
   } else {
     nms
@@ -44,13 +46,17 @@ print.supreme <- function(x, ...) {
   cat(
     paste(
       "A supreme model object",
-      paste(length(dta), "entity:",
-            paste(nms.disp, collapse = ", ")
+      paste0(
+        len.dta,
+        if (len.dta > 1) " entities" else " entity",
+        ": ",
+        paste(nms.disp, sep = "", collapse = ", ")
       ),
       sep = "\n"
-      ),
+    ),
     "\n"
   )
+  invisible(NULL)
 }
 
 is_supreme <- function(x) {
