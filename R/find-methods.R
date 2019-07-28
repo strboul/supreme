@@ -119,12 +119,12 @@ find_block_calling_modules <- function(x) {
   }
 }
 
-#' Find arguments from a function body
+#' Find formals of a function body
 #'
 #' @param x an \R expression.
 #' @return returns `NULL` if the given expression is not a function body.
 #' @noRd
-find_arguments <- function(x) {
+find_formals <- function(x) {
   if (is.call(x)) {
       if (is_func_sym(x[[1]])) {
         if (is.pairlist(x[[2]])) {
@@ -136,7 +136,7 @@ find_arguments <- function(x) {
   } else if (is_expr_sym(x)) {
     invisible(NULL)
   } else {
-    unlist(lapply(x, find_arguments))
+    unlist(lapply(x, find_formals))
   }
 }
 

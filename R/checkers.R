@@ -65,8 +65,9 @@ NULL
 #' @noRd
 is_shiny_server_component <- function(x) {
   if (is.language(x)) {
-    args <- find_arguments(x)
-    all(c("input", "output", "session") %in% args)
+    fun.formals <- find_formals(x)
+    shiny.compulsory.formals <- c("input", "output", "session")
+    all(shiny.compulsory.formals %in% fun.formals)
   } else {
     FALSE
   }
