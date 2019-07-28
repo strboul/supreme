@@ -7,12 +7,12 @@ test_that("can find arguments", {
   block <- find_block(p, "linkedScatter")
 
   expect_equal(
-    find_arguments(block),
+    find_formals(block),
     c("input", "output", "session", "data", "left", "right")
   )
 
   expect_null(
-    find_arguments(quote(`{`))
+    find_formals(quote(`{`))
   )
 
 })
