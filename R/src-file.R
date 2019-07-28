@@ -13,6 +13,11 @@ src_file <- function(x) {
   structure(obj, class = "src_file")
 }
 
+#' @export
+print.src_file <- function(x, ...) {
+  cat("Model file object", "\n")
+}
+
 #' Read src file
 #'
 #' A small subset of [base::getSrcLines].
