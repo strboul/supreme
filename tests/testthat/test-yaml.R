@@ -108,5 +108,32 @@ test_that("can source yaml files", {
     regexp = "Provide a file or text."
   )
 
+  model.src <- "
+  - type: module
+    name: server
+    calling_modules: [table, button]
+    src: folder/proj/app.R
+  - type: module
+    name: table
+    src: folder/proj/sub-module/table.R
+  - type: module
+    name: button
+    src: folder/proj/sub-module/app.R
+  "
+
+  expect_equal(src_yaml(text = model.src),
+               structure(list(
+                 list(
+                   type = "module",
+                   name = "server",
+                   calling_modules = c("table",
+                                       "button"),
+                   src = "folder/proj/app.R"
+                 ),
+                 list(type = "module",
+                      name = "table", src = "folder/proj/sub-module/table.R"),
+                 list(type = "module", name = "button", src = "folder/proj/sub-module/app.R")
+               ), class = "src_yaml"))
+
 })
 

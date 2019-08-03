@@ -2,7 +2,7 @@
 % Please edit documentation in R/src-file.R
 \name{src_file}
 \alias{src_file}
-\title{Read an R file containing Shiny application}
+\title{Read \R files}
 \usage{
 src_file(x)
 }
@@ -10,7 +10,7 @@ src_file(x)
 \item{x}{a file path.}
 }
 \description{
-Read an R file containing Shiny application
+The files should contain some Shiny application.
 }
 \examples{
 paths <- example_app_path()
