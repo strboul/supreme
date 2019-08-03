@@ -119,7 +119,7 @@ find_block_calling_modules <- function(x) {
   }
 }
 
-#' Find formals of a function body
+#' Find formals of a function
 #'
 #' @param x an \R expression.
 #' @return returns `NULL` if the given expression is not a function body.
@@ -133,6 +133,8 @@ find_formals <- function(x) {
       } else if (is_left_assign_sym(x[[1]])) {
         Recall(x[[3]])
       }
+  } else if (is.function(x)) {
+    return(names(formals(x)))
   } else if (is_expr_sym(x)) {
     invisible(NULL)
   } else {
@@ -140,7 +142,7 @@ find_formals <- function(x) {
   }
 }
 
-#' Find assignment name of a function body
+#' Find assignment name of a function
 #'
 #' @param x an \R expression.
 #' @return returns the assigned name of the function body as character vector.
