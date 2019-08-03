@@ -107,6 +107,10 @@ find_block_calling_modules <- function(x) {
           }
         }
       }
+    } else if (is.function(x)) {
+      bod <- as.list(x)
+      bod.len <- length(bod)
+      Recall(bod[[bod.len]])
     }
   }
 
