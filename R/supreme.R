@@ -17,6 +17,9 @@ supreme <- function(x) {
     ),
     source_input = class(x)
   )
+  if (!length(ret$data[[1]]) > 0) {
+    warning("0 (zero) entries found in the source.", call. = FALSE)
+  }
   structure(ret, class = "supreme")
 }
 
