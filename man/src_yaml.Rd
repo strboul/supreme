@@ -2,7 +2,7 @@
 % Please edit documentation in R/src-yaml.R
 \name{src_yaml}
 \alias{src_yaml}
-\title{Read yaml model}
+\title{Read a yaml file containing model}
 \usage{
 src_yaml(file = NULL, text = NULL)
 }
@@ -12,7 +12,7 @@ src_yaml(file = NULL, text = NULL)
 \item{text}{a YAML formatted character string.}
 }
 \description{
-Read yaml model
+Read a yaml file containing model
 }
 \examples{
 \dontrun{

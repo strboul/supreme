@@ -1,5 +1,5 @@
 
-#' Read yaml model
+#' Read a yaml file containing model
 #'
 #' @param file file path to a yaml file.
 #' @param text a YAML formatted character string.
