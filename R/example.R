@@ -21,3 +21,54 @@ example_app_path <- function(file = NULL) {
   }
 }
 
+#' Get package to `supreme` example
+#'
+#' This function asks to build packages in the users' system if they are not found.
+#'
+#' @param pkg a list contains name (*package name*) and path (*GitHub path*) fields.
+#'   For the example purposes, the default value is `supreme.pkg.test`.
+#' @importFrom devtools install_github
+#' @export
+example_package <- function(pkg = list(name = "supreme.pkg.test",
+                                       path = "strboul/supreme.pkg.test")) {
+
+  ## check 'pkg' arg. fields:
+  if (!all(c("name", "path") %in% names(pkg))) {
+    ncstopf("Specify all fields in the example package.")
+  }
+
+  if (!is_package_exist(pkg$name)) {
+    answer <- if (interactive()) {
+      menu(
+        choices = c("Yes", "No"),
+        title = paste(
+          "\n",
+          paste0(
+            "The test package '",
+            pkg$name,
+            "' not found in the system."),
+          "Do you want to install it to run the tests?",
+          "",
+          paste0(
+            "The package placed under the repository: '",
+            paste0("https://github.com/", pkg$path),
+            "'"
+          ),
+          sep = "\n"
+        )
+      )
+    } else {
+      1L
+    }
+    if (identical(answer, 1L)) {
+      devtools::install_github(pkg$path)
+    }
+  }
+
+  if (is_package_exist(pkg$name)) {
+    pkg$name
+  } else {
+    ncstopf("Cannot find the package '%s' in the system.", pkg$name)
+  }
+}
+
