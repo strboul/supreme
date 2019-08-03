@@ -64,12 +64,14 @@ NULL
 #' @rdname shinyexprcheck
 #' @noRd
 is_shiny_server_component <- function(x) {
-  if (is.language(x)) {
-    fun.formals <- find_formals(x)
-    shiny.compulsory.formals <- c("input", "output", "session")
-    all(shiny.compulsory.formals %in% fun.formals)
+  fun.formals <- if (is.language(x)) {
+    find_formals(x)
+  } else if (is.function(x)) {
+    names(formals(x))
   } else {
-    FALSE
+    return(FALSE)
   }
+  shiny.compulsory.formals <- c("input", "output", "session")
+  all(shiny.compulsory.formals %in% fun.formals)
 }
 
