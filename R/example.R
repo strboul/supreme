@@ -72,3 +72,41 @@ example_package <- function(pkg = list(name = "supreme.pkg.test",
   }
 }
 
+#' Get environment to `supreme` example
+#' @export
+example_environment <- function() {
+  e <- local({
+    module1_ui <- function(id) {
+    }
+    module1_server <- function(input, output, session, input1) {
+    }
+    module2_ui <- function(id) {
+    }
+    module2_server <- function(input, output, session, input2) {
+    }
+    module3_ui <- function(id) {
+    }
+    module3_server <- function(input, output, session, input3) {
+    }
+    moduleA_ui <- function(id) {
+      shiny::tagList(
+        module1_ui("1"),
+        module2_ui("2"),
+        module3_ui("3")
+      )
+    }
+    moduleA_server <- function(input, output, session) {
+      callModule(module1_server, "1")
+      callModule(module2_server, "2")
+      callModule(module3_server, "3")
+    }
+    ui <- shiny::fluidPage(
+      moduleA_ui("A")
+    )
+    server <- function(input, output, session) {
+      callModule(moduleA_server, "A")
+    }
+  })
+  environment(e)
+}
+
