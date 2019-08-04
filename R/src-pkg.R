@@ -13,7 +13,7 @@ src_pkg <- function(x) {
   }
   obj <- make_module_entities_from_package(x)
   out <- entity_constructor(obj)
-  structure(out, class = "src_pkg")
+  structure(out, class = c("src_obj", "src_pkg"))
 }
 
 #' @export
@@ -49,7 +49,7 @@ make_module_entities_from_package <- function(x) {
   ns <- asNamespace(x)
   ## verify package name:
   pkg.name <- utils::packageName(ns)
-  all_calls <- ls(ns)
+  all_calls <- ls(ns, all.names = TRUE)
   exprs <- list()
   for (i in seq_along(all_calls)) {
     c.name <- all_calls[i]

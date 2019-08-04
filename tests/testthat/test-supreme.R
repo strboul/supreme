@@ -7,8 +7,7 @@ test_that("supreme with source yaml", {
 
   s <- supreme(src_yaml(ex_file_path))
 
-
-  expect_equal(s$source_input, "src_yaml")
+  expect_equal(s$source_input, c("src_obj", "src_yaml"))
 
 })
 

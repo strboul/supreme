@@ -72,7 +72,7 @@ test_that("can source yaml files", {
                    input = NULL,
                    calling_modules = NULL
                  )
-               ), class = "src_yaml"))
+               ), class = c("src_obj", "src_yaml")))
 
   model <- "
   - type: module
@@ -95,7 +95,7 @@ test_that("can source yaml files", {
                  ),
                  list(type = "module",
                       name = "childModuleB", input = "selected.model")
-               ), class = "src_yaml"))
+               ), class = c("src_obj", "src_yaml")))
 
 
   expect_error(
@@ -133,7 +133,7 @@ test_that("can source yaml files", {
                  list(type = "module",
                       name = "table", src = "folder/proj/sub-module/table.R"),
                  list(type = "module", name = "button", src = "folder/proj/sub-module/app.R")
-               ), class = "src_yaml"))
+               ), class = c("src_obj", "src_yaml")))
 
 })
 

@@ -13,7 +13,7 @@ src_file <- function(x) {
     ncstopf("cannot read file: %s", conditionMessage(e)))
   obj <- make_module_entities_from_paths(x)
   out <- entity_constructor(obj)
-  structure(out, class = "src_file")
+  structure(out, class = c("src_obj", "src_file"))
 }
 
 #' @export

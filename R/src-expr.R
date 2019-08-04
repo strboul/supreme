@@ -5,7 +5,7 @@ src_expr <- function(x) {
   }
   obj <- make_module_entities_from_expression(x)
   out <- entity_constructor(obj)
-  structure(out, class = "src_expr")
+  structure(out, class = c("src_obj", "src_expr"))
 }
 
 #' @export

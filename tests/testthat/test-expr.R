@@ -58,6 +58,6 @@ test_that("can read expression objects", {
                    calling_modules = NULL,
                    src = NULL
                  )
-               ), class = "src_expr"))
+               ), class = c("src_obj", "src_expr")))
 
 })
