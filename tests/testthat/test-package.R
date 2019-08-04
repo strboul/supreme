@@ -39,6 +39,6 @@ test_that("can read package 'supreme.pkg.test'", {
                                        "moduleB_server"),
                    src = "package:supreme.pkg.test"
                  )
-               ), class = "src_pkg"))
+               ), class = c("src_obj", "src_pkg")))
 
 })

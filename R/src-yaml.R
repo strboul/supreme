@@ -49,7 +49,7 @@ src_yaml <- function(file = NULL, text = NULL) {
     }
   }
   verify_yaml(obj)
-  structure(obj, class = "src_yaml")
+  structure(obj, class = c("src_obj", "src_yaml"))
 }
 
 #' @export

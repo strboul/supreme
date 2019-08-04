@@ -4,7 +4,7 @@
 #' @param x a valid source input.
 #' @export
 supreme <- function(x) {
-  if(!supreme_is_valid_input(x)) {
+  if(!is_source_object(x)) {
     ncstopf("the provided input cannot be turned into a supreme object")
   }
   ret <- list(
@@ -18,21 +18,9 @@ supreme <- function(x) {
     source_input = class(x)
   )
   if (!length(ret$data[[1]]) > 0) {
-    warning("0 (zero) entries found in the source.", call. = FALSE)
+    warning("0 (zero) entities found in the source.", call. = FALSE)
   }
   structure(ret, class = "supreme")
-}
-
-# TODO finish the other srcs
-supreme_is_valid_input <- function(x) {
-  switch (class(x),
-          "src_yaml" = TRUE,
-          "src_env" = TRUE,
-          "src_pkg" = TRUE,
-          "src_file" = TRUE,
-          "src_expr" = TRUE,
-          FALSE
-  )
 }
 
 #' @export
@@ -65,3 +53,8 @@ print.supreme <- function(x, ...) {
 is_supreme <- function(x) {
   inherits(x, "supreme")
 }
+
+is_source_object <- function(x) {
+  inherits(x, "src_obj")
+}
+
