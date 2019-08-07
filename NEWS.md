@@ -1,10 +1,19 @@
 
-# supreme 0.0.2 
+# supreme 0.2.0 (2019-08-07)
+
++ Create example functions in the API for demonstration purposes, e.g.
+`example_app_path()`.
+
++ Use [nomnoml](https://cran.r-project.org/package=nomnoml) package for the `graph()`
+facility.
+
++ Implement reading functions for files (`src_file()`), packages (`src_pkg()`),
+environments (`src_env()`), expressions (`src_expr()`) and YAML objects
+(`src_yaml()`).
+
+# supreme 0.1.0 (2019-02-06)
 
 + Added a `NEWS.md` file to track changes to the package.
 
-# supreme 0.0.1 (2019-02-06)
++ Package creation and initial work.
 
-+ Initial work on parsing files.
-
-+ Created and set up the package.

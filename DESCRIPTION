@@ -1,9 +1,13 @@
 Package: supreme
-Title: Structure better Shiny applications
-Description: What the package does (one paragraph).
+Title: Structure your Shiny application developed with modules
+Description: supreme helps you structure your Shiny application developed with 
+    modules. Possible to 1. model and visualize your existing application or design 
+    a new one from scratch; 2. keep track of your modules that are either placed 
+    in the different parts or reused in multiple places in your existing 
+    application.
 Authors@R: 
     person("Metin", "Yazici", email = "name@example.com", role = c("aut", "cre", "cph"))
-Version: 0.0.0.9000
+Version: 0.2.0
 License: file LICENSE
 Imports:
     yaml,
