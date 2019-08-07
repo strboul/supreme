@@ -1,0 +1,69 @@
+---
+title: "Visualize 'supreme' objects"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Visualize 'supreme' objects}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(supreme)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+This vignette is about styling graphs created from supreme objects.
+
+```{r}
+paths <- example_app_path()
+s <- supreme(src_file(paths))
+s
+```
+
+Create entity-relationship diagram:
+```{r}
+graph(s)
+```
+
+Style graph:
+
+```{r, eval=FALSE}
+graph(s, style = list(name = "server", fill = "#ff0", linetype = "dashed"))
+```
+
+Example: Style modules whose name ending with 'slider':
+
+```{r}
+s_df <- as.data.frame(s) # turn supreme object to data.frame
+graph(s, style = list(name = grep("^slider", s_df$name), fill = "#ff0"))
+```
+
+A good use of changing styles could be for focusing on particular modules.
+An example tries to make parent and child of a module explicit:
+```{r}
+# arrange parent & child
+```
+
+You can have a custom options for the graph:
+```{r}
+graph(s, options = list(
+  direction = "right", 
+  fontSize = 10, 
+  title = "Model customer plot")
+)
+```
+
+You can also use `%>%` pipes from the
+[magrittr](https://cran.r-project.org/package=magrittr) package:
+
+```{r}
+supreme(src_file(path)) %>%
+  graph()
+```
+

@@ -1,0 +1,19 @@
+
+## A module that doesn't have any calling modules
+main_table_server <- function(input, output, session, data, tbl.pageLength = 10,
+                              tbl.selection = c("none", "single", "multiple")) {
+  tbl.selection <- match.arg(tbl.selection)
+  rv <- reactiveValues(selected = NULL)
+  output$tbl <- renderDataTable({
+    datatable(data(), style = "bootstrap", selection = list(mode = tbl.selection,
+                                                            selected = if (tbl.selection != "none") 1L else NULL),
+              options = list(pageLength = tbl.pageLength))
+  })
+  observeEvent(input$tbl_rows_selected, {
+    rv$selected <- input$tbl_rows_selected
+  }, ignoreNULL = FALSE)
+  return({
+    rv
+  })
+}
+

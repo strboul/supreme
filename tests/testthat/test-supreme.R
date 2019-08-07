@@ -1,155 +1,51 @@
 
 context("test-supreme")
 
-test_that("nested server side test", {
+test_that("supreme with source yaml", {
 
-  nested.server.test <- expression({
+  ex_file_path <- file.path("yaml-test", "example-model-1.yaml")
 
-    library(shiny)
+  s <- supreme(src_yaml(ex_file_path))
 
-    data <- mtcars
+  expect_equal(s$source_input, c("src_obj", "src_yaml"))
 
-    ui <- fluidPage(
-      titlePanel("Module test application 1"),
-      hr(),
-      ConditionalItemsUI("ConditionalItems"),
-      hr(),
-      ObservedPanelUI("ObservedPanel"),
-      hr(),
-      SomeTabUI("SomeTab"),
-      hr(),
-      BarPlotPanelUI("BarPlotPanel"),
-      hr(),
-      CustomerListPanelUI("CustomerListPanel"),
-      br()
-    )
+})
 
-    server <- function(input, output, session) {
+# test_that("supreme with source expr", {
+#   supreme(src_expr())
+# })
+#
+#
+# test_that("supreme with source file", {
+#   supreme(src_file())
+# })
 
-      ## `callModule` in the server
-      callModule(module = SomeTabServer, id = "SomeTab")
+test_that("supreme print methods", {
 
-      ## `callModule` in the server without argument names:
-      callModule(BarPlotPanelServer, "BarPlotPanel")
+  model1 <- '
+  - type: module
+    name: displayImages
+  '
 
-      ## `callModule` in the server with different ordered argument names:
-      callModule(id = "CustomerListPanel", module = CustomerListPanelServer)
-
-      ## `callModule` inside `observe()` call
-      observe(callModule(module = ObservedPanelServer, id = "ObservedPanel"))
-
-      ## `callModule` inside `observe()` call wrapped between curly braces
-      observe({
-        req(someImportantData())
-        callModule(module = ConditionalItemsServer, id = "ConditionalItems")
-      })
-
-      ## `callModule` inside `observe()` inside `reactive()` call where all calls are
-      ## wrapped between curly braces
-      react <- reactive({
-        req(someImportantData())
-        items1 <- callModule(
-          module = ConditionalConditionalItems1Server,
-          id = "ConditionalConditionalItems1"
-        )
-        observe({
-          req(otherImportantData())
-          callModule(
-            module = ConditionalConditionalItems2Server,
-            id = "ConditionalConditionalItems2"
-          )
-        })
-      })
-
-      ## `callModule` assigned to a variable:
-      button <- callModule(id = "DetailsButton", module = DetailsButtonServer)
-
-      ## an assigned constant variable:
-      a <- 2L
-
-    }
-
-    shinyApp(ui, server)
-
-  })
-
-  server <- get_server_block(nested.server.test[[1]])
-
-  server.modules <- get_modules_from_block(server[[1]])
-
+  s1 <- supreme(src_yaml(text = model1))
   expect_equal(
-    server.modules,
-    list("SomeTabServer", "BarPlotPanelServer", "CustomerListPanelServer",
-         "ObservedPanelServer", "ConditionalItemsServer", "ConditionalConditionalItems1Server",
-         "ConditionalConditionalItems2Server", "DetailsButtonServer")
+    paste(utils::capture.output(s1), collapse = " "),
+    "A supreme model object 1 entity: displayImages "
   )
 
-})
+  model2 <- '
+  - type: module
+    name: displayImages
 
-test_that("when there's multiple symbols of 'server'", {
+  - type: module
+    name: checkInbox
+  '
 
-  multiple.server.symbols <- expression({
-
-    library(shiny)
-
-    ui <- fluidPage(
-      p("Multiple server side functions defined!")
-    )
-
-    server <- function(input, output, session) {
-      output$table <- renderTable({ head(iris) })
-    }
-
-    server <- function(input, output, session) {
-      output$plot <- renderPlot({ plot(iris) })
-    }
-
-    shinyApp(ui, server)
-  })
-
-  server.blocks <- find_block(multiple.server.symbols, "server")
-
-  expect_equal(deparse(server.blocks), {
-    c(
-      "list(function(input, output, session) {",
-      "    output$table <- renderTable({",
-      "        head(iris)",
-      "    })",
-      "}, function(input, output, session) {",
-      "    output$plot <- renderPlot({",
-      "        plot(iris)",
-      "    })",
-      "})"
-    )
-  })
-
-  expect_error(
-    get_server_block(multiple.server.symbols[[1]])
+  s2 <- supreme(src_yaml(text = model2))
+  expect_equal(
+    paste(utils::capture.output(s2), collapse = " "),
+    "A supreme model object 2 entities: displayImages, checkInbox "
   )
-})
-
-test_that("module arg names", {
-
-  module.arg.names <- expression({
-    library(shiny)
-
-    server <- function(input, output, session) {
-
-      callModule(
-        CustomerListPanelServer,
-        "CustomerListPanel",
-        data = bigData,
-        input.value = TRUE
-      )
-
-    }
-
-    shinyApp(ui, server)
-  })
-
-  s <- get_server_block(module.arg.names)
-
-  expect_equal(get_modules_from_block(s[[1]]), list("CustomerListPanelServer"))
 
 })
 
