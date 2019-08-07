@@ -1,4 +1,8 @@
 
+#' Read \R expressions
+#'
+#' @param x an \R expression.
+#' @export
 src_expr <- function(x) {
   if (!length(x) == 1L) {
     ncstopf("expression length must be one, instead of: %s", length(x))
