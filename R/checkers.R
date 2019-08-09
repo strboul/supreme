@@ -64,7 +64,7 @@ NULL
 #' @rdname shinyexprcheck
 #' @noRd
 is_shiny_server_component <- function(x) {
-  if (is.language(x)) {
+  if (is.language(x) || is.function(x)) {
     fun.formals <- find_formals(x)
   } else {
     return(FALSE)
