@@ -1,13 +1,19 @@
 
 #' Check objects
 #'
-#' @param x a valid \R expression.
+#' @param x a valid \R object.
+#'
+#' @details
+#'
+#' + `is_list()` checks if an object is a list (but not a data.frame).
+#'
+#' + `is_expression()` checks if an object is an \R expression (with an expression
+#' class) that is also a `language` object.
 #'
 #' @name objcheck
 #' @noRd
 NULL
 
-#' Checks if an object is a list (but not a data.frame)
 #'
 #' @param x an R object.
 #' @rdname objcheck
@@ -25,6 +31,20 @@ is_expression <- function(x) {
 #' Checks the symbol of a call (the first element)
 #'
 #' @param x a valid \R expression.
+#'
+#' @details
+#'
+#' + `is_left_assign_sym` looks for `<-` symbol that is used to bind a name (a
+#' symbol) to an object
+#'
+#' + `is_expr_sym` looks for a symbol that is often used for having compound
+#' statements enclosed within `{` (left brace). That symbol is also named as `expr`.
+#'
+#' + `is_func_sym()` looks for `function` symbol which is used to create function
+#' objects.
+#'
+#' + `is_callModule_sym()` looks for `callModule` symbol, which is a "prefix"
+#' function name
 #'
 #' @name objsymcheck
 #' @noRd
