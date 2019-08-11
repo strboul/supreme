@@ -33,7 +33,7 @@ read_srcfile <- function(x) {
     fname <- x[i]
     srcfile <- srcfile(fname)
     if (!.isOpen(srcfile)) {
-      on.exit(close(srcfile))
+      on.exit(close(srcfile), add = TRUE)
     }
     first <- 1L
     conn <- open(srcfile, first)

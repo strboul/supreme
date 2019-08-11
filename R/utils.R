@@ -50,3 +50,15 @@ pasten <- function(...) paste(..., sep = "\n")
 #' @noRd
 pastenc <- function(...) paste(..., sep = "\n", collapse = "")
 
+#' @param x package name.
+#' @noRd
+is_package_exist <- function(x) {
+  stopifnot(is.character(x))
+  pkg <- find.package(x, quiet = TRUE)
+  if (length(pkg) >= 1L) {
+    TRUE
+  } else {
+    FALSE
+  }
+}
+
