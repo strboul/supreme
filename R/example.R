@@ -9,7 +9,7 @@
 #'
 #' @examples
 #' example_app_path()
-#' example_app_path(c("app.R", "module-customers.R"))
+#' example_app_path(c("app", "module-customers"))
 #' @export
 example_app_path <- function(file = NULL) {
   pkg <- system.file("extdata", package = "supreme", mustWork = TRUE)
@@ -17,7 +17,7 @@ example_app_path <- function(file = NULL) {
   if (is.null(file)) {
     files
   } else {
-    files[basename(files) %in% file]
+    files[grep(file, files)]
   }
 }
 

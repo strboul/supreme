@@ -16,5 +16,5 @@ endeavors to demonstrate all the features \code{supreme} has.
 }
 \examples{
 example_app_path()
-example_app_path(c("app.R", "module-customers.R"))
+example_app_path(c("app", "module-customers"))
 }
