@@ -2,7 +2,6 @@
 #' Check objects
 #'
 #' @param x a valid \R object.
-#'
 #' @details
 #'
 #' + `is_list()` checks if an object is a list (but not a data.frame).
@@ -14,8 +13,7 @@
 #' @noRd
 NULL
 
-#'
-#' @param x an R object.
+
 #' @rdname objcheck
 #' @noRd
 is_list <- function(x) {
@@ -34,11 +32,12 @@ is_expression <- function(x) {
 #'
 #' @details
 #'
-#' + `is_left_assign_sym` looks for `<-` symbol that is used to bind a name (a
-#' symbol) to an object
+#' + `is_left_assign_sym` looks for a `<-` symbol that is used to bind a name (a
+#' symbol) to an object.
 #'
 #' + `is_expr_sym` looks for a symbol that is often used for having compound
-#' statements enclosed within `{` (left brace). That symbol is also named as `expr`.
+#' statements enclosed within "left curly brace". That symbol is also named as
+#' `expr`.
 #'
 #' + `is_func_sym()` looks for `function` symbol which is used to create function
 #' objects.
