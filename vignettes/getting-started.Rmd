@@ -169,7 +169,7 @@ graph(obj)
 In this context, an '*entity*' means that it is a Shiny module having such
 attributes:
 
-```{r,results='asis'}
+```{r, echo=FALSE, results='asis'}
 fields <-  c(
   supreme:::SUPREME_REQUIRED_FIELDS,
   supreme:::SUPREME_OPTIONAL_FIELDS

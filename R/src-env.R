@@ -1,4 +1,7 @@
 
+#' Read \R environment
+#'
+#' @param x an \R environment.
 #' @export
 src_env <- function(x) {
   if (!is.environment(x)) {

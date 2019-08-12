@@ -73,8 +73,10 @@ example_package <- function(pkg = list(name = "supreme.pkg.test",
 }
 
 #' Get environment to `supreme` example
+#'
+#' @importFrom utils menu
 #' @export
-example_environment <- function() {
+example_environment <- function() { #nocov start
   e <- local({
     module1_ui <- function(id) {
     }
@@ -108,5 +110,5 @@ example_environment <- function() {
     }
   })
   environment(e)
-}
+} #nocov end
 
