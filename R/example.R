@@ -13,7 +13,7 @@
 #' @export
 example_app_path <- function(file = NULL) {
   pkg <- system.file("extdata", package = "supreme", mustWork = TRUE)
-  files <- list.files(pkg, full.names = TRUE)
+  files <- list.files(pkg, pattern = "\\.R$", full.names = TRUE)
   if (is.null(file)) {
     files
   } else {
