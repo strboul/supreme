@@ -12,26 +12,24 @@ status](https://ci.appveyor.com/api/projects/status/github/strboul/supreme?branc
 [![Coverage
 status](https://codecov.io/gh/strboul/supreme/branch/master/graph/badge.svg)](https://codecov.io/github/strboul/supreme?branch=master)
 
-*supreme* helps you structure your Shiny application developed with
-modules
+*supreme* helps you structure Shiny applications developed with modules
 
-You are be able to:
+Therefore, you are able to:
 
-  - Model and visualize your existing application or design a new one
-    from scratch
+  - **Visualize** relationship of modules in any existing application
 
-  - Keep track of your modules that are either placed in the different
-    parts or reused in multiple places in your existing application
-
-## Installation
-
-``` r
-devtools::install_github("strboul/supreme")
-```
+  - **Design** new applications from scratch
 
 ## Usage
 
-Create a supreme object from a file:
+First of all, the application has to be read as a model object by
+*supreme*.
+
+For your existing application, you may read it from a file by using
+`src_file()`. Please see the vignette for the other options to read your
+application as model objects.
+
+After reading, create a *supreme* object from the read model object:
 
 ``` r
 library(supreme)
@@ -60,15 +58,18 @@ df <- as.data.frame(obj)
 tbbl <- tibble::as_tibble(df)
 tbbl
 #> # A tibble: 6 x 6
-#>   type   name       input output calling_modules           src             
-#>   <chr>  <chr>      <chr> <chr>  <chr>                     <chr>           
-#> 1 module server     <NA>  <NA>   items_tab_module_server,… /Users/metin/Li…
-#> 2 module customers… <NA>  <NA>   main_table_server         /Users/metin/Li…
-#> 3 module items_tab… <NA>  <NA>   main_table_server, items… /Users/metin/Li…
-#> 4 module items_plo… <NA>  <NA>   <NA>                      /Users/metin/Li…
-#> 5 module transacti… <NA>  <NA>   main_table_server         /Users/metin/Li…
-#> 6 module main_tabl… <NA>  <NA>   <NA>                      /Users/metin/Li…
+#>   type   name         input output calling_modules                src      
+#>   <chr>  <chr>        <chr> <chr>  <chr>                          <chr>    
+#> 1 module server       <NA>  <NA>   items_tab_module_server, cust… app.R    
+#> 2 module customers_t… <NA>  <NA>   main_table_server              module-c…
+#> 3 module items_tab_m… <NA>  <NA>   main_table_server, items_plot… module-i…
+#> 4 module items_plot_… <NA>  <NA>   <NA>                           module-i…
+#> 5 module transaction… <NA>  <NA>   main_table_server              module-t…
+#> 6 module main_table_… <NA>  <NA>   <NA>                           module-u…
 ```
+
+For designing a new application, or designing a new part in your
+existing application, use YAML:
 
 ## Read more
 
@@ -83,6 +84,12 @@ use *supreme* in different ways.
   - [**Visualize ‘supreme’
     objects**](https://strboul.github.io/supreme/articles/visualize-supreme-objects.html)
 
+## Installation
+
+``` r
+devtools::install_github("strboul/supreme")
+```
+
 ## Contribution
 
 This package is still on progress. **API is subject to change.**
@@ -91,11 +98,16 @@ PRs and issues are much appreciated.
 
 ## Acknowledgements
 
-  - *supreme* does a static analysis on the code thanks to *R* allowing
-    to manipulate *abstract syntax trees* (AST) easily.
+  - R Core Team: *supreme* came to life thanks to *R* allowing to
+    manipulate *abstract syntax trees* (AST) easily in the code that is
+    a huge benefit of practising static analyses.
 
-  - [datamodelr](https://github.com/bergant/datamodelr)
+  - [datamodelr](https://github.com/bergant/datamodelr): Inspiring work
+    for creating modelling language
+
+  - [shinypod](https://github.com/ijlyttle/shinypod): Interesting
+    thoughts regarding the implementation of Shiny modules
 
 ## License
 
-GPL-2.0
+GPL-2.0 © Metin Yazici

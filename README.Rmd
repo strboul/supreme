@@ -1,5 +1,5 @@
 ---
-output: 
+output:
   github_document:
     fig_width: 4
     fig_height: 1
@@ -12,35 +12,31 @@ always_allow_html: yes
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
+  fig.path = "inst/media/",
+  dev = "png",
   out.width = "100%"
 )
-knitr::opts_chunk$set(fig.path = "inst/media/", dev = "png")
 ```
 
 # supreme
 
 [![Repo status](https://www.repostatus.org/badges/latest/wip.svg)](https://github.com/strboul/supreme) [![Travis build status](https://travis-ci.org/strboul/supreme.svg?branch=master)](https://travis-ci.org/strboul/supreme) [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/strboul/supreme?branch=master&svg=true)](https://ci.appveyor.com/project/strboul/supreme) [![Coverage status](https://codecov.io/gh/strboul/supreme/branch/master/graph/badge.svg)](https://codecov.io/github/strboul/supreme?branch=master)
 
-*supreme* helps you structure your Shiny application developed with modules
+*supreme* helps you structure Shiny applications developed with modules
 
-You are be able to:
+Therefore, you are able to:
 
-+ Model and visualize your existing application or design a new one
-from scratch
++ **Visualize** relationship of modules in any existing application
 
-+ Keep track of your modules that are either placed in the different parts or reused
-in multiple places in your existing application
-
-## Installation
-
-```{r, eval=FALSE}
-devtools::install_github("strboul/supreme")
-```
++ **Design** new applications from scratch
 
 ## Usage
 
-Create a supreme object from a file:
+First of all, the application has to be read as a model object by *supreme*.
+
+For your existing application, you may read it from a file by using `src_file()`. Please see the vignette for the other options to read your application as model objects.
+
+After reading, create a *supreme* object from the read model object:
 
 ```{r}
 library(supreme)
@@ -65,9 +61,12 @@ tbbl <- tibble::as_tibble(df)
 tbbl
 ```
 
+For designing a new application, or designing a new part in your existing
+application, use YAML:
+
 ## Read more
 
-The following vignettes contain more detailed information about how to use *supreme* 
+The following vignettes contain more detailed information about how to use *supreme*
 in different ways.
 
 *(they're under development)*
@@ -75,6 +74,12 @@ in different ways.
 + [**Getting started with supreme**](https://strboul.github.io/supreme/articles/getting-started.html)
 
 + [**Visualize 'supreme' objects**](https://strboul.github.io/supreme/articles/visualize-supreme-objects.html)
+
+## Installation
+
+```{r, eval=FALSE}
+devtools::install_github("strboul/supreme")
+```
 
 ## Contribution
 
@@ -84,12 +89,17 @@ PRs and issues are much appreciated.
 
 ## Acknowledgements
 
-+ *supreme* does a static analysis on the code thanks to *R* allowing to manipulate
-*abstract syntax trees* (AST) easily.
++ R Core Team: *supreme* came to life thanks to *R* allowing to manipulate *abstract
+syntax trees* (AST) easily in the code that is a huge benefit of practising static
+analyses.
 
-+ [datamodelr](https://github.com/bergant/datamodelr)
++ [datamodelr](https://github.com/bergant/datamodelr): Inspiring work for
+  creating modelling language
+
++ [shinypod](https://github.com/ijlyttle/shinypod): Interesting thoughts regarding
+  the implementation of Shiny modules
 
 ## License
 
-GPL-2.0
+GPL-2.0 &copy; Metin Yazici
 
