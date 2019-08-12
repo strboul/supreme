@@ -56,10 +56,11 @@ read_srcfile <- function(x) {
 #' @param x file paths.
 #' @noRd
 make_module_entities_from_paths <- function(x) {
-  out <- lapply(seq_along(x), function(i) {
-    path <- x[i]
+  short.src <- shorten_src_file_path(x)
+  out <- lapply(seq_along(short.src), function(i) {
+    src <- short.src[i]
+    path <- x[grep(src, x)]
     body <- read_srcfile(path)
-    src <- path
     list(body = body, src = src)
   })
   structure(out, class = "module_entities")
