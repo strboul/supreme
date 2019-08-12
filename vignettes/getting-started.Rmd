@@ -141,10 +141,10 @@ model <- '
 There are some special rules when creating models with YAML. 
 
 + Each entity in the model must have 
-*`r mmy::list_en_end(supreme:::SUPREME_REQUIRED_FIELDS, add.quotes=T)`* fields.
+*`r supreme:::SUPREME_REQUIRED_FIELDS`* fields.
 
 + The entities can have optional fields which are
-*`r mmy::list_en_end(supreme:::SUPREME_OPTIONAL_FIELDS, add.quotes=T)`*.
+*`r supreme:::SUPREME_OPTIONAL_FIELDS`*.
 
 Any other field, which is not known by the supreme modal object, added to the model
 definition would throw an error (e.g. adding a field called `apple: green` isn't

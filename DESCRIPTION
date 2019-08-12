@@ -12,7 +12,6 @@ License: file LICENSE
 Imports:
     yaml,
     nomnoml,
-    mmy,
     devtools
 Suggests: 
     testthat,
@@ -20,8 +19,6 @@ Suggests:
     covr,
     knitr,
     rmarkdown
-Remotes:
-    strboul/mmy
 Language: en-US
 LazyData: true
 Encoding: UTF-8

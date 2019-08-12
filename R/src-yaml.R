@@ -21,7 +21,6 @@
 #' src_yaml(text = model)
 #' }
 #' @importFrom yaml yaml.load_file yaml.load
-#' @importFrom mmy text_trunc
 #' @export
 src_yaml <- function(file = NULL, text = NULL) {
   if (is.null(file) && is.null(text)) {
@@ -43,7 +42,7 @@ src_yaml <- function(file = NULL, text = NULL) {
     } else {
       ncstopf(
         "File not found: `%s`",
-        mmy::text_trunc(file, value = 35L, sep = " "),
+        substr(file, 1, 35),
         single.line = TRUE
       )
     }
