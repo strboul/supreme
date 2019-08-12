@@ -10,6 +10,7 @@ vignette: >
 
 ```{r setup, include=FALSE}
 library(supreme)
+library(magrittr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -34,14 +35,14 @@ graph(s)
 Style graph:
 
 ```{r, eval=FALSE}
-graph(s, style = list(name = "server", fill = "#ff0", linetype = "dashed"))
+# graph(s, style = list(name = "server", fill = "#ff0", linetype = "dashed"))
 ```
 
 Example: Style modules whose name ending with 'slider':
 
 ```{r}
-s_df <- as.data.frame(s) # turn supreme object to data.frame
-graph(s, style = list(name = grep("^slider", s_df$name), fill = "#ff0"))
+#s_df <- as.data.frame(s) # turn supreme object to data.frame
+#graph(s, style = list(name = grep("^slider", s_df$name), fill = "#ff0"))
 ```
 
 A good use of changing styles could be for focusing on particular modules.
@@ -52,18 +53,18 @@ An example tries to make parent and child of a module explicit:
 
 You can have a custom options for the graph:
 ```{r}
-graph(s, options = list(
-  direction = "right", 
-  fontSize = 10, 
-  title = "Model customer plot")
-)
+# graph(s, options = list(
+#   direction = "right", 
+#   fontSize = 10, 
+#   title = "Model customer plot")
+# )
 ```
 
 You can also use `%>%` pipes from the
 [magrittr](https://cran.r-project.org/package=magrittr) package:
 
 ```{r}
-supreme(src_file(path)) %>%
+supreme(src_file(paths)) %>%
   graph()
 ```
 

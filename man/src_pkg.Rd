@@ -7,7 +7,7 @@
 src_pkg(x)
 }
 \arguments{
-\item{x}{package name installed in the system.}
+\item{x}{a package name as character (must be installed in the system).}
 }
 \description{
 The package should contain some Shiny application.
