@@ -82,8 +82,8 @@ verify_yaml <- function(x) {
   if (!is.null(names(x))) {
     ncstopf("malformed yaml model")
   }
-  required <- SUPREME_REQUIRED_FIELDS
-  optional <- SUPREME_OPTIONAL_FIELDS
+  required <- getOption("SUPREME_MODEL_REQUIRED_FIELDS")
+  optional <- getOption("SUPREME_MODEL_OPTIONAL_FIELDS")
   for (xi in seq_along(x)) {
     nst <- vapply(seq_along(x[[xi]]), function(zi) {
       is.list(x[[xi]][[zi]])
