@@ -1,4 +1,8 @@
 
+# supreme 0.2.1
+
++ Make the exported variables in `R/globals.R` options placed in `R/zzz.R`.
+
 # supreme 0.2.0 (2019-08-07)
 
 + Create example functions in the API for demonstration purposes, e.g.

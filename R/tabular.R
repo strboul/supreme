@@ -21,8 +21,8 @@ as.data.frame.supreme <- function(x, ...) {
 #' @param x an object.
 #' @noRd
 supreme_to_df <- function(x) {
-  req_fields <- SUPREME_REQUIRED_FIELDS
-  opt_fields <- SUPREME_OPTIONAL_FIELDS
+  req_fields <- getOption("SUPREME_MODEL_REQUIRED_FIELDS")
+  opt_fields <- getOption("SUPREME_MODEL_OPTIONAL_FIELDS")
   all_fields <- c(req_fields, opt_fields)
   full.tbl <- do.call(rbind, lapply(seq_along(x), function(xi) {
     mod <- x[[xi]]
