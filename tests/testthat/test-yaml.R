@@ -22,7 +22,7 @@ test_that("can verify yaml files", {
   sub <- yaml::yaml.load_file(file.path("yaml-test", "verify-yaml-sublist.yaml"))
   expect_error(
     verify_yaml(sub),
-    regexp = "model yaml cannot contain sub-list in '1' element: 'calling_modules'"
+    regexp = "model YAML cannot contain sub-list in '1' element: 'calling_modules'"
   )
 
 })
