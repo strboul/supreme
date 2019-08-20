@@ -1,7 +1,7 @@
 
-#' Read a yaml file containing model
+#' Read a YAML file containing model
 #'
-#' @param file file path to a yaml file.
+#' @param file file path to a YAML file.
 #' @param text a YAML formatted character string.
 #'
 #' @examples \dontrun{
@@ -56,21 +56,21 @@ print.src_yaml <- function(x, ...) {
   cat("Model yaml object", "\n")
 }
 
-#' Verify yaml object for supreme
+#' Verify YAML object for supreme
 #'
-#' The loaded yaml model can be verified against the structure of an supreme
-#' object model. The errors catched during the parsing of yaml file will be handled
+#' The loaded YAML model can be verified against the structure of an supreme
+#' object model. The errors catched during the parsing of YAML file will be handled
 #' by the *yaml* package.
 #'
-#' @param x a list (yaml) object.
+#' @param x a list (YAML) object.
 #'
 #' @details
 #'
-#' + Checks whether yaml object contains sub-lists
+#' + Checks whether YAML object contains sub-lists
 #'
-#' + Checks whether yaml object does miss some or all required fields
+#' + Checks whether YAML object does miss some or all required fields
 #'
-#' + Checks whether yaml object contains any other field not existing in either
+#' + Checks whether YAML object contains any other field not existing in either
 #' required or optional fields
 #'
 #' @return returns (invisibly) true if everything is fine.
@@ -80,7 +80,7 @@ verify_yaml <- function(x) {
     ncstopf("cannot verify object with a class of: '%s'", class(x))
   }
   if (!is.null(names(x))) {
-    ncstopf("malformed yaml model")
+    ncstopf("malformed YAML model")
   }
   required <- getOption("SUPREME_MODEL_REQUIRED_FIELDS")
   optional <- getOption("SUPREME_MODEL_OPTIONAL_FIELDS")
@@ -91,7 +91,7 @@ verify_yaml <- function(x) {
     anst <- any(nst)
     if (anst) {
       ncstopf(paste(
-        "model yaml cannot contain sub-list in",
+        "model YAML cannot contain sub-list in",
         paste0("'", xi, "'"),
         "element:", paste("'", names(x[[xi]])[nst], "'", sep = "", collapse = ", ")
       ))
