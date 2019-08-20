@@ -166,20 +166,57 @@ graph(obj)
 
 ## Model language
 
-In this context, an '*entity*' means that it is a Shiny module having such
-attributes:
+A *supreme* object is consisted by *entities*. An '*entity*' denotes here a Shiny
+server component that could either be a server side of a module or the main `server`
+function of a Shiny application.
 
-```{r, echo=FALSE, results='asis'}
-fields <-  c(
-  getOption("SUPREME_MODEL_REQUIRED_FIELDS"),
-  getOption("SUPREME_MODEL_OPTIONAL_FIELDS")
-)
-for (field in fields) {
-  cat("+", field, "\n\n")
-}
-```
+*supreme* objects can be created with YAML with the following structure[^2]:
+
+1. Create an *entity* by using list members that are denoted by a leading hyphen
+(`-`).
+
+2. Each entity can have the following fields. The `type` and `name` fields are
+absolute must to generate a `supreme` object. Other fields are optional, but they
+enhance `supreme` objects.
+
+2.1. `type` *(required)*: This should be straightforward "module" for now. The
+possible entries, which this field can take, may be changed in the future.
+
+2.2. `name` *(required)*: The name of the entity.
+
+2.3. `input` *(optional)*: Input names which an entity can take. (If you have names
+of a length greater than one, put them between square brackets (`[ ]`) whose entries
+are delimited by commas.)
+
+2.4. `output` *(optional)*: Output names which an entity can take. (This is under
+development)
+
+2.5. `calling_modules` *(optional)*: The names of the modules are called from that
+entity via `callModule()` call.
+
+2.6. `src` *(optional)*: A single location where the read resources (file paths,
+package name etc.) can be found.
+
+## Current limitations
+
++ Although it's possible to create a Shiny app by only providing `input` and `output`
+arguments in the server side, *supreme* will not read any Shiny server side component
+missing a `session` argument[^3].
+
++ *supreme* will not properly parse the source code of your application if server
+side component is created with `shinyServer()`, which is kind of soft-deprecated
+after a very early Shiny version `0.10`, because of the reason mentioned just above.
+
++ Some idiocratic Shiny application code may not be parsed as intended. It would be
+great if you can open an issue with a reproducible example.
 
 ## Notes
 
 [^1]: YAML is a popular is a human-readable data-serialization language. <https://yaml.org/>
+
+[^2]: Please note that some of the directives here in terms of notations, symbols to use
+are directly coming from the YAML specification.
+
+[^3]: That's reasonable because modules cannot work without `session` argument and
+supreme is a package designed to work with Shiny modules.
 
