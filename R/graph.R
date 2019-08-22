@@ -15,11 +15,15 @@ graph_create_general_directives <- function(directives) {
 #' @noRd
 graph_sanitize_classifier_name <- function(name) {
   stopifnot(length(name) == 1L)
-  no.digits <- gsub("[[:digit:]]+", "", name)
-  no.underscore <- gsub("\\_+", "", no.digits)
-  no.capital <- tolower(no.underscore)
+  sanitized <- local({
+    no.digits <- gsub("[[:digit:]]+", "", name)
+    no.underscore <- gsub("\\_+", "", no.digits)
+    no.capital <- tolower(no.underscore)
+    no.dot <- gsub("\\.+", "", no.capital)
+    no.dot
+  })
   random <- paste(sample(c(letters), 10), collapse = "")
-  add.random <- paste0(no.capital, random)
+  add.random <- paste0(sanitized, random)
   list(
     original = name,
     result = add.random
