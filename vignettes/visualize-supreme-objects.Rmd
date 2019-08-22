@@ -1,6 +1,5 @@
 ---
 title: "Visualize 'supreme' objects"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Visualize 'supreme' objects}

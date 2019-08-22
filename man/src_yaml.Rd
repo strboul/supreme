@@ -2,17 +2,17 @@
 % Please edit documentation in R/src-yaml.R
 \name{src_yaml}
 \alias{src_yaml}
-\title{Read a yaml file containing model}
+\title{Read a YAML file containing model}
 \usage{
 src_yaml(file = NULL, text = NULL)
 }
 \arguments{
-\item{file}{file path to a yaml file.}
+\item{file}{file path to a YAML file.}
 
 \item{text}{a YAML formatted character string.}
 }
 \description{
-Read a yaml file containing model
+Read a YAML file containing model
 }
 \examples{
 \dontrun{
