@@ -10,3 +10,4 @@ inst/doc
 vignettes/*.html
 vignettes/*.pdf
 .httr-oauth
+docs/
