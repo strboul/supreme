@@ -12,13 +12,15 @@ src_yaml(file = NULL, text = NULL)
 \item{text}{a YAML formatted character string.}
 }
 \description{
-Read a YAML file containing model
+Reads an object or a file in YAML format and returns a model YAML object.
 }
 \examples{
 \dontrun{
+## Read from file:
 file <- file.path("yaml-test", "example-model-1.yaml")
 src_yaml(file)
 
+## Read from text object:
 model <- "
 - type: module
   name: childModuleA
