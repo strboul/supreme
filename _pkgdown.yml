@@ -48,3 +48,8 @@ navbar:
     news:
       text: Changelog
       href: news/index.html
+
+template:
+  params:
+    bootswatch: flatly
+
