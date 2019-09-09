@@ -2,6 +2,10 @@
 #' Create a supreme object
 #'
 #' @param x a valid source input.
+#' @examples \dontrun{
+#' path <- example_app_path()
+#' supr <- supreme(src_file(path))
+#' }
 #' @export
 supreme <- function(x) {
   if(!is_source_object(x)) {

@@ -12,3 +12,9 @@ supreme(x)
 \description{
 Create a supreme object
 }
+\examples{
+\dontrun{
+path <- example_app_path()
+supr <- supreme(src_file(path))
+}
+}
