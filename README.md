@@ -58,14 +58,14 @@ df <- as.data.frame(obj)
 tbbl <- tibble::as_tibble(df)
 tbbl
 #> # A tibble: 6 x 6
-#>   type   name         input output calling_modules                src      
-#>   <chr>  <chr>        <chr> <chr>  <chr>                          <chr>    
-#> 1 module server       <NA>  <NA>   items_tab_module_server, cust… app.R    
-#> 2 module customers_t… <NA>  <NA>   main_table_server              module-c…
-#> 3 module items_tab_m… <NA>  <NA>   main_table_server, items_plot… module-i…
-#> 4 module items_plot_… <NA>  <NA>   <NA>                           module-i…
-#> 5 module transaction… <NA>  <NA>   main_table_server              module-t…
-#> 6 module main_table_… <NA>  <NA>   <NA>                           module-u…
+#>   type   name                 input  output  calling_modules src           
+#>   <chr>  <chr>                <I(ch> <I(chr> <I(list)>       <chr>         
+#> 1 module server               <NA>   <NA>    <chr [3]>       app.R         
+#> 2 module customers_tab_modul… <NA>   <NA>    <chr [1]>       module-custom…
+#> 3 module items_tab_module_se… <NA>   <NA>    <chr [2]>       module-items.R
+#> 4 module items_plot_server    <NA>   <NA>    <chr [1]>       module-items.R
+#> 5 module transactions_tab_mo… <NA>   <NA>    <chr [1]>       module-transa…
+#> 6 module main_table_server    <NA>   <NA>    <chr [1]>       module-utils.R
 ```
 
 For designing a new application, or designing a new part in your
@@ -110,4 +110,4 @@ PRs and issues are much appreciated.
 
 ## License
 
-GPL-2.0 © Metin Yazici
+MIT © Metin Yazici
