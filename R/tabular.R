@@ -23,6 +23,7 @@ as.data.frame.supreme <- function(x, ...) {
 supreme_to_df <- function(x) {
   req_fields <- getOption("SUPREME_MODEL_REQUIRED_FIELDS")
   opt_fields <- getOption("SUPREME_MODEL_OPTIONAL_FIELDS")
+  multi_fields <- getOption("SUPREME_MODEL_MULTI_VAR_FIELDS")
   all_fields <- c(req_fields, opt_fields)
   full.tbl <- do.call(rbind, lapply(seq_along(x), function(xi) {
     mod <- x[[xi]]
@@ -33,12 +34,15 @@ supreme_to_df <- function(x) {
         value <- NA_character_
       }
       if (length(value) > 1L) {
-        value <- paste(value, collapse = ", ")
+        value <- list(value)
       }
-      tbl <- if (field %in% names(mod)) {
-        data.frame(value, stringsAsFactors = FALSE)
+      if (!field %in% names(mod)) {
+        value <- NA_character_
+      }
+      tbl <- if (field %in% multi_fields) {
+        data.frame(I(value), stringsAsFactors = FALSE)
       } else {
-        data.frame(NA_character_, stringsAsFactors = FALSE)
+        data.frame(value, stringsAsFactors = FALSE)
       }
       names(tbl) <- field
       tbl

@@ -27,32 +27,40 @@ test_that("supreme_to_df", {
                      "reusableModuleLoading",
                      "orphanModule"
                    ),
-                   input = c(
-                     NA,
-                     "input.data, reactive",
+                   input = list(
+                     NA_character_,
+                     c("input.data",
+                       "reactive"),
                      "selected.model",
-                     "data, trigger.btn",
-                     "data, trigger.btn",
+                     c("data", "trigger.btn"),
+                     c("data",
+                       "trigger.btn"),
                      "data",
-                     NA
-                   ),
-                   output = c(
-                     NA_character_,
-                     NA_character_,
-                     NA_character_,
-                     NA_character_,
-                     NA_character_,
-                     NA_character_,
                      NA_character_
                    ),
-                   calling_modules = c(
-                     "childModuleA, childModuleB",
-                     "grandChildModule1",
-                     NA,
-                     "reusableModuleLoading",
-                     "reusableModuleLoading",
-                     NA,
-                     NA
+                   output = structure(
+                     c(
+                       NA_character_,
+                       NA_character_,
+                       NA_character_,
+                       NA_character_,
+                       NA_character_,
+                       NA_character_,
+                       NA_character_
+                     ),
+                     class = "AsIs"
+                   ),
+                   calling_modules = structure(
+                     list(
+                       c("childModuleA", "childModuleB"),
+                       "grandChildModule1",
+                       NA_character_,
+                       "reusableModuleLoading",
+                       "reusableModuleLoading",
+                       NA_character_,
+                       NA_character_
+                     ),
+                     class = "AsIs"
                    ),
                    src = c(
                      NA_character_,
@@ -90,15 +98,17 @@ test_that("as.data.frame.supreme S3 method", {
                    type = c("module", "module"),
                    name = c("childModuleA",
                             "childModuleB"),
-                   input = c("input.data, reactive", "selected.model"),
-                   output = c(NA_character_, NA_character_),
-                   calling_modules = c("grandChildModule1",
-                                       NA),
+                   input = structure(list(
+                     c("input.data", "reactive"), "selected.model"
+                   ), class = "AsIs"),
+                   output = structure(c(NA_character_,
+                                        NA_character_), class = "AsIs"),
+                   calling_modules = structure(c("grandChildModule1",
+                                                 NA), class = "AsIs"),
                    src = c(NA_character_, NA_character_)
                  ),
                  row.names = c(NA,-2L),
                  class = "data.frame"
                ))
-
 })
 
