@@ -8,7 +8,7 @@ Description: supreme helps you structure your Shiny application developed with
 Authors@R: 
     person("Metin", "Yazici", email = "name@example.com", role = c("aut", "cre", "cph"))
 Version: 0.2.0
-License: file LICENSE
+License: MIT + file LICENSE
 Imports:
     utils,
     yaml,

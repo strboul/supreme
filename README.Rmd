@@ -101,5 +101,5 @@ analyses.
 
 ## License
 
-GPL-2.0 &copy; Metin Yazici
+MIT © Metin Yazici
 
