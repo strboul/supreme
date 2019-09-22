@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# supreme <a href='https://github.com/strboul/supreme/'><img src='inst/media/logo.png' align="right" height="135"></a>
+# supreme <a href='https://github.com/strboul/supreme/'><img src='https://raw.githubusercontent.com/strboul/supreme/master/inst/media/logo.png' align="right" height="135"></a>
 
 [![Repo
 status](https://www.repostatus.org/badges/latest/wip.svg)](https://github.com/strboul/supreme)
@@ -12,17 +12,18 @@ status](https://ci.appveyor.com/api/projects/status/github/strboul/supreme?branc
 [![Coverage
 status](https://codecov.io/gh/strboul/supreme/branch/master/graph/badge.svg)](https://codecov.io/github/strboul/supreme?branch=master)
 
-*supreme* helps you structure Shiny applications developed with modules
+*supreme* is a modeling tool helping you better structure Shiny
+applications developed with modules
 
 Therefore, you are able to:
 
-  - **Visualize** relationship of modules in any existing application
+1.  **Visualize** relationship of modules in *existing applications*
 
-  - **Design** new applications from scratch
+2.  **Design** *new applications* from scratch
 
 ## Usage
 
-First of all, the application has to be read as a model object by
+The Shiny application has to first be read as a model object by
 *supreme*.
 
 For your existing application, you may read it from a file by using
