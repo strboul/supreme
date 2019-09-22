@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# supreme
+# supreme <a href='https://github.com/strboul/supreme/'><img src='inst/media/logo.png' align="right" height="135"></a>
 
 [![Repo status](https://www.repostatus.org/badges/latest/wip.svg)](https://github.com/strboul/supreme) [![Travis build status](https://travis-ci.org/strboul/supreme.svg?branch=master)](https://travis-ci.org/strboul/supreme) [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/strboul/supreme?branch=master&svg=true)](https://ci.appveyor.com/project/strboul/supreme) [![Coverage status](https://codecov.io/gh/strboul/supreme/branch/master/graph/badge.svg)](https://codecov.io/github/strboul/supreme?branch=master)
 
