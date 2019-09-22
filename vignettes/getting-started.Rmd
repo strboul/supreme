@@ -21,32 +21,26 @@ knitr::opts_chunk$set(
 
 ### Read files containing your Shiny application
 
-In **supreme** package, we provide path lead to an example application of Shiny
-created with modules that resides in `inst/extdata` [*directory*](#todo-add-link) of the repository.
+The **supreme** package provides an example path containing a dummy Shiny application
+created with modules. The modeling graph generation can be called in three easy steps:
 
-You can get the paths for the example app by calling `example_app_path()`:
+1. You can get the paths for the example app by calling `example_app_path()`
+
+2. Read as *supreme* object.
+
+3. Visualize
 
 ```{r}
 paths <- example_app_path()
-paths
-```
-
-Then create a `supreme` object:
-
-```{r}
 s <- supreme(src_file(paths))
-```
-
-Visualize:
-
-```{r}
 graph(s)
 ```
 
 Those all can be also done using pipes (`%>%`) from the [magrittr](https://cran.r-project.org/package=magrittr) package:
 
 ```{r, eval=FALSE}
-src_file(paths) %>%
+paths %>% 
+  src_file() %>%
   supreme() %>% 
   graph()
 ```

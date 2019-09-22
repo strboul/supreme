@@ -30,7 +30,9 @@ navbar:
     - articles
     - tutorials
     - news
-    right: github
+    right:
+      - icon: fa-github fa-lg
+        href: https://github.com/strboul/supreme
   components:
     home:
       icon: fa-home fa-lg
