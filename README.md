@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# supreme
+# supreme <a href='https://github.com/strboul/supreme/'><img src='inst/media/logo.png' align="right" height="135"></a>
 
 [![Repo
 status](https://www.repostatus.org/badges/latest/wip.svg)](https://github.com/strboul/supreme)
@@ -59,7 +59,7 @@ tbbl <- tibble::as_tibble(df)
 tbbl
 #> # A tibble: 6 x 6
 #>   type   name                 input  output  calling_modules src           
-#>   <chr>  <chr>                <I(ch> <I(chr> <I(list)>       <chr>         
+#>   <chr>  <chr>                <I<ch> <I<chr> <I<list>>       <chr>         
 #> 1 module server               <NA>   <NA>    <chr [3]>       app.R         
 #> 2 module customers_tab_modul… <NA>   <NA>    <chr [1]>       module-custom…
 #> 3 module items_tab_module_se… <NA>   <NA>    <chr [2]>       module-items.R
