@@ -1,12 +1,13 @@
 
 #' Read \R files
 #'
-#' The files should contain some Shiny application.
+#' Read files contain at least one Shiny application.
 #'
 #' @param x a file path.
 #' @examples
 #' paths <- example_app_path()
 #' s <- supreme(src_file(paths))
+#' @family source functions
 #' @export
 src_file <- function(x) {
   tryCatch({ file.exists(as.character(x)) }, error = function(e)

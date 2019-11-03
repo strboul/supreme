@@ -12,5 +12,26 @@ example_package(pkg = list(name = "supreme.pkg.test", path =
 For the example purposes, the default value is \code{supreme.pkg.test}.}
 }
 \description{
-This function asks to build packages in the users' system if they are not found.
+This function asks user to install the example \emph{supreme} package only if the
+package is not found in any of the known directories.
 }
+\details{
+This supreme example helper function \code{example_package()} contains an R package named
+\code{supreme.pkg.test} placed in this link:
+\url{https://github.com/strboul/supreme.pkg.test}
+
+This function uses
+\link[devtools:install_github]{devtools::install_github} call to clone, build and install the package.
+}
+\examples{
+\dontrun{
+pkg <- example_package()
+supreme(src_pkg(pkg))
+}
+}
+\seealso{
+Other source examples: \code{\link{example_app_path}},
+  \code{\link{example_environment}},
+  \code{\link{example_expression}}
+}
+\concept{source examples}

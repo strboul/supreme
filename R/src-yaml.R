@@ -25,6 +25,7 @@
 #' src_yaml(text = model)
 #' }
 #' @importFrom yaml yaml.load_file yaml.load
+#' @family source functions
 #' @export
 src_yaml <- function(file = NULL, text = NULL) {
   if (is.null(file) && is.null(text)) {

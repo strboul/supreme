@@ -4,6 +4,7 @@
 #' The package should contain some Shiny application.
 #'
 #' @param x a package name as character (must be installed in the system).
+#' @family source functions
 #' @export
 src_pkg <- function(x) {
   ## enforce input to be a character.

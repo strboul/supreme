@@ -2,6 +2,7 @@
 #' Read \R environment
 #'
 #' @param x an \R environment.
+#' @family source functions
 #' @export
 src_env <- function(x) {
   if (!is.environment(x)) {
