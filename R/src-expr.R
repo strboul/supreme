@@ -2,6 +2,7 @@
 #' Read \R expressions
 #'
 #' @param x an \R expression.
+#' @family source functions
 #' @export
 src_expr <- function(x) {
   if (!length(x) == 1L) {

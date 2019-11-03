@@ -12,3 +12,9 @@ src_env(x)
 \description{
 Read \R environment
 }
+\seealso{
+Other source functions: \code{\link{src_expr}},
+  \code{\link{src_file}}, \code{\link{src_pkg}},
+  \code{\link{src_yaml}}
+}
+\concept{source functions}

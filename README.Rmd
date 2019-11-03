@@ -12,15 +12,14 @@ always_allow_html: yes
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "inst/media/",
-  dev = "png",
+  fig.path = "man/figures/README-",
   out.width = "100%"
 )
 ```
 
 # supreme <a href='https://github.com/strboul/supreme/'><img src='https://raw.githubusercontent.com/strboul/supreme/master/inst/media/logo.png' align="right" height="135"></a>
 
-[![Repo status](https://www.repostatus.org/badges/latest/wip.svg)](https://github.com/strboul/supreme) [![Travis build status](https://travis-ci.org/strboul/supreme.svg?branch=master)](https://travis-ci.org/strboul/supreme) [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/strboul/supreme?branch=master&svg=true)](https://ci.appveyor.com/project/strboul/supreme) [![Coverage status](https://codecov.io/gh/strboul/supreme/branch/master/graph/badge.svg)](https://codecov.io/github/strboul/supreme?branch=master)
+[![Repo status](https://www.repostatus.org/badges/latest/active.svg)](https://github.com/strboul/supreme) [![Travis build status](https://travis-ci.org/strboul/supreme.svg?branch=master)](https://travis-ci.org/strboul/supreme) [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/strboul/supreme?branch=master&svg=true)](https://ci.appveyor.com/project/strboul/supreme) [![Coverage status](https://codecov.io/gh/strboul/supreme/branch/master/graph/badge.svg)](https://codecov.io/github/strboul/supreme?branch=master)
 
 *supreme* is a modeling tool helping you better structure Shiny applications
 developed with modules
@@ -31,21 +30,39 @@ Therefore, you are able to:
 
 1. **Design** *new applications* from scratch
 
+## Installation
+
+```{r, eval=FALSE}
+# install.packages("devtools")
+devtools::install_github("strboul/supreme")
+```
+
 ## Usage
 
-The Shiny application has to first be read as a model object by *supreme*.
+### Existing applications
 
-For your existing application, you may read it from a file by using `src_file()`.
-Please see the vignette for the other options to read your application as model
-objects.
+For your existing application, you can use `src_file()` call that reads your application from files.
 
-After reading, create a *supreme* object from the read model object:
+*supreme* package comes with an example path containing a dummy Shiny application
+created with modules for testing issues.
+
+After the application has been read, create a *supreme* object from the read model object:
 
 ```{r}
 library(supreme)
 path <- example_app_path()
 obj <- supreme(src_file(path))
 obj
+```
+
+If you want to run *supreme* on your application that is stored in a different format (as a package, environment etc.), please see the `?src_file` documentation page that has information about the other options to read your application as *supreme* source model objects.
+
+See the generated *supreme* object in tabular form (as `data.frame` or `tibble`):
+
+```{r}
+df <- as.data.frame(obj)
+tbbl <- tibble::as_tibble(df)
+tbbl
 ```
 
 Visualize the module structure:
@@ -56,53 +73,127 @@ graph(obj)
 
 <br>
 
-See the generated *supreme* object in tabular form (as `data.frame` or `tibble`):
+### Creating YAML model objects
+
+Model definition with *YAML* is a handy to design a new application from scratch or 
+just design the specific parts of applications. Planning ahead with model tool can 
+really be beneficial before going wild on implementation.
+
+```{r, echo=FALSE, results='asis'}
+model <- "
+- type: module
+  name: server
+  calling_modules: 
+    - items_tab_module_server
+    - customers_tab_module_server 
+    - transactions_tab_module_server
+    
+- type: module
+  name: items_tab_module_server
+  input: 
+    - items_list
+    - is_fired
+  src: inventory
+  
+- type: module
+  name: customers_tab_module_server
+  input: customers_list
+  output: 
+    - paid_customers_table
+    - free_customers_table
+  src: sales
+    
+- type: module
+  name: transactions_tab_module_server
+  output: transactions_table
+  return: transactions_keys
+  src: sales
+"
+cat(sprintf("```yaml%s```\n", model))
+```
 
 ```{r}
-df <- as.data.frame(obj)
-tbbl <- tibble::as_tibble(df)
-tbbl
+library(supreme)
+model_yaml <- src_yaml(text = model)
+obj <- supreme(model_yaml)
+tibble::as_tibble(as.data.frame(obj))
 ```
 
-For designing a new application, or designing a new part in your existing
-application, use YAML:
+There are some special rules when creating model objects with *YAML*: 
 
-## Read more
++ Each entity in the model must have 
+  `r mmy::list_en_end(paste0("*", getOption("SUPREME_MODEL_REQUIRED_FIELDS"), "*"))` 
+  fields.
 
-The following vignettes contain more detailed information about how to use *supreme*
-in different ways.
++ The entities can have optional fields, which are
+  `r mmy::list_en_end(paste0("*", getOption("SUPREME_MODEL_OPTIONAL_FIELDS"), "*"))`.
 
-*(they're under development)*
++ The fields 
+  `r mmy::list_en_end(paste0("*", getOption("SUPREME_MODEL_MULTI_VAR_FIELDS"), "*"))`
+  can have mutliple elements. The others can only have a single element.
 
-+ [**Getting started with supreme**](https://strboul.github.io/supreme/articles/getting-started.html)
+Any other field, which is not known by the supreme modal object 
+(like a `shape: star`), added to the model
+definition is not allowed and it will throw an error.
 
-+ [**Visualize 'supreme' objects**](https://strboul.github.io/supreme/articles/visualize-supreme-objects.html)
-
-## Installation
-
-```{r, eval=FALSE}
-devtools::install_github("strboul/supreme")
+Finally, we can visualize the supreme mode object we created above from *YAML* model:
+```{r yaml-graph}
+graph(obj)
 ```
 
-## Contribution
+See the next session to understand how this [model language](#model language) works.
 
-This package is still on progress. **API is subject to change.**
+### The model language
 
-PRs and issues are much appreciated.
+A *supreme* object is consisted by *entities*. An *"entity"* denotes here that a Shiny
+server component is allowed to either be a server side of a module or the main `server`
+function of a Shiny application.
+
+```{r out-diagram, echo=FALSE, out.width='90%', fig.align='center'}
+knitr::include_graphics("inst/media/supreme-diagram.png")
+```
+
+<br/>
+
+A graph entity consists of five main fields:
+
+1. Module name
+
+2. Module inputs (except the defaults *input*, *output*, *session*)
+
+3. Module outputs
+
+3. Return from the module
+
+4. Modules called by the module
+
+## Current limitations
+
++ Although it's possible to create a Shiny application by only providing `input` and `output`
+arguments in the server side, *supreme* will not read any Shiny server side component
+missing a `session` argument. That's reasonable decision because modules cannot work without `session` argument and
+supreme is a package designed to work with Shiny modules.
+
++ *supreme* will not properly parse the source code of your application if server
+side component is created with `shinyServer()`, which is kind of soft-deprecated
+after a very early Shiny version `0.10`.
+
++ Some idiosyncratic Shiny application code may not be parsed as intended. For such cases,
+it would be great if you open an issue describing the situation with a reproducible example.
 
 ## Acknowledgements
 
-+ R Core Team: *supreme* came to life thanks to *R* allowing to manipulate *abstract
-syntax trees* (AST) easily in the code that is a huge benefit of practising static
-analyses.
++ [R Core Team](https://www.r-project.org/): 
+  *supreme* package is brought to life thanks to *R* allowing *abstract
+  syntax trees* (AST) that is used to practice static analysis on the code.
 
-+ [datamodelr](https://github.com/bergant/datamodelr): Inspiring work for
-  creating modelling language
++ [datamodelr](https://github.com/bergant/datamodelr): 
+  Inspiring work for creating modelling language
 
-+ [shinypod](https://github.com/ijlyttle/shinypod): Interesting thoughts regarding
-  the implementation of Shiny modules
++ [shinypod](https://github.com/ijlyttle/shinypod):
+  Interesting thoughts regarding the implementation of Shiny modules
 
 ## License
 
-MIT © Metin Yazici
+MIT &#169; Metin Yazici
 

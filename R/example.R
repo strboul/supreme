@@ -8,8 +8,9 @@
 #'   all the example file paths will be listed.
 #'
 #' @examples
-#' example_app_path()
-#' example_app_path(c("app", "module-customers"))
+#' files <- example_app_path(c("app", "module-customers"))
+#' supreme(src_file(files))
+#' @family source examples
 #' @export
 example_app_path <- function(file = NULL) {
   pkg <- system.file("extdata", package = "supreme", mustWork = TRUE)
@@ -23,11 +24,25 @@ example_app_path <- function(file = NULL) {
 
 #' Get package to `supreme` example
 #'
-#' This function asks to build packages in the users' system if they are not found.
+#' @description
+#' This function asks user to install the example *supreme* package only if the
+#' package is not found in any of the known directories.
 #'
 #' @param pkg a list contains name (*package name*) and path (*GitHub path*) fields.
 #'   For the example purposes, the default value is `supreme.pkg.test`.
+#' @details
+#' This supreme example helper function `example_package()` contains an R package named
+#' `supreme.pkg.test` placed in this link:
+#' \url{https://github.com/strboul/supreme.pkg.test}
+#'
+#' This function uses
+#' [devtools::install_github] call to clone, build and install the package.
+#' @examples \dontrun{
+#' pkg <- example_package()
+#' supreme(src_pkg(pkg))
+#' }
 #' @importFrom devtools install_github
+#' @family source examples
 #' @export
 example_package <- function(pkg = list(name = "supreme.pkg.test",
                                        path = "strboul/supreme.pkg.test")) {
@@ -74,9 +89,13 @@ example_package <- function(pkg = list(name = "supreme.pkg.test",
 
 #' Get environment to `supreme` example
 #'
+#' @examples
+#' env <- example_environment()
+#' supreme(src_env(env))
 #' @importFrom utils menu
+#' @family source examples
 #' @export
-example_environment <- function() { #nocov start
+example_environment <- function() {
   e <- local({
     module1_ui <- function(id) {
     }
@@ -110,5 +129,39 @@ example_environment <- function() { #nocov start
     }
   })
   environment(e)
-} #nocov end
+}
+
+#' Get expression to `supreme` example
+#'
+#' @examples
+#' expr <- example_expression()
+#' supreme(src_expr(expr))
+#' @family source examples
+#' @export
+example_expression <- function() {
+  e <- expression({
+    text_ui <- function(id) {
+      ns <- NS(id)
+      tagList(textInput(ns("text"), "Write here"),
+              verbatimTextOutput(ns("display")))
+    }
+    text_server <- function(input, output, session) {
+      rv.text <- reactiveValues(val = FALSE)
+      observeEvent(input$text, {
+        rv.text$val <- input$text
+      })
+      output$display <- renderText({
+        rv.text$val
+      })
+    }
+    ui <- fluidPage(fluidRow(
+      column(6,
+             text_ui("text"))
+    ))
+    server <- function(input, output, session) {
+      callModule(module = text_server, id = "text")
+    }
+    shinyApp(ui, server)
+  })
+}
 

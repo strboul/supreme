@@ -10,9 +10,15 @@ src_file(x)
 \item{x}{a file path.}
 }
 \description{
-The files should contain some Shiny application.
+Read files contain at least one Shiny application.
 }
 \examples{
 paths <- example_app_path()
 s <- supreme(src_file(paths))
 }
+\seealso{
+Other source functions: \code{\link{src_env}},
+  \code{\link{src_expr}}, \code{\link{src_pkg}},
+  \code{\link{src_yaml}}
+}
+\concept{source functions}
