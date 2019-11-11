@@ -8,17 +8,11 @@
 #' }
 #' @export
 supreme <- function(x) {
-  if(!is_source_object(x)) {
+  if (!is_source_object(x)) {
     ncstopf("the provided input cannot be turned into a supreme object")
   }
   ret <- list(
-    components = list(
-      server_side = NULL,
-      ui_side = NULL
-    ),
-    data = list(
-      x
-    ),
+    data = x,
     source_input = class(x)
   )
   if (!length(ret$data[[1]]) > 0) {
@@ -29,11 +23,10 @@ supreme <- function(x) {
 
 #' @export
 print.supreme <- function(x, ...) {
-  dta <- x$data[[1]]
+  dta <- x[["data"]]
   len.dta <- length(dta)
   nms <- vapply(seq_along(dta), function(i) dta[[i]][["name"]], character(1))
-  len.nms <- length(nms)
-  nms.disp <- if (len.nms > 4L) {
+  nms.disp <- if (length(nms) > 4L) {
     c(nms[seq(4L)], "...")
   } else {
     nms
