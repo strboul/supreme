@@ -13,10 +13,10 @@ as.data.frame.supreme <- function(x, ...) {
   if (!is_supreme(x)) {
     ncstopf("cannot coerce a non-supreme object")
   }
-  supreme_to_df(x$data[[1]])
+  supreme_to_df(x$data)
 }
 
-#' Turn supreme data into a data frame
+#' Turn supreme data into a data.frame
 #'
 #' @param x an object.
 #' @noRd

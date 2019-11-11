@@ -85,7 +85,8 @@ model <- "
   name: server
   calling_modules: 
     - items_tab_module_server
-    - customers_tab_module_server 
+    - customers_tab_module_server:
+      - customers_tab_ui
     - transactions_tab_module_server
     
 - type: module
@@ -105,6 +106,9 @@ model <- "
     
 - type: module
   name: transactions_tab_module_server
+  input: 
+    - table
+    - button_clicked
   output: transactions_table
   return: transactions_keys
   src: sales
@@ -148,6 +152,8 @@ See the next session to understand how this [model language](#model language) wo
 A *supreme* object is consisted by *entities*. An *"entity"* denotes here that a Shiny
 server component is allowed to either be a server side of a module or the main `server`
 function of a Shiny application.
+
+<br/>
 
 ```{r out-diagram, echo=FALSE, out.width='90%', fig.align='center'}
 knitr::include_graphics("inst/media/supreme-diagram.png")
