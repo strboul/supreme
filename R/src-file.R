@@ -27,6 +27,15 @@ print.src_file <- function(x, ...) {
 #'
 #' @param x a file name.
 #' @return A parsed expression.
+#' @details
+#' Lines starting with commenting symbol # (hash) are removed from the character
+#' vector before sending to parsing. Normally, `parse()` automatically removes the
+#' comments;however, we do it before anyway to avoid any potential problems, which
+#' can be caused by the paste collapsing.
+#'
+#' Before parsing, the character vector is wrapped between curly braces (`{` and `}`)
+#' as the system is designed around exprs. Also put new lines before the quotes to be
+#' sure that they are not commented out from # a previous commented line.
 #' @noRd
 read_srcfile <- function(x) {
   lijnen <- lapply(seq_along(x), function(i) {
@@ -46,10 +55,10 @@ read_srcfile <- function(x) {
     lines
   })
   lijnen <- unlist(lijnen)
-  ## Remove commented lines:
-  lijnen <- lijnen[-grep("^#", lijnen)]
-  ## Wrap`{`, `}` quotes in between as the system is designed around exprs"
-  lines <- paste("{", paste(lijnen, collapse = "\n"), "}")
+  if (length(commented.lines <- grep("^#", lijnen)) > 0L) {
+    lijnen <- lijnen[-commented.lines]
+  }
+  lines <- paste("{\n", paste(lijnen, collapse = "\n"), "\n}")
   parse(text = lines)
 }
 
