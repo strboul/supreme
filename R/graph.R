@@ -19,8 +19,8 @@ check_type_module <- function(type) {
 #' ))
 #' @noRd
 graph_create_general_directives <- function(directives) {
-  stopifnot(is.list(directives))
-  if (is.null(names(directives)) || any(nchar(names(directives)) == 0L)) {
+  stopifnot(is_list(directives))
+  if (!is_named_list(directives)) {
     ncstopf("directive names must be properly named", internal = TRUE)
   }
   out <- do.call(pastenc, lapply(seq_along(directives), function(i) {
@@ -42,7 +42,7 @@ graph_sanitize_classifier_name <- function(name, random.str.len = 15L) {
     no.dot <- gsub("\\.+", "", no.capital)
     no.dot
   })
-  random <- paste(sample(c(letters), random.str.len), collapse = "")
+  random <- paste(sample(letters, random.str.len), collapse = "")
   add.random <- paste0(sanitized, random)
   list(
     original = name,
@@ -96,10 +96,8 @@ graph_generate_custom_classifier <- function(classifier.name, styles = NULL) {
 #' @noRd
 graph_create_node <- function(x, classifier = NULL) {
   check_type_module(x[["type"]])
-  if (!is.null(classifier)) {
-    if (!is.character(classifier)) {
-      classifier <- as.character(classifier)
-    }
+  if (!(is.null(classifier) && !is.character(classifier))) {
+    classifier <- as.character(classifier)
   }
   .create_multi_vars_field <- function(e, add.bullet = TRUE, add.quote = FALSE) {
     if (!is.null(e)) {
