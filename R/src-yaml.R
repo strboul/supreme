@@ -91,7 +91,7 @@ verify_yaml <- function(x) {
   optional <- getOption("SUPREME_MODEL_OPTIONAL_FIELDS")
   for (xi in seq_along(x)) {
     nst <- vapply(seq_along(x[[xi]]), function(zi) {
-      is.list(x[[xi]][[zi]])
+      is_list(x[[xi]][[zi]])
     }, logical(1))
     anst <- any(nst)
     if (anst) {

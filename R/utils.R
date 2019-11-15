@@ -62,3 +62,12 @@ is_package_exist <- function(x) {
   }
 }
 
+#' Checks whether a list is named
+#'
+#' @param x a list object.
+#' @noRd
+is_named_list <- function(x) {
+  stopifnot(is_list(x))
+  !(is.null(names(x)) || any(names(x) == ""))
+}
+
