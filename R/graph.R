@@ -1,17 +1,4 @@
 
-#' Checks whether the type field is called as "module"
-#'
-#' @details
-#' This function throws an error if the type is not equal to a *character string*
-#' called "module". If not, it returns (invisibly) `TRUE`.
-#' @noRd
-check_type_module <- function(type) {
-  stopifnot(is.character(type))
-  if (!identical(type, "module")) {
-    ncstopf("type should be a \"module\", not \"%s\"", type, internal = TRUE)
-  }
-  invisible(TRUE)
-}
 
 #' @examples
 #' (dir <- graph_create_general_directives(
@@ -81,7 +68,7 @@ graph_generate_custom_classifier <- function(classifier.name, styles = NULL) {
 ### ----------------------------------------------------------------- ###
 
 #' @examples
-#' x <- list(list(type = "module", name = "childModuleA",
+#' x <- list(list(name = "childModuleA",
 #' input = c("input.data", "reactive"), output = c("output1", "output2"),
 #' return = "ret", calling_modules = "grandChildModule1"))
 #' (node <- graph_create_node(x[[1]]))
@@ -91,11 +78,10 @@ graph_generate_custom_classifier <- function(classifier.name, styles = NULL) {
 #' (node_cls <- graph_create_node(x[[1]], classifier = cls))
 #'
 #' ## with some missing fields:
-#' y <- list(list(type = "module", name = "childModuleB", input = "data"))
+#' y <- list(list(name = "childModuleB", input = "data"))
 #' graph_create_node(y[[1]])
 #' @noRd
 graph_create_node <- function(x, classifier = NULL) {
-  check_type_module(x[["type"]])
   if (!(is.null(classifier) && !is.character(classifier))) {
     classifier <- as.character(classifier)
   }
@@ -131,16 +117,15 @@ graph_create_node <- function(x, classifier = NULL) {
 }
 
 #' @examples
-#' x <- list(list(type = "module", name = "childModuleA",
+#' x <- list(list(name = "childModuleA",
 #' input = c("input.data", "reactive"), output = c("tbl1", "tbl2"),
 #' return = "ret", calling_modules = "grandChildModule1"),
-#' list(type = "module", name = "childModuleB", input = NULL,
+#' list(name = "childModuleB", input = NULL,
 #' calling_modules = NULL))
 #' graph_create_edge(x[[1]])
 #' graph_create_edge(x[[2]])
 #' @noRd
 graph_create_edge <- function(x) {
-  check_type_module(x[["type"]])
   if (is.null(x[["calling_modules"]])) {
     return(NULL)
   }
@@ -156,14 +141,14 @@ graph_create_edge <- function(x) {
 }
 
 #' @examples
-#' x <- list(list(type = "module", name = "childModuleA",
+#' x <- list(list(name = "childModuleA",
 #' input = c("input.data", "reactive"), output = c("output1", "output2"),
 #' return = "ret", calling_modules = "grandChildModule1"))
 #' (cons <- graph_construct(x))
 #' cat(cons, "\n")
 #'
-#' y <- list(list(type = "module", name = "childModuleA", input = c("input.data",
-#' "reactive"), calling_modules = "grandChildModule1"), list(type = "module", name
+#' y <- list(list(name = "childModuleA", input = c("input.data",
+#' "reactive"), calling_modules = "grandChildModule1"), list(name
 #' = "childModuleB", input = NULL, calling_modules = NULL))
 #' graph_construct(y)
 #' @noRd

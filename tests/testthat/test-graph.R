@@ -1,11 +1,6 @@
 
 context("test-graph")
 
-test_that("check_type_module", {
-  expect_true(check_type_module("module"))
-  expect_error(check_type_module("APPLE"))
-})
-
 test_that("graph_create_general_directives", {
   expect_equal(
     graph_create_general_directives(list(
@@ -49,7 +44,6 @@ test_that("graph_generate_custom_classifier", {
 test_that("graph_create_node", {
   x <- list(
     list(
-      type = "module",
       name = "childModuleA",
       input = c("input.data", "reactive"),
       output = c("output1", "output2"),
@@ -68,7 +62,7 @@ test_that("graph_create_node", {
     )
   }
   ## with some missing fields:
-  y <- list(list(type = "module", name = "childModuleB", input = "data"))
+  y <- list(list(name = "childModuleB", input = "data"))
   node_incomplete <- graph_create_node(y[[1]])
   expect_equal(
     node_incomplete,
@@ -79,7 +73,6 @@ test_that("graph_create_node", {
 test_that("graph_create_edge", {
   x <- list(
     list(
-      type = "module",
       name = "childModuleA",
       input = c("input.data", "reactive"),
       output = c("tbl1", "tbl2"),
@@ -87,7 +80,6 @@ test_that("graph_create_edge", {
       calling_modules = "grandChildModule1"
     ),
     list(
-      type = "module",
       name = "childModuleB",
       input = NULL,
       calling_modules = NULL

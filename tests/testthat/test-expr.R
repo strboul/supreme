@@ -34,26 +34,22 @@ test_that("can read expression objects", {
   expect_equal(src_expr(e),
                structure(list(
                  list(
-                   type = "module",
                    name = "moduleA",
                    calling_modules = c("childModule1Server",
                                        "childModule2Server"),
                    src = NULL
                  ),
                  list(
-                   type = "module",
                    name = "moduleB",
                    calling_modules = "someModule",
                    src = NULL
                  ),
                  list(
-                   type = "module",
                    name = "emptyModuleFunction",
                    calling_modules = NULL,
                    src = NULL
                  ),
                  list(
-                   type = "module",
                    name = "moduleWithoutAnyCallingModules",
                    calling_modules = NULL,
                    src = NULL
