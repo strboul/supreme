@@ -80,40 +80,8 @@ just design the specific parts of applications. Planning ahead with model tool c
 really be beneficial before going wild on implementation.
 
 ```{r, echo=FALSE, results='asis'}
-model <- "
-- type: module
-  name: server
-  calling_modules: 
-    - items_tab_module_server
-    - customers_tab_module_server:
-      - customers_tab_ui
-    - transactions_tab_module_server
-    
-- type: module
-  name: items_tab_module_server
-  input: 
-    - items_list
-    - is_fired
-  src: inventory
-  
-- type: module
-  name: customers_tab_module_server
-  input: customers_list
-  output: 
-    - paid_customers_table
-    - free_customers_table
-  src: sales
-    
-- type: module
-  name: transactions_tab_module_server
-  input: 
-    - table
-    - button_clicked
-  output: transactions_table
-  return: transactions_keys
-  src: sales
-"
-cat(sprintf("```yaml%s```\n", model))
+model <- paste(readLines(file.path("tests", "testthat", "yaml-test", "example-model.yaml")), collapse = "\n")
+cat(sprintf("```yaml\n%s```\n", model))
 ```
 
 ```{r}

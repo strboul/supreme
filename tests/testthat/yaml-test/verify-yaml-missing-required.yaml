@@ -1,2 +1,1 @@
-- type: module
-  input: [data, trigger.btn]
+- input: [data, trigger.btn]

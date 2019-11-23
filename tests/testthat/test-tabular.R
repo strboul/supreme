@@ -2,7 +2,7 @@
 context("test-tabular")
 
 test_that("supreme_to_df", {
-  file <- file.path("yaml-test", "example-model-1.yaml")
+  file <- file.path("yaml-test", "example-model.yaml")
   obj <- src_yaml(file)
   ## look the first two rows as it's too long..
   expect_equal(head(supreme_to_df(obj), 2L),

@@ -1,5 +1,5 @@
-- type: module
-  name: childModuleA
-  input: [input.data, reactive]
+- name: too deep
   calling_modules:
-    - moduleName: A
+    - depth1:
+      - depth2:
+        - depth3

@@ -31,7 +31,7 @@ src_file <- function(x) {
 #'
 #' @examples \dontrun{
 #' ## Read from file:
-#' file <- file.path("yaml-test", "example-model-1.yaml")
+#' file <- file.path("yaml-test", "example-model.yaml")
 #' src_yaml(file)
 #'
 #' ## Read from text object:
@@ -234,28 +234,45 @@ print.src_env <- function(x, ...) {
 #' @return returns (invisibly) true if everything is fine.
 #' @noRd
 .verify_yaml <- function(x) {
+
   if (!is_list(x)) {
     ncstopf("cannot verify object with a class of: '%s'", class(x))
   }
+
   if (!is.null(names(x))) {
     ncstopf("malformed YAML model")
   }
-  required <- getOption("SUPREME_MODEL_REQUIRED_FIELDS")
-  optional <- getOption("SUPREME_MODEL_OPTIONAL_FIELDS")
+
+  .verify_yaml_check_list_depth(x)
+
+  .verify_yaml_check_names_and_missing(x)
+
+  invisible(TRUE)
+}
+
+.verify_yaml_check_list_depth <- function(x) {
   for (xi in seq_along(x)) {
-    nst <- vapply(seq_along(x[[xi]]), function(zi) {
-      is_list(x[[xi]][[zi]])
-    }, logical(1))
-    anst <- any(nst)
-    if (anst) {
-      ncstopf(paste(
-        "model YAML cannot contain sub-list in",
-        paste0("'", xi, "'"),
-        "element:", paste("'", names(x[[xi]])[nst], "'", sep = "", collapse = ", ")
-      ))
+    for (yi in seq_along(x[[xi]])) {
+      current <- x[[xi]][yi]
+      current_key <- names(current)
+      current_value <- current[[1L]]
+      res <- if (identical(current_key, "calling_modules")) {
+        any(vapply(current_value, function(val) vapply(val, is_list, logical(1)), logical(1)))
+      } else {
+        is_list(current_value)
+      }
+      if (res) {
+        ncstopf("model YAML cannot contain too depth lists in '%s'", current_key)
+      }
     }
-    anst
   }
+}
+
+.verify_yaml_check_names_and_missing <- function(
+  x,
+  required = getOption("SUPREME_MODEL_REQUIRED_FIELDS"),
+  optional = getOption("SUPREME_MODEL_OPTIONAL_FIELDS")) {
+
   for (i in seq_along(x)) {
     elem <- x[[i]]
     required.names <- required %in% names(elem)
@@ -280,7 +297,6 @@ print.src_env <- function(x, ...) {
       )
     }
   }
-  invisible(TRUE)
 }
 
 
