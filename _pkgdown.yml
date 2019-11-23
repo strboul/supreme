@@ -5,7 +5,6 @@ reference:
   - '`as.data.frame.supreme`'
   - '`example_app_path`'
   - '`example_environment`'
-  - '`example_package`'
   - '`graph`'
   - '`src_env`'
   - '`src_expr`'

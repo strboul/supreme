@@ -10,5 +10,12 @@ graph(x)
 \item{x}{a \code{supreme} object.}
 }
 \description{
-Make a graph of modules
+The call graph creates a UML like graph of your Shiny application.
+}
+\examples{
+\dontrun{
+path <- example_app_path()
+supr <- supreme(src_file(path))
+graph(supr)
+}
 }
