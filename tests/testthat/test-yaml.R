@@ -3,11 +3,10 @@ context("test-yaml")
 
 test_that("can verify yaml files", {
 
-  ex1 <- yaml::yaml.load_file(file.path("yaml-test", "example-model-1.yaml"))
+  ex1 <- yaml::yaml.load_file(file.path("yaml-test", "example-model.yaml"))
   expect_true(.verify_yaml(ex1))
 
   miss <- yaml::yaml.load_file(file.path("yaml-test", "verify-yaml-missing-required.yaml"))
-
   expect_error(
     .verify_yaml(miss),
     regexp = "required fields are missing in '1' element: 'name'"
@@ -19,87 +18,73 @@ test_that("can verify yaml files", {
     regexp = "the following names not required or optional: 'foreign_input'"
   )
 
-  sub <- yaml::yaml.load_file(file.path("yaml-test", "verify-yaml-sublist.yaml"))
+  sublist <- yaml::yaml.load_file(file.path("yaml-test", "verify-yaml-sublist.yaml"))
   expect_error(
-    .verify_yaml(sub),
-    regexp = "model YAML cannot contain sub-list in '1' element: 'calling_modules'"
+    .verify_yaml(sublist),
+    regexp = "model YAML cannot contain too depth lists in 'calling_modules'"
   )
 
 })
 
 test_that("can source yaml files", {
 
-  example.file <- file.path("yaml-test", "example-model-1.yaml")
+  example_model <- file.path("yaml-test", "example-model.yaml")
 
-  expect_equal(src_yaml(example.file),
+  expect_equal(src_yaml(example_model),
                structure(list(
                  list(
-                   type = "module",
                    name = "server",
-                   calling_modules = c("childModuleA",
-                                       "childModuleB")
+                   calling_modules = list(
+                     list(items_tab_module_server = "items_tab_ui"),
+                     list(customers_tab_module_server = "customers_tab_ui"),
+                     list(transactions_tab_module_server = "transactions_tab_ui")
+                   )
                  ),
                  list(
-                   type = "module",
-                   name = "childModuleA",
-                   input = c("input.data", "reactive"),
-                   calling_modules = "grandChildModule1"
-                 ),
-                 list(type = "module", name = "childModuleB", input = "selected.model"),
-                 list(
-                   type = "module",
-                   name = "grandChildModule1",
-                   input = c("data",
-                             "trigger.btn"),
-                   calling_modules = "reusableModuleLoading"
+                   name = "items_tab_module_server",
+                   input = c("items_list",
+                             "is_fired"),
+                   src = "inventory"
                  ),
                  list(
-                   type = "module",
-                   name = "grandChildModule2",
-                   input = c("data",
-                             "trigger.btn"),
-                   calling_modules = "reusableModuleLoading"
+                   name = "customers_tab_module_server",
+                   input = "customers_list",
+                   output = c("paid_customers_table",
+                              "free_customers_table"),
+                   src = "sales"
                  ),
                  list(
-                   type = "module",
-                   name = "reusableModuleLoading",
-                   input = "data",
-                   calling_modules = NULL
-                 ),
-                 list(
-                   type = "module",
-                   name = "orphanModule",
-                   input = NULL,
-                   calling_modules = NULL
+                   name = "transactions_tab_module_server",
+                   input = c("table", "button_clicked"),
+                   output = "transactions_table",
+                   return = "transactions_keys",
+                   src = "sales"
                  )
-               ), class = c("src_obj", "src_yaml")))
+               ), class = c("src_obj",
+                            "src_yaml")))
 
-  model <- "
-  - type: module
-    name: childModuleA
+  str_model <- "
+  - name: childModuleA
     input: [input.data, reactive]
-    calling_modules: grandChildModule1
-  - type: module
-    name: childModuleB
-    input: selected.model
+    calling_modules:
+      - grandChildModule1:
+        - grandChildModule1UI
   "
 
-  expect_equal(src_yaml(text = model),
+  expect_equal(src_yaml(text = str_model),
                structure(list(
                  list(
-                   type = "module",
                    name = "childModuleA",
                    input = c("input.data",
                              "reactive"),
-                   calling_modules = "grandChildModule1"
-                 ),
-                 list(type = "module",
-                      name = "childModuleB", input = "selected.model")
-               ), class = c("src_obj", "src_yaml")))
+                   calling_modules = list(list(grandChildModule1 = "grandChildModule1UI"))
+                 )
+               ), class = c("src_obj",
+                            "src_yaml")))
 
 
   expect_error(
-    src_yaml(file = example.file, text = model),
+    src_yaml(file = example_model, text = str_model),
     regexp = "Provide a file or text, not both."
   )
 
@@ -108,32 +93,28 @@ test_that("can source yaml files", {
     regexp = "Provide a file or text."
   )
 
-  model.src <- "
-  - type: module
-    name: server
+  test_src_unique_file_paths <- "
+  - name: server
     calling_modules: [table, button]
     src: folder/proj/app.R
-  - type: module
-    name: table
+  - name: table
     src: folder/proj/sub-module/table.R
-  - type: module
-    name: button
+  - name: button
     src: folder/proj/sub-module/app.R
   "
 
-  expect_equal(src_yaml(text = model.src),
+  expect_equal(src_yaml(text = test_src_unique_file_paths),
                structure(list(
                  list(
-                   type = "module",
                    name = "server",
                    calling_modules = c("table",
                                        "button"),
                    src = "folder/proj/app.R"
                  ),
-                 list(type = "module",
-                      name = "table", src = "folder/proj/sub-module/table.R"),
-                 list(type = "module", name = "button", src = "folder/proj/sub-module/app.R")
-               ), class = c("src_obj", "src_yaml")))
+                 list(name = "table", src = "folder/proj/sub-module/table.R"),
+                 list(name = "button", src = "folder/proj/sub-module/app.R")
+               ), class = c("src_obj",
+                            "src_yaml")))
 
 })
 

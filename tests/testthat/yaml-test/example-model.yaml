@@ -1,0 +1,30 @@
+- name: server
+  calling_modules:
+    - items_tab_module_server:
+      - items_tab_ui
+    - customers_tab_module_server:
+      - customers_tab_ui
+    - transactions_tab_module_server:
+      - transactions_tab_ui
+
+- name: items_tab_module_server
+  input:
+    - items_list
+    - is_fired
+  src: inventory
+
+- name: customers_tab_module_server
+  input: customers_list
+  output:
+    - paid_customers_table
+    - free_customers_table
+  src: sales
+
+- name: transactions_tab_module_server
+  input:
+    - table
+    - button_clicked
+  output: transactions_table
+  return: transactions_keys
+  src: sales
+
