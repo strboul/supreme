@@ -15,7 +15,6 @@ supreme(src_env(env))
 }
 \seealso{
 Other source examples: \code{\link{example_app_path}},
-  \code{\link{example_expression}},
-  \code{\link{example_package}}
+  \code{\link{example_expression}}
 }
 \concept{source examples}

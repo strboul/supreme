@@ -12,8 +12,7 @@ License: MIT + file LICENSE
 Imports:
     utils,
     yaml,
-    nomnoml,
-    devtools
+    nomnoml
 Suggests: 
     testthat,
     shiny,

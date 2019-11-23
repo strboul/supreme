@@ -22,70 +22,6 @@ example_app_path <- function(file = NULL) {
   }
 }
 
-#' Get package to `supreme` example
-#'
-#' @description
-#' This function asks user to install the example *supreme* package only if the
-#' package is not found in any of the known directories.
-#'
-#' @param pkg a list contains name (*package name*) and path (*GitHub path*) fields.
-#'   For the example purposes, the default value is `supreme.pkg.test`.
-#' @details
-#' This supreme example helper function `example_package()` contains an R package named
-#' `supreme.pkg.test` placed in this link:
-#' \url{https://github.com/strboul/supreme.pkg.test}
-#'
-#' This function uses
-#' [devtools::install_github] call to clone, build and install the package.
-#' @examples \dontrun{
-#' pkg <- example_package()
-#' supreme(src_pkg(pkg))
-#' }
-#' @importFrom devtools install_github
-#' @family source examples
-#' @export
-example_package <- function(pkg = list(name = "supreme.pkg.test",
-                                       path = "strboul/supreme.pkg.test")) {
-
-  ## check 'pkg' arg. fields:
-  if (!all(c("name", "path") %in% names(pkg))) {
-    ncstopf("Specify all fields in the example package.")
-  }
-
-  if (!is_package_exist(pkg$name)) {
-    answer <- if (interactive()) {
-      menu(
-        choices = c("Yes", "No"),
-        title = paste(
-          "\n",
-          paste0(
-            "The test package '",
-            pkg$name,
-            "' not found in the system."),
-          "Do you want to install it to run the tests?",
-          "",
-          paste0(
-            "The package placed under the repository: '",
-            paste0("https://github.com/", pkg$path),
-            "'"
-          ),
-          sep = "\n"
-        )
-      )
-    } else {
-      1L
-    }
-    if (identical(answer, 1L)) {
-      devtools::install_github(pkg$path)
-    }
-  }
-
-  if (is_package_exist(pkg$name)) {
-    pkg$name
-  } else {
-    ncstopf("Cannot find the package '%s' in the system.", pkg$name)
-  }
-}
 
 #' Get environment to `supreme` example
 #'
@@ -130,6 +66,7 @@ example_environment <- function() {
   })
   environment(e)
 }
+
 
 #' Get expression to `supreme` example
 #'
