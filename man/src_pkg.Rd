@@ -12,6 +12,9 @@ src_pkg(x)
 \description{
 The package should contain some Shiny application.
 }
+\details{
+The function coerces input to be a character.
+}
 \seealso{
 Other source functions: \code{\link{src_env}},
   \code{\link{src_expr}}, \code{\link{src_file}},

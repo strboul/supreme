@@ -17,7 +17,7 @@ Reads an object or a file in YAML format and returns a model YAML object.
 \examples{
 \dontrun{
 ## Read from file:
-file <- file.path("yaml-test", "example-model-1.yaml")
+file <- file.path("yaml-test", "example-model.yaml")
 src_yaml(file)
 
 ## Read from text object:
