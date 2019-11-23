@@ -10,8 +10,7 @@ test_that("supreme with source yaml", {
 
 test_that("supreme print methods", {
   model1 <- '
-  - type: module
-    name: displayImages
+  - name: displayImages
   '
   s1 <- supreme(src_yaml(text = model1))
   expect_equal(
@@ -19,11 +18,9 @@ test_that("supreme print methods", {
     "A supreme model object 1 entity: displayImages "
   )
   model2 <- '
-  - type: module
-    name: displayImages
+  - name: displayImages
 
-  - type: module
-    name: checkInbox
+  - name: checkInbox
   '
   s2 <- supreme(src_yaml(text = model2))
   expect_equal(

@@ -36,13 +36,11 @@ src_file <- function(x) {
 #'
 #' ## Read from text object:
 #' model <- "
-#' - type: module
-#'   name: childModuleA
+#' - name: childModuleA
 #'   input: [input.data, reactive]
 #'   calling_modules: grandChildModule1
 #'
-#' - type: module
-#'   name: childModuleB
+#' - name: childModuleB
 #'   input: selected.model
 #' "
 #' src_yaml(text = model)
