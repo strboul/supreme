@@ -12,7 +12,7 @@ find_block <- function(x, bname) {
         if (is_left_assign_sym(x[[i]][[1]])) {
           if (is.symbol(x[[i]][[2]])) {
             if (x[[i]][[2]] == bname) {
-              res[[length(res)+1]] <- x[[i]][[3]]
+              res[[length(res) + 1]] <- x[[i]][[3]]
             }
           }
         }
@@ -57,15 +57,15 @@ find_block_calling_modules <- function(x) {
         } else if (is_left_assign_sym(x[[1]])) {
           Recall(x[[3]])
         } else if (is_expr_sym(x[[1]])) {
-          if (!length(x) > 1) {
+          if (!length(x) > 1L) {
             return(NULL)
           }
           for (i in seq(2L, length(x))) {
             if (is.call(x[[i]])) {
               if (is_callModule_sym(x[[i]][[1]])) {
-                mod.names <- names(x[[i]])
-                mod.names.inds <- if (!is.null(mod.names)) {
-                  module <- which(mod.names == "module")
+                mod_names <- names(x[[i]])
+                mod_names_inds <- if (!is.null(mod_names)) {
+                  module <- which(mod_names == "module")
                   if (!length(module) == 0L) {
                     module
                   } else {
@@ -74,7 +74,7 @@ find_block_calling_modules <- function(x) {
                 } else {
                   2L
                 }
-                res[[length(res)+1]] <<- as.character(x[[i]][[mod.names.inds]])
+                res[[length(res) + 1L]] <<- as.character(x[[i]][[mod_names_inds]])
               } else {
                 if (is.call(x[[i]])) {
                   Recall(x[[i]])
@@ -85,9 +85,9 @@ find_block_calling_modules <- function(x) {
             }
           }
         } else if (is_callModule_sym(x[[1]])) {
-          mod.names <- names(x)
-          mod.names.inds <- if (!is.null(mod.names)) {
-            module <- which(mod.names == "module")
+          mod_names <- names(x)
+          mod_names_inds <- if (!is.null(mod_names)) {
+            module <- which(mod_names == "module")
             if (!length(module) == 0L) {
               module
             } else {
@@ -96,7 +96,7 @@ find_block_calling_modules <- function(x) {
           } else {
             2L
           }
-          res[[length(res)+1]] <<- as.character(x[[mod.names.inds]])
+          res[[length(res) + 1L]] <<- as.character(x[[mod_names_inds]])
         } else {
           if (length(x) >= 2) {
             if (is.call(x[[2]])) {
