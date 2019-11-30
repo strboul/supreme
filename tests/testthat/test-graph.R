@@ -16,6 +16,7 @@ test_that("graph_create_general_directives", {
   expect_error(graph_create_general_directives(NULL))
 })
 
+
 test_that("graph_generate_custom_classifier", {
   {
     set.seed(1234)
@@ -41,6 +42,7 @@ test_that("graph_generate_custom_classifier", {
   )
 })
 
+
 test_that("graph_create_node", {
   x <- list(
     list(
@@ -57,18 +59,23 @@ test_that("graph_create_node", {
     cls <- graph_generate_custom_classifier(x[[1]][["name"]])$classifier
     node <- graph_create_node(x[[1]], classifier = cls)
     expect_equal(
-      node,
-      "[<childmoduleayjemqlsiwnahcgo>childModuleA|• input.data;• reactive|• output1;• output2|\"ret\"|• grandChildModule1]"
+      unlist(strsplit(node, "\\|")),
+      c("[<childmoduleayjemqlsiwnahcgo> childModuleA ",
+        " • input.data;• reactive ",
+        " • output1;• output2 ",
+        " \"ret\" ",
+        "  \n <grandChildModule1>]")
     )
   }
   ## with some missing fields:
   y <- list(list(name = "childModuleB", input = "data"))
   node_incomplete <- graph_create_node(y[[1]])
   expect_equal(
-    node_incomplete,
-    "[childModuleB|• data|||]"
+    unlist(strsplit(node_incomplete, "\\|")),
+    c("[ childModuleB ", " • data]")
   )
 })
+
 
 test_that("graph_create_edge", {
   x <- list(
@@ -85,7 +92,7 @@ test_that("graph_create_edge", {
       calling_modules = NULL
     )
   )
-  expect_equal(graph_create_edge(x[[1]]), "[childModuleA]->[grandChildModule1]")
+  expect_equal(graph_create_edge(x[[1]]), "[childModuleA]->[NULL]")
   expect_null(graph_create_edge(x[[2]]))
 })
 

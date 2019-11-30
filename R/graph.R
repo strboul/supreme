@@ -1,4 +1,8 @@
 
+### ----------------------------------------------------------------- ###
+### GRAPH UTILS ----
+### ----------------------------------------------------------------- ###
+
 
 #' @examples
 #' (dir <- graph_create_general_directives(
@@ -17,25 +21,6 @@ graph_create_general_directives <- function(directives) {
   out
 }
 
-#' @examples
-#' graph_sanitize_classifier_name("my_great_MoDule123_21")
-#' @noRd
-graph_sanitize_classifier_name <- function(name, random.str.len = 15L) {
-  stopifnot(identical(length(name), 1L))
-  sanitized <- local({
-    no.digits <- gsub("[[:digit:]]+", "", name)
-    no.underscore <- gsub("\\_+", "", no.digits)
-    no.capital <- tolower(no.underscore)
-    no.dot <- gsub("\\.+", "", no.capital)
-    no.dot
-  })
-  random <- paste(sample(letters, random.str.len), collapse = "")
-  add.random <- paste0(sanitized, random)
-  list(
-    original = name,
-    result = add.random
-  )
-}
 
 #' @examples
 #' graph_generate_custom_classifier("my_great_MoDule123_21")
@@ -54,7 +39,7 @@ graph_generate_custom_classifier <- function(classifier.name, styles = NULL) {
       st[[1L]]
     }
   }, character(1))
-  sanitized.name <- graph_sanitize_classifier_name(classifier.name)
+  sanitized.name <- .graph_classifier_sanitize_name(classifier.name)
   out <- paste0("#.", sanitized.name$result, ": ", paste(list.styles, collapse = " "))
   list(
     original = classifier.name,
@@ -63,58 +48,88 @@ graph_generate_custom_classifier <- function(classifier.name, styles = NULL) {
   )
 }
 
+
+.graph_classifier_sanitize_name <- function(name, random_str_len = 15L) {
+  stopifnot(identical(length(name), 1L))
+  sanitized <- local({
+    no_digits <- gsub("[[:digit:]]+", "", name)
+    no_underscore <- gsub("\\_+", "", no_digits)
+    no_capital <- tolower(no_underscore)
+    no_dot <- gsub("\\.+", "", no_capital)
+    no_dot
+  })
+  random <- paste(sample(letters, random_str_len), collapse = "")
+  add_random <- paste0(sanitized, random)
+  list(
+    original = name,
+    result = add_random
+  )
+}
+
+
 ### ----------------------------------------------------------------- ###
-### CREATE METHODS ----
+### CREATE NODE ----
 ### ----------------------------------------------------------------- ###
 
-#' @examples
-#' x <- list(list(name = "childModuleA",
-#' input = c("input.data", "reactive"), output = c("output1", "output2"),
-#' return = "ret", calling_modules = "grandChildModule1"))
-#' (node <- graph_create_node(x[[1]]))
-#'
-#' ## create a node with a classifier:
-#' cls <- graph_generate_custom_classifier(x[[1]][["name"]])$classifier
-#' (node_cls <- graph_create_node(x[[1]], classifier = cls))
-#'
-#' ## with some missing fields:
-#' y <- list(list(name = "childModuleB", input = "data"))
-#' graph_create_node(y[[1]])
-#' @noRd
 graph_create_node <- function(x, classifier = NULL) {
+
   if (!(is.null(classifier) && !is.character(classifier))) {
     classifier <- as.character(classifier)
   }
-  .create_multi_vars_field <- function(e, add.bullet = TRUE, add.quote = FALSE) {
-    if (!is.null(e)) {
-      if (add.bullet) e <- paste("•", e)
-      if (add.quote) e <- paste0("\"", e, "\"")
-      paste(e, collapse= ";")
-    } else {
-      ""
-    }
-  }
-  .create_calling_modules_field <- function(e) {
-    # TODO
-  }
-  Name <- x[["name"]]
-  Classifier <- if (!is.null(classifier)) paste0("<", classifier, ">") else ""
-  Inputs <- .create_multi_vars_field(x[["input"]])
-  Outputs <- .create_multi_vars_field(x[["output"]])
-  Returns <- .create_multi_vars_field(x[["return"]],
-                                      add.bullet = FALSE,
-                                      add.quote = TRUE)
-  CallingModules <- .create_multi_vars_field(x[["calling_modules"]])
-  name_classifier <- paste0(Classifier, Name)
-  paste0("[",
-         paste(name_classifier,
-               Inputs,
-               Outputs,
-               Returns,
-               CallingModules,
-               sep = "|"),
-         "]")
+
+  node <- list()
+  node$identifier <- paste(
+    if (!is.null(classifier)) paste0("<", classifier, ">") else "",
+    x[["name"]]
+  )
+
+  node$input <- .node_create_multi_vars_field(x[["input"]])
+  node$output <- .node_create_multi_vars_field(x[["output"]])
+  node$return <- .node_create_multi_vars_field(
+    x[["return"]],
+    bullet = FALSE,
+    quote = TRUE
+  )
+
+  node$calling_modules <- .node_create_calling_modules_field(x[["calling_modules"]])
+
+  .node_generate_string_node(node)
 }
+
+
+#' @param empty_to_null change empty strings to `NULL`.
+#' @noRd
+.node_generate_string_node <- function(node, empty_to_null = TRUE) {
+  if (empty_to_null) node[node == ""] <- NULL
+  nd_sep <- do.call(function(...) paste(..., sep = " | "), node)
+  paste0("[", nd_sep, "]")
+}
+
+
+.node_create_calling_modules_field <- function(calling_modules) {
+  vapply(calling_modules, function(cm) {
+    server_module <- names(cm)
+    ui_module <- unlist(cm, use.names = FALSE)
+    paste(
+      server_module, "\n",
+      paste0("<", ui_module, ">")
+    )
+  }, character(1)) -> out
+  paste(out, collapse = ";")
+}
+
+
+.node_create_multi_vars_field <- function(e, bullet = TRUE, quote = FALSE) {
+  bullet_sym <- "\u2022"
+  if (!is.null(e)) {
+    if (bullet) e <- paste(bullet_sym, e)
+    if (quote) e <- paste0("\"", e, "\"")
+    paste(e, collapse= ";")
+  } else {
+    ""
+  }
+}
+
 
 #' @examples
 #' x <- list(list(name = "childModuleA",
@@ -126,19 +141,25 @@ graph_create_node <- function(x, classifier = NULL) {
 #' graph_create_edge(x[[2]])
 #' @noRd
 graph_create_edge <- function(x) {
-  if (is.null(x[["calling_modules"]])) {
-    return(NULL)
-  }
-  out <- paste(
+  if (is.null(x[["calling_modules"]])) return(NULL)
+  edge <- list()
+  edge$name <- x[["name"]]
+  edge$calling_modules <- sapply(x[["calling_modules"]], names)
+  .edge_generate_string_edge(edge)
+}
+
+
+.edge_generate_string_edge <- function(edge) {
+  paste(
     paste0(
-      "[", x[["name"]], "]",
+      "[", edge$name, "]",
       "->",
-      "[", x[["calling_modules"]], "]"
+      "[", edge$calling_modules, "]"
     ),
     collapse = "\n"
   )
-  out
 }
+
 
 #' @examples
 #' x <- list(list(name = "childModuleA",
@@ -154,14 +175,17 @@ graph_create_edge <- function(x) {
 #' @noRd
 graph_construct <- function(x) {
   sub_body <- do.call(pasten, lapply(seq_along(x), function(i) {
+
     custom_classifier <- graph_generate_custom_classifier(
       x[[i]][["name"]],
       styles = list("align" = "center", "bold"))
+
     if (identical(custom_classifier$original, x[[i]][["name"]])) {
       custom_classifier_name <- custom_classifier$classifier
     } else {
       ncstopf("something really went wrong", internal = TRUE)
     }
+
     paste(
       custom_classifier$classifier.str,
       graph_create_node(x[[i]], classifier = custom_classifier_name),
@@ -183,12 +207,14 @@ graph_construct <- function(x) {
   structure(out, class = "graph_construct")
 }
 
+
 #' @importFrom nomnoml nomnoml
 #' @noRd
 graph_render <- function(construct) {
   stopifnot(inherits(construct, "graph_construct"))
   nomnoml::nomnoml(construct)
 }
+
 
 #' Make a graph of modules
 #'
