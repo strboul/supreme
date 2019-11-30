@@ -1,5 +1,0 @@
-- name: too deep
-  calling_modules:
-    - depth1:
-      - depth2:
-        - depth3

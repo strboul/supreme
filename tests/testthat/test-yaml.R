@@ -1,34 +1,64 @@
 
 context("test-yaml")
 
-test_that("can verify yaml files", {
+test_that("verify_yaml", {
 
-  ex1 <- yaml::yaml.load_file(file.path("yaml-test", "example-model.yaml"))
-  expect_true(.verify_yaml(ex1))
+  ## first, check if example file is ok:
+  ex <- yaml::yaml.load_file("example-model.yaml")
+  expect_true(.verify_yaml(ex))
 
-  miss <- yaml::yaml.load_file(file.path("yaml-test", "verify-yaml-missing-required.yaml"))
+  missing <- "
+  - input: [data, trigger.btn]
+  "
+  missing_yaml <- yaml::yaml.load(missing)
   expect_error(
-    .verify_yaml(miss),
-    regexp = "required fields are missing in '1' element: 'name'"
+    .verify_yaml(missing_yaml),
+    regexp = "[supreme] 'name' field(s) required for every element",
+    fixed = TRUE
   )
 
-  foreign <- yaml::yaml.load_file(file.path("yaml-test", "verify-yaml-foreign.yaml"))
+  alien <- "
+  - name: grandChildModule
+    alien_field: 1
+  "
+  alien_yaml <- yaml::yaml.load(alien)
   expect_error(
-    .verify_yaml(foreign),
-    regexp = "the following names not required or optional: 'foreign_input'"
+    .verify_yaml(alien_yaml),
+    regexp = "[supreme] following name(s) not required or optional: 'alien_field'",
+    fixed = TRUE
   )
 
-  sublist <- yaml::yaml.load_file(file.path("yaml-test", "verify-yaml-sublist.yaml"))
+  deep <- "
+  - name: too deep
+    calling_modules:
+      - depth1:
+        - depth2:
+          - depth3
+  "
+  deep_yaml <- yaml::yaml.load(deep)
   expect_error(
-    .verify_yaml(sublist),
-    regexp = "model YAML cannot contain too depth lists in 'calling_modules'"
+    .verify_yaml(deep_yaml),
+    regexp = "[supreme] model YAML cannot contain too depth lists in 'calling_modules'",
+    fixed = TRUE
+  )
+
+  cm <- "
+  - name: childModuleA
+    calling_modules: grandChildModule1
+  "
+  cm_yaml <- yaml::yaml.load(cm)
+  expect_error(
+    .verify_yaml(cm_yaml),
+    regexp = "[supreme] 'calling_modules' field must have a UI part, a proper name or NULL (~)",
+    fixed = TRUE
   )
 
 })
 
-test_that("can source yaml files", {
 
-  example_model <- file.path("yaml-test", "example-model.yaml")
+test_that("src_yaml", {
+
+  example_model <- "example-model.yaml"
 
   expect_equal(src_yaml(example_model),
                structure(list(
@@ -44,7 +74,8 @@ test_that("can source yaml files", {
                    name = "items_tab_module_server",
                    input = c("items_list",
                              "is_fired"),
-                   src = "inventory"
+                   src = "inventory",
+                   calling_modules = list(list(module_modal_dialog = NULL))
                  ),
                  list(
                    name = "customers_tab_module_server",
@@ -85,17 +116,18 @@ test_that("can source yaml files", {
 
   expect_error(
     src_yaml(file = example_model, text = str_model),
-    regexp = "Provide a file or text, not both."
+    regexp = "[supreme] Provide a file or text, not both.",
+    fixed = TRUE
   )
 
   expect_error(
     src_yaml(),
-    regexp = "Provide a file or text."
+    regexp = "[supreme] Provide a file or text.",
+    fixed = TRUE
   )
 
   test_src_unique_file_paths <- "
   - name: server
-    calling_modules: [table, button]
     src: folder/proj/app.R
   - name: table
     src: folder/proj/sub-module/table.R
@@ -105,12 +137,7 @@ test_that("can source yaml files", {
 
   expect_equal(src_yaml(text = test_src_unique_file_paths),
                structure(list(
-                 list(
-                   name = "server",
-                   calling_modules = c("table",
-                                       "button"),
-                   src = "folder/proj/app.R"
-                 ),
+                 list(name = "server", src = "folder/proj/app.R"),
                  list(name = "table", src = "folder/proj/sub-module/table.R"),
                  list(name = "button", src = "folder/proj/sub-module/app.R")
                ), class = c("src_obj",

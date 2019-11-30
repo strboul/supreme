@@ -1,17 +1,16 @@
 - name: server
   calling_modules:
-    - items_tab_module_server:
-      - items_tab_ui
-    - customers_tab_module_server:
-      - customers_tab_ui
-    - transactions_tab_module_server:
-      - transactions_tab_ui
+    - items_tab_module_server: items_tab_ui
+    - customers_tab_module_server: customers_tab_ui
+    - transactions_tab_module_server: transactions_tab_ui
 
 - name: items_tab_module_server
   input:
     - items_list
     - is_fired
   src: inventory
+  calling_modules:
+    - module_modal_dialog: ~
 
 - name: customers_tab_module_server
   input: customers_list

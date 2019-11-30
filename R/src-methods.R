@@ -29,22 +29,24 @@ src_file <- function(x) {
 #' @param file file path to a YAML file.
 #' @param text a YAML formatted character string.
 #'
-#' @examples \dontrun{
+#' @examples
+#'
+#' \dontrun{
 #' ## Read from file:
-#' file <- file.path("yaml-test", "example-model.yaml")
+#' file <- file.path("path", "to", "model.yaml")
 #' src_yaml(file)
+#' }
 #'
 #' ## Read from text object:
 #' model <- "
 #' - name: childModuleA
 #'   input: [input.data, reactive]
-#'   calling_modules: grandChildModule1
+#'   src: package
 #'
 #' - name: childModuleB
 #'   input: selected.model
 #' "
 #' src_yaml(text = model)
-#' }
 #' @importFrom yaml yaml.load_file yaml.load
 #' @family source functions
 #' @export
@@ -213,92 +215,6 @@ print.src_env <- function(x, ...) {
 }
 
 
-#' Verify YAML object for supreme
-#'
-#' The loaded YAML model can be verified against the structure of an supreme
-#' object model. The errors catched during the parsing of YAML file will be handled
-#' by the *yaml* package.
-#'
-#' @param x a list (YAML) object.
-#'
-#' @details
-#'
-#' + Checks whether YAML object contains sub-lists
-#'
-#' + Checks whether YAML object does miss some or all required fields
-#'
-#' + Checks whether YAML object contains any other field not existing in either
-#' required or optional fields
-#'
-#' @return returns (invisibly) true if everything is fine.
-#' @noRd
-.verify_yaml <- function(x) {
-
-  if (!is_list(x)) {
-    ncstopf("cannot verify object with a class of: '%s'", class(x))
-  }
-
-  if (!is.null(names(x))) {
-    ncstopf("malformed YAML model")
-  }
-
-  .verify_yaml_check_list_depth(x)
-
-  .verify_yaml_check_names_and_missing(x)
-
-  invisible(TRUE)
-}
-
-.verify_yaml_check_list_depth <- function(x) {
-  for (xi in seq_along(x)) {
-    for (yi in seq_along(x[[xi]])) {
-      current <- x[[xi]][yi]
-      current_key <- names(current)
-      current_value <- current[[1L]]
-      res <- if (identical(current_key, "calling_modules")) {
-        any(vapply(current_value, function(val) vapply(val, is_list, logical(1)), logical(1)))
-      } else {
-        is_list(current_value)
-      }
-      if (res) {
-        ncstopf("model YAML cannot contain too depth lists in '%s'", current_key)
-      }
-    }
-  }
-}
-
-.verify_yaml_check_names_and_missing <- function(
-  x,
-  required = getOption("SUPREME_MODEL_REQUIRED_FIELDS"),
-  optional = getOption("SUPREME_MODEL_OPTIONAL_FIELDS")) {
-
-  for (i in seq_along(x)) {
-    elem <- x[[i]]
-    required.names <- required %in% names(elem)
-    if (!all(required.names)) {
-      ncstopf(
-        paste(
-          "required fields are missing in",
-          paste0("'", i,"'"),
-          "element:",
-          paste("'", required[!required.names], "'", sep = "", collapse = ", ")
-        )
-      )
-    }
-    all.names <- c(required, optional)
-    req.opt.names <- names(elem) %in% all.names
-    if (!all(req.opt.names)) {
-      ncstopf(
-        paste(
-          "the following names not required or optional:",
-          paste("'", names(elem)[!req.opt.names], "'", sep = "", collapse = ", ")
-        )
-      )
-    }
-  }
-}
-
-
 #' Make module entities from file paths
 #'
 #' @param x file paths.
@@ -368,5 +284,109 @@ print.src_env <- function(x, ...) {
   exprs <- as.call(c(as.name("{"), exprs))
   exprs <- as.expression(exprs)
   exprs
+}
+
+### ----------------------------------------------------------------- ###
+### VERIFY YAML ----
+### ----------------------------------------------------------------- ###
+
+#' Verify YAML object for supreme
+#'
+#' The loaded YAML model can be verified against the structure of an supreme
+#' object model. The errors catched during the parsing of YAML file will be handled
+#' by the *yaml* package.
+#'
+#' @param x a list (YAML) object.
+#'
+#' @details
+#'
+#' + Checks whether YAML object contains sub-lists
+#'
+#' + Checks whether YAML object does miss some or all required fields
+#'
+#' + Checks whether YAML object contains any other field not existing in either
+#' required or optional fields
+#'
+#' @return returns (invisibly) true if everything is fine.
+#' @noRd
+.verify_yaml <- function(x) {
+
+  if (!is_list(x)) {
+    ncstopf("cannot verify object with a class of: '%s'", class(x))
+  }
+
+  if (!is.null(names(x))) {
+    ncstopf("malformed YAML model")
+  }
+
+  for (element in x) {
+    .verify_yaml_check_names_and_missing(element)
+    .verify_yaml_check_field_depth(element)
+  }
+
+  invisible(TRUE)
+}
+
+
+.verify_yaml_check_names_and_missing <- function(
+  x,
+  required = getOption("SUPREME_MODEL_REQUIRED_FIELDS"),
+  optional = getOption("SUPREME_MODEL_OPTIONAL_FIELDS")) {
+
+  required.names <- required %in% names(x)
+  if (!all(required.names)) {
+    ncstopf(
+      "%s field(s) required for every element",
+      paste("'", required[!required.names], "'", sep = "", collapse = ", ")
+    )
+  }
+  all.names <- c(required, optional)
+  req.opt.names <- names(x) %in% all.names
+  if (!all(req.opt.names)) {
+    ncstopf(
+      paste(
+        "following name(s) not required or optional:",
+        paste("'", names(x)[!req.opt.names], "'", sep = "", collapse = ", ")
+      )
+    )
+  }
+}
+
+#' Also checks the calling_modules field that if it is formed properly
+#' A proper formation is that:
+#' - a module item is put as a sublist of calling_modules field and the module ends
+#' with a colon
+#' @noRd
+.verify_yaml_check_field_depth <- function(x) {
+  for (xi in seq_along(x)) {
+
+    current <- x[xi]
+    current_key <- names(current)
+    current_value <- current[[1L]]
+
+    ## calling modules field treated differently:
+    if (identical(current_key, "calling_modules")) {
+      must_list <- any(vapply(current_value, is_list, logical(1)))
+      if (!must_list) {
+        ncstopf(
+          "'%s' field must have a UI part, a proper name or NULL (~)",
+          current_key
+        )
+      }
+      too_depth <- any(vapply(current_value, function(val) {
+        vapply(val, is_list, logical(1))
+      }, logical(1)))
+      if (too_depth) {
+        ncstopf("model YAML cannot contain too depth lists in '%s'", current_key)
+      }
+    } else {
+      ## the rest of the fields:
+      res <- is_list(current_value)
+      if (res) {
+        ncstopf("model YAML cannot contain too depth lists in '%s'", current_key)
+      }
+    }
+
+  }
 }
 
