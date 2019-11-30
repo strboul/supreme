@@ -84,11 +84,11 @@ NULL
 #' @noRd
 is_shiny_server_component <- function(x) {
   if (is.language(x) || is.function(x)) {
-    fun.formals <- find_formals(x)
+    fun_formals <- find_formals(x)
   } else {
     return(FALSE)
   }
-  shiny.compulsory.formals <- c("input", "output", "session")
-  all(shiny.compulsory.formals %in% fun.formals)
+  shiny_compulsory_formals <- c("input", "output", "session")
+  all(shiny_compulsory_formals %in% fun_formals)
 }
 

@@ -23,7 +23,8 @@ ui <- fluidPage(
               tabPanel(title = "About",
                        value = "AboutTab",
                        br(),
-                       "This is a purely fictional corporation."
+                       paste("This is a purely fictional corporation.",
+                             "All the data displayed here is totally fake.")
               )
   )
 )

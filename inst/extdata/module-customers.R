@@ -9,7 +9,7 @@ customers_tab_module_ui <- function(id) {
 
 customers_tab_module_server <- function(input, output, session) {
 
-  customers.data <- reactive({
+  customers_data <- reactive({
     read.table(
       file = file.path("data", "example_customers.csv"),
       sep = ",",
@@ -20,7 +20,7 @@ customers_tab_module_server <- function(input, output, session) {
   callModule(
     main_table_server,
     "customers_tbl",
-    customers.data
+    customers_data
   )
 }
 

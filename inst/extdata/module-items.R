@@ -13,7 +13,7 @@ items_tab_module_ui <- function(id) {
 
 items_tab_module_server <- function(input, output, session) {
 
-  items.data <- reactive({
+  items_data <- reactive({
     read.table(
       file = file.path("data", "example_items.csv"),
       sep = ",",
@@ -24,18 +24,18 @@ items_tab_module_server <- function(input, output, session) {
   tbl <- callModule(
     main_table_server,
     "items_tbl",
-    items.data,
-    tbl.pageLength = 5L,
-    tbl.selection = "multiple"
+    items_data,
+    tbl_pageLength = 5L,
+    tbl_selection = "multiple"
   )
 
-  items.selected.row.inds <- reactive({ tbl$selected })
+  items_selected_row_inds <- reactive({ tbl$selected })
 
   callModule(
     items_plot_server,
     "items_plot",
-    data = items.data,
-    selected.items = items.selected.row.inds
+    data = items_data,
+    selected_items = items_selected_row_inds
   )
 
 }
@@ -47,12 +47,12 @@ items_plot_ui <- function(id) {
   )
 }
 
-items_plot_server <- function(input, output, session, data, selected.items) {
+items_plot_server <- function(input, output, session, data, selected_items) {
   output$plot <- renderPlot({
     ggplot(data(), aes(list_price, quantity)) +
       geom_point(colour = "blue") +
-      geom_point(data = data()[selected.items(), ], aes(list_price, quantity), colour = "red", size = 4L) +
-      facet_wrap(~ category) +
+      geom_point(data = data()[selected_items(), ], aes(list_price, quantity), colour = "red", size = 4L) +
+      facet_wrap( ~ category) +
       theme_minimal()
   })
 }

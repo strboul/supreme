@@ -319,9 +319,9 @@ print.src_env <- function(x, ...) {
     ncstopf("malformed YAML model")
   }
 
-  for (element in x) {
-    .verify_yaml_check_names_and_missing(element)
-    .verify_yaml_check_field_depth(element)
+  for (entity in x) {
+    .verify_yaml_check_names_and_missing(entity)
+    .verify_yaml_check_field_depth(entity)
   }
 
   invisible(TRUE)
