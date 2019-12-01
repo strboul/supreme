@@ -67,6 +67,27 @@ graph_generate_custom_classifier <- function(classifier.name, styles = NULL) {
 }
 
 
+#' This creates a comment in the graph body that may be helpful for debugging.
+#' @noRd
+create_graph_comment <- function(comment) {
+  stopifnot(is.character(comment))
+  paste("//", comment)
+}
+
+
+#' Center the field names displayed in the nodes. An invisible unicode character is
+#' used as a hidden quote because nomnoml only display spaces if they are between the
+#' character strings, otherwise the leading and trailing whitespaces are trimmed.
+#' @noRd
+centre_graph_strings <- function(x, quotes = "\u2063") {
+  if (is.null(x)) return(x)
+  if (!length(x) > 0) return(NULL)
+  stopifnot(is.character(x))
+  centred <- format(x, justify = "centre")
+  paste(quotes, centred, quotes)
+}
+
+
 ### ----------------------------------------------------------------- ###
 ### CREATE NODE ----
 ### ----------------------------------------------------------------- ###
@@ -85,11 +106,9 @@ graph_create_node <- function(x, classifier = NULL) {
 
   node$input <- .node_create_multi_vars_field(x[["input"]])
   node$output <- .node_create_multi_vars_field(x[["output"]])
-  node$return <- .node_create_multi_vars_field(
-    x[["return"]],
-    bullet = FALSE,
-    quote = TRUE
-  )
+
+  node$return <- .node_create_single_vars_field(x[["return"]])
+  # TODO src
 
   node$calling_modules <- .node_create_calling_modules_field(x[["calling_modules"]])
 
@@ -106,16 +125,26 @@ graph_create_node <- function(x, classifier = NULL) {
 }
 
 
-.node_create_calling_modules_field <- function(calling_modules) {
-  vapply(calling_modules, function(cm) {
+.node_create_calling_modules_field <- function(calling_modules, centre = TRUE) {
+  as.vector(vapply(calling_modules, function(cm) {
     server_module <- names(cm)
-    ui_module <- unlist(cm, use.names = FALSE)
-    paste(
-      server_module, "\n",
-      paste0("<", ui_module, ">")
-    )
-  }, character(1)) -> out
+    ui_module <- paste0("<", unlist(cm, use.names = FALSE), ">")
+    c(server_module, ui_module)
+  }, character(2))) -> out
+  if (centre) {
+    out <- centre_graph_strings(out)
+  }
   paste(out, collapse = ";")
+}
+
+
+.node_create_single_vars_field <- function(e, quote = TRUE) {
+  if (!is.null(e)) {
+    if (quote) e <- paste0("\"", e, "\"")
+    e
+  } else {
+    ""
+  }
 }
 
 
@@ -131,15 +160,6 @@ graph_create_node <- function(x, classifier = NULL) {
 }
 
 
-#' @examples
-#' x <- list(list(name = "childModuleA",
-#' input = c("input.data", "reactive"), output = c("tbl1", "tbl2"),
-#' return = "ret", calling_modules = "grandChildModule1"),
-#' list(name = "childModuleB", input = NULL,
-#' calling_modules = NULL))
-#' graph_create_edge(x[[1]])
-#' graph_create_edge(x[[2]])
-#' @noRd
 graph_create_edge <- function(x) {
   if (is.null(x[["calling_modules"]])) return(NULL)
   edge <- list()
@@ -161,18 +181,6 @@ graph_create_edge <- function(x) {
 }
 
 
-#' @examples
-#' x <- list(list(name = "childModuleA",
-#' input = c("input.data", "reactive"), output = c("output1", "output2"),
-#' return = "ret", calling_modules = "grandChildModule1"))
-#' (cons <- graph_construct(x))
-#' cat(cons, "\n")
-#'
-#' y <- list(list(name = "childModuleA", input = c("input.data",
-#' "reactive"), calling_modules = "grandChildModule1"), list(name
-#' = "childModuleB", input = NULL, calling_modules = NULL))
-#' graph_construct(y)
-#' @noRd
 graph_construct <- function(x) {
   sub_body <- do.call(pasten, lapply(seq_along(x), function(i) {
 
@@ -186,17 +194,23 @@ graph_construct <- function(x) {
       ncstopf("something really went wrong", internal = TRUE)
     }
 
+    node_comment <- paste(paste(rep("=", 8), collapse = ""),
+                          custom_classifier$original,
+                          paste(rep("=", 8), collapse = ""))
     paste(
+      create_graph_comment(node_comment),
       custom_classifier$classifier.str,
       graph_create_node(x[[i]], classifier = custom_classifier_name),
       graph_create_edge(x[[i]]),
+      "\n",
       sep = "\n"
     )
   }))
   body <- list(
     graph_create_general_directives(list(
       direction = "down",
-      font = "Arial",
+      font = "Courier New",
+      arrowSize = 0.5,
       fontSize = 11,
       padding = 8
     )),
