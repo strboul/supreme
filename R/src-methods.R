@@ -18,7 +18,7 @@ src_file <- function(x) {
     ncstopf("cannot read file: %s", conditionMessage(e)))
   obj <- .make_module_entities_from_paths(x)
   out <- entity_constructor(obj)
-  structure(out, class = c("src_obj", "src_file"))
+  structure(out, class = c("supreme_src_obj", "supreme_src_file"))
 }
 
 
@@ -76,7 +76,7 @@ src_yaml <- function(file = NULL, text = NULL) {
     }
   }
   .verify_yaml(obj)
-  structure(obj, class = c("src_obj", "src_yaml"))
+  structure(obj, class = c("supreme_src_obj", "supreme_src_yaml"))
 }
 
 
@@ -91,7 +91,7 @@ src_expr <- function(x) {
   }
   obj <- .make_module_entities_from_expression(x)
   out <- entity_constructor(obj)
-  structure(out, class = c("src_obj", "src_expr"))
+  structure(out, class = c("supreme_src_obj", "supreme_src_expr"))
 }
 
 
@@ -111,7 +111,7 @@ src_pkg <- function(x) {
   }
   obj <- .make_src_pkg(x)
   out <- entity_constructor(obj)
-  structure(out, class = c("src_obj", "src_pkg"))
+  structure(out, class = c("supreme_src_obj", "supreme_src_pkg"))
 }
 
 
@@ -126,41 +126,21 @@ src_env <- function(x) {
   }
   obj <- .make_src_env(x)
   out <- entity_constructor(obj)
-  structure(out, class = c("src_obj", "src_env"))
-}
-
-
-### ----------------------------------------------------------------- ###
-### S3 PRINTS ----
-### ----------------------------------------------------------------- ###
-
-#' @export
-print.src_file <- function(x, ...) {
-  cat("Model file object", "\n")
+  structure(out, class = c("supreme_src_obj", "supreme_src_env"))
 }
 
 
 #' @export
-print.src_yaml <- function(x, ...) {
-  cat("Model yaml object", "\n")
-}
-
-
-#' @export
-print.src_expr <- function(x, ...) {
-  cat("Model expression object", "\n")
-}
-
-
-#' @export
-print.src_pkg <- function(x, ...) {
-  cat("Model package object", "\n")
-}
-
-
-#' @export
-print.src_env <- function(x, ...) {
-  cat("Model environment object", "\n")
+print.src_obj <- function(x, ...) {
+  cls <- setdiff(class(x), "supreme_src_obj")
+  switch (cls,
+    "src_file" = "file",
+    "src_yaml" = "yaml",
+    "src_expr" = "expression",
+    "src_pkg" = "package",
+    "src_env" = "environment"
+  ) -> type
+  cat("Model", type, "object", "\n")
 }
 
 
@@ -211,7 +191,7 @@ print.src_env <- function(x, ...) {
     body <- .read_srcfile(path)
     list(body = body, src = src)
   })
-  structure(out, class = "module_entities")
+  structure(out, class = "supreme_module_entities")
 }
 
 
@@ -221,7 +201,7 @@ print.src_env <- function(x, ...) {
 #' @noRd
 .make_module_entities_from_expression <- function(x) {
   out <- list(list(body = x, src = NULL))
-  structure(out, class = "module_entities")
+  structure(out, class = "supreme_module_entities")
 }
 
 
@@ -238,7 +218,7 @@ print.src_env <- function(x, ...) {
   stopifnot(length(utils::packageName(asNamespace(pkg.name))) > 0L)
   entities <- .make_module_entities_from_environment(ns)
   out <- list(list(body = entities, src = paste("package", pkg.name, sep = ":")))
-  structure(out, class = "module_entities")
+  structure(out, class = "supreme_module_entities")
 }
 
 
@@ -249,7 +229,7 @@ print.src_env <- function(x, ...) {
   stopifnot(is.environment(envir))
   entities <- .make_module_entities_from_environment(envir)
   out <- list(list(body = entities, src = "expression"))
-  structure(out, class = "module_entities")
+  structure(out, class = "supreme_module_entities")
 }
 
 

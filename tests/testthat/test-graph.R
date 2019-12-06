@@ -1,6 +1,21 @@
 
 context("test-graph")
 
+test_that("graph test", {
+  expect_s3_class(
+    graph(supreme(src_file(example_app_path()))),
+    c("nomnoml", "htmlwidget")
+  )
+  expect_s3_class(
+    graph(supreme(src_expr(example_expression()))),
+    c("nomnoml", "htmlwidget")
+  )
+  expect_s3_class(
+    graph(supreme(src_env(example_environment()))),
+    c("nomnoml", "htmlwidget")
+  )
+})
+
 test_that("graph_create_general_directives", {
   expect_equal(
     graph_create_general_directives(list(
@@ -44,29 +59,34 @@ test_that("graph_generate_custom_classifier", {
 
 
 test_that("graph_create_node", {
+
   x <- list(
     list(
       name = "childModuleA",
       input = c("input.data", "reactive"),
       output = c("output1", "output2"),
       return = "ret",
-      calling_modules = "grandChildModule1"
+      calling_modules = list(
+        list("grandChildModule1Server" = "grandChildModule1UI"),
+        list("grandChildModule2Server" = "grandChildModule2UI")
+      )
     )
   )
+
   ## create a node with a classifier:
-  {
-    set.seed(2019)
-    cls <- graph_generate_custom_classifier(x[[1]][["name"]])$classifier
-    node <- graph_create_node(x[[1]], classifier = cls)
-    expect_equal(
-      unlist(strsplit(node, "\\|")),
-      c("[<childmoduleayjemqlsiwnahcgo> childModuleA ",
-        " • input.data;• reactive ",
-        " • output1;• output2 ",
-        " \"ret\" ",
-        "  \n <grandChildModule1>]")
-    )
-  }
+  set.seed(2019)
+  cls <- graph_generate_custom_classifier(x[[1]][["name"]])[["classifier"]]
+  ## disable 'centre' because it breaks the text output:
+  node <- graph_create_node(x[[1]], classifier = cls, centre = FALSE)
+  expect_equal(
+    unlist(strsplit(node, "\\|")),
+    c("[<childmoduleayjemqlsiwnahcgo> childModuleA ",
+      " • input.data;• reactive ",
+      " • output1;• output2 ",
+      " \"ret\" ",
+      " grandChildModule1Server;<grandChildModule1UI>;grandChildModule2Server;<grandChildModule2UI>]")
+  )
+
   ## with some missing fields:
   y <- list(list(name = "childModuleB", input = "data"))
   node_incomplete <- graph_create_node(y[[1]])
@@ -74,6 +94,7 @@ test_that("graph_create_node", {
     unlist(strsplit(node_incomplete, "\\|")),
     c("[ childModuleB ", " • data]")
   )
+
 })
 
 
