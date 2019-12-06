@@ -52,6 +52,6 @@ is_supreme <- function(x) {
 }
 
 is_source_object <- function(x) {
-  inherits(x, "src_obj")
+  inherits(x, "supreme_src_obj")
 }
 

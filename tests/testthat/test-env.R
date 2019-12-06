@@ -35,7 +35,7 @@ test_that("can read environment objects", {
                      src = "expression"
                    )
                  ),
-                 class = c("src_obj", "src_env")
+                 class = c("supreme_src_obj", "supreme_src_env")
                ))
 
 })

@@ -91,8 +91,8 @@ test_that("src_yaml", {
                    return = "transactions_keys",
                    src = "sales"
                  )
-               ), class = c("src_obj",
-                            "src_yaml")))
+               ), class = c("supreme_src_obj",
+                            "supreme_src_yaml")))
 
   str_model <- "
   - name: childModuleA
@@ -110,8 +110,8 @@ test_that("src_yaml", {
                              "reactive"),
                    calling_modules = list(list(grandChildModule1 = "grandChildModule1UI"))
                  )
-               ), class = c("src_obj",
-                            "src_yaml")))
+               ), class = c("supreme_src_obj",
+                            "supreme_src_yaml")))
 
 
   expect_error(
@@ -140,8 +140,8 @@ test_that("src_yaml", {
                  list(name = "server", src = "folder/proj/app.R"),
                  list(name = "table", src = "folder/proj/sub-module/table.R"),
                  list(name = "button", src = "folder/proj/sub-module/app.R")
-               ), class = c("src_obj",
-                            "src_yaml")))
+               ), class = c("supreme_src_obj",
+                            "supreme_src_yaml")))
 
 })
 

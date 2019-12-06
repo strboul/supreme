@@ -92,7 +92,7 @@ centre_graph_strings <- function(x, quotes = "\u2063") {
 ### CREATE NODE ----
 ### ----------------------------------------------------------------- ###
 
-graph_create_node <- function(x, classifier = NULL) {
+graph_create_node <- function(x, classifier = NULL, centre = TRUE) {
 
   if (!(is.null(classifier) && !is.character(classifier))) {
     classifier <- as.character(classifier)
@@ -108,9 +108,11 @@ graph_create_node <- function(x, classifier = NULL) {
   node$output <- .node_create_multi_vars_field(x[["output"]])
 
   node$return <- .node_create_single_vars_field(x[["return"]])
-  # TODO src
 
-  node$calling_modules <- .node_create_calling_modules_field(x[["calling_modules"]])
+  node$calling_modules <- .node_create_calling_modules_field(
+    calling_modules = x[["calling_modules"]],
+    centre = centre
+  )
 
   .node_generate_string_node(node)
 }
@@ -218,14 +220,14 @@ graph_construct <- function(x) {
     sub_body
   )
   out <- do.call(pastenc, body)
-  structure(out, class = "graph_construct")
+  structure(out, class = "supreme_graph_construct")
 }
 
 
 #' @importFrom nomnoml nomnoml
 #' @noRd
 graph_render <- function(construct) {
-  stopifnot(inherits(construct, "graph_construct"))
+  stopifnot(inherits(construct, "supreme_graph_construct"))
   nomnoml::nomnoml(construct)
 }
 
