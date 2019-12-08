@@ -9,12 +9,17 @@ example_environment()
 \description{
 Get environment to \code{supreme} example
 }
+\details{
+Please note that all examples give the same output.
+}
 \examples{
 env <- example_environment()
 supreme(src_env(env))
 }
 \seealso{
-Other source examples: \code{\link{example_app_path}},
-  \code{\link{example_expression}}
+Other source examples: 
+\code{\link{example_app_path}()},
+\code{\link{example_expression}()},
+\code{\link{example_yaml}()}
 }
 \concept{source examples}

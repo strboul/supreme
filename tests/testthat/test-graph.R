@@ -59,7 +59,6 @@ test_that("graph_generate_custom_classifier", {
 
 
 test_that("graph_create_node", {
-
   x <- list(
     list(
       name = "childModuleA",
@@ -72,7 +71,6 @@ test_that("graph_create_node", {
       )
     )
   )
-
   ## create a node with a classifier:
   set.seed(2019)
   cls <- graph_generate_custom_classifier(x[[1]][["name"]])[["classifier"]]
@@ -80,11 +78,9 @@ test_that("graph_create_node", {
   node <- graph_create_node(x[[1]], classifier = cls, centre = FALSE)
   expect_equal(
     unlist(strsplit(node, "\\|")),
-    c("[<childmoduleayjemqlsiwnahcgo> childModuleA ",
-      " • input.data;• reactive ",
-      " • output1;• output2 ",
-      " \"ret\" ",
-      " grandChildModule1Server;<grandChildModule1UI>;grandChildModule2Server;<grandChildModule2UI>]")
+    c("[<childmoduleayjemqlsiwnahcgo> childModuleA ", " ▹ input.data;▹ reactive ",
+      " ○ output1;○ output2 ", " ◻ \"ret\" ", " grandChildModule1Server;<grandChildModule1UI>;grandChildModule2Server;<grandChildModule2UI>]"
+    )
   )
 
   ## with some missing fields:
@@ -92,7 +88,7 @@ test_that("graph_create_node", {
   node_incomplete <- graph_create_node(y[[1]])
   expect_equal(
     unlist(strsplit(node_incomplete, "\\|")),
-    c("[ childModuleB ", " • data]")
+    c("[ childModuleB ", " ▹ data]")
   )
 
 })

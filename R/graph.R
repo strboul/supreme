@@ -3,7 +3,6 @@
 ### GRAPH UTILS ----
 ### ----------------------------------------------------------------- ###
 
-
 #' @examples
 #' (dir <- graph_create_general_directives(
 #' list(direction = "down", font = "Arial", fontSize = 11, padding = 8)
@@ -104,10 +103,10 @@ graph_create_node <- function(x, classifier = NULL, centre = TRUE) {
     x[["name"]]
   )
 
-  node$input <- .node_create_multi_vars_field(x[["input"]])
-  node$output <- .node_create_multi_vars_field(x[["output"]])
+  node$input <- .node_create_multi_vars_field(x[["input"]], bullet = "triangular")
+  node$output <- .node_create_multi_vars_field(x[["output"]], bullet = "circle")
 
-  node$return <- .node_create_single_vars_field(x[["return"]])
+  node$return <- .node_create_single_var_field(x[["return"]], bullet = "square")
 
   node$calling_modules <- .node_create_calling_modules_field(
     calling_modules = x[["calling_modules"]],
@@ -140,9 +139,11 @@ graph_create_node <- function(x, classifier = NULL, centre = TRUE) {
 }
 
 
-.node_create_single_vars_field <- function(e, quote = TRUE) {
+.node_create_single_var_field <- function(e, bullet, quote = TRUE) {
+  bullet_sym <- getOption("SUPREME_GRAPH_BULLET_SYMBOLS")[[bullet]]
   if (!is.null(e)) {
     if (quote) e <- paste0("\"", e, "\"")
+    e <- paste(bullet_sym, e)
     e
   } else {
     ""
@@ -150,11 +151,11 @@ graph_create_node <- function(x, classifier = NULL, centre = TRUE) {
 }
 
 
-.node_create_multi_vars_field <- function(e, bullet = TRUE, quote = FALSE) {
-  bullet_sym <- "\u2022"
+.node_create_multi_vars_field <- function(e, bullet, quote = FALSE) {
+  bullet_sym <- getOption("SUPREME_GRAPH_BULLET_SYMBOLS")[[bullet]]
   if (!is.null(e)) {
-    if (bullet) e <- paste(bullet_sym, e)
     if (quote) e <- paste0("\"", e, "\"")
+    e <- paste(bullet_sym, e)
     paste(e, collapse= ";")
   } else {
     ""

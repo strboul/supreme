@@ -15,14 +15,11 @@ src_yaml(file = NULL, text = NULL)
 Reads an object or a file in YAML format and returns a model YAML object.
 }
 \examples{
-
-\dontrun{
-## Read from file:
-file <- file.path("path", "to", "model.yaml")
+## Read from a file:
+path <- example_yaml()
 src_yaml(file)
-}
 
-## Read from text object:
+## Read from an (text) object:
 model <- "
 - name: childModuleA
   input: [input.data, reactive]
@@ -34,8 +31,10 @@ model <- "
 src_yaml(text = model)
 }
 \seealso{
-Other source functions: \code{\link{src_env}},
-  \code{\link{src_expr}}, \code{\link{src_file}},
-  \code{\link{src_pkg}}
+Other source functions: 
+\code{\link{src_env}()},
+\code{\link{src_expr}()},
+\code{\link{src_file}()},
+\code{\link{src_pkg}()}
 }
 \concept{source functions}

@@ -30,14 +30,11 @@ src_file <- function(x) {
 #' @param text a YAML formatted character string.
 #'
 #' @examples
-#'
-#' \dontrun{
-#' ## Read from file:
-#' file <- file.path("path", "to", "model.yaml")
+#' ## Read from a file:
+#' path <- example_yaml()
 #' src_yaml(file)
-#' }
 #'
-#' ## Read from text object:
+#' ## Read from an (text) object:
 #' model <- "
 #' - name: childModuleA
 #'   input: [input.data, reactive]
@@ -129,17 +126,18 @@ src_env <- function(x) {
   structure(out, class = c("supreme_src_obj", "supreme_src_env"))
 }
 
-
 #' @export
-print.src_obj <- function(x, ...) {
+print.supreme_src_obj <- function(x, ...) {
   cls <- setdiff(class(x), "supreme_src_obj")
   switch (cls,
-    "src_file" = "file",
-    "src_yaml" = "yaml",
-    "src_expr" = "expression",
-    "src_pkg" = "package",
-    "src_env" = "environment"
+    "supreme_src_file" = "file",
+    "supreme_src_yaml" = "yaml",
+    "supreme_src_expr" = "expression",
+    "supreme_src_env" = "environment",
+    "supreme_src_pkg" = "package",
+    NULL
   ) -> type
+  stopifnot(!is.null(type))
   cat("Model", type, "object", "\n")
 }
 
@@ -228,7 +226,7 @@ print.src_obj <- function(x, ...) {
 .make_src_env <- function(envir) {
   stopifnot(is.environment(envir))
   entities <- .make_module_entities_from_environment(envir)
-  out <- list(list(body = entities, src = "expression"))
+  out <- list(list(body = entities, src = NULL))
   structure(out, class = "supreme_module_entities")
 }
 

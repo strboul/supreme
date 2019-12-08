@@ -13,8 +13,10 @@ src_expr(x)
 Read \R expressions
 }
 \seealso{
-Other source functions: \code{\link{src_env}},
-  \code{\link{src_file}}, \code{\link{src_pkg}},
-  \code{\link{src_yaml}}
+Other source functions: 
+\code{\link{src_env}()},
+\code{\link{src_file}()},
+\code{\link{src_pkg}()},
+\code{\link{src_yaml}()}
 }
 \concept{source functions}
