@@ -2,7 +2,7 @@
 context("test-supreme")
 
 test_that("supreme with source yaml", {
-  yaml_path <- "example-model.yaml"
+  yaml_path <- example_yaml()
   yaml <- src_yaml(yaml_path)
   supr <- supreme(yaml)
   expect_equal(supr$source_input, c("supreme_src_obj", "supreme_src_yaml"))

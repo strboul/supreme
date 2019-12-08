@@ -4,7 +4,7 @@ context("test-yaml")
 test_that("verify_yaml", {
 
   ## first, check if example file is ok:
-  ex <- yaml::yaml.load_file("example-model.yaml")
+  ex <- yaml::yaml.load_file(example_yaml())
   expect_true(.verify_yaml(ex))
 
   missing <- "
@@ -58,41 +58,47 @@ test_that("verify_yaml", {
 
 test_that("src_yaml", {
 
-  example_model <- "example-model.yaml"
+  example_model <- example_yaml()
 
   expect_equal(src_yaml(example_model),
-               structure(list(
+               structure(
                  list(
-                   name = "server",
-                   calling_modules = list(
-                     list(items_tab_module_server = "items_tab_ui"),
-                     list(customers_tab_module_server = "customers_tab_ui"),
-                     list(transactions_tab_module_server = "transactions_tab_ui")
-                   )
+                   list(
+                     name = "server",
+                     calling_modules = list(
+                       list(items_tab_module_server = "ItemsTab"),
+                       list(customers_tab_module_server = "CustomersTab"),
+                       list(transactions_tab_module_server = "TransactionsTab")
+                     ),
+                     src = "app.R"
+                   ),
+                   list(
+                     name = "customers_tab_module_server",
+                     input = "customers_list",
+                     output = c("paid_customers_table",
+                                "free_customers_table"),
+                     src = "module-customers.R"
+                   ),
+                   list(
+                     name = "items_tab_module_server",
+                     input = c("items_list",
+                               "is_fired"),
+                     calling_modules = list(list(module_modal_dialog = NULL)),
+                     src = "module-items.R"
+                   ),
+                   list(
+                     name = "transactions_tab_module_server",
+                     input = c("table", "button_clicked"),
+                     output = "transactions_table",
+                     return = "transactions_keys",
+                     src = "module-transactions.R"
+                   ),
+                   list(name = "module_modal_dialog", input = "text", src = "module-utils.R")
                  ),
-                 list(
-                   name = "items_tab_module_server",
-                   input = c("items_list",
-                             "is_fired"),
-                   src = "inventory",
-                   calling_modules = list(list(module_modal_dialog = NULL))
-                 ),
-                 list(
-                   name = "customers_tab_module_server",
-                   input = "customers_list",
-                   output = c("paid_customers_table",
-                              "free_customers_table"),
-                   src = "sales"
-                 ),
-                 list(
-                   name = "transactions_tab_module_server",
-                   input = c("table", "button_clicked"),
-                   output = "transactions_table",
-                   return = "transactions_keys",
-                   src = "sales"
-                 )
-               ), class = c("supreme_src_obj",
-                            "supreme_src_yaml")))
+                 class = c("supreme_src_obj",
+                           "supreme_src_yaml")
+               ))
+
 
   str_model <- "
   - name: childModuleA
@@ -113,6 +119,13 @@ test_that("src_yaml", {
                ), class = c("supreme_src_obj",
                             "supreme_src_yaml")))
 
+  a_long_model <- "
+
+  "
+
+})
+
+test_that("src_yaml errors", {
 
   expect_error(
     src_yaml(file = example_model, text = str_model),
@@ -126,6 +139,10 @@ test_that("src_yaml", {
     fixed = TRUE
   )
 
+})
+
+test_that("src_yaml (unique src paths)", {
+
   test_src_unique_file_paths <- "
   - name: server
     src: folder/proj/app.R
@@ -136,12 +153,15 @@ test_that("src_yaml", {
   "
 
   expect_equal(src_yaml(text = test_src_unique_file_paths),
-               structure(list(
-                 list(name = "server", src = "folder/proj/app.R"),
-                 list(name = "table", src = "folder/proj/sub-module/table.R"),
-                 list(name = "button", src = "folder/proj/sub-module/app.R")
-               ), class = c("supreme_src_obj",
-                            "supreme_src_yaml")))
+               structure(
+                 list(
+                   list(name = "server", src = "folder/proj/app.R"),
+                   list(name = "table", src = "folder/proj/sub-module/table.R"),
+                   list(name = "button", src = "folder/proj/sub-module/app.R")
+                 ),
+                 class = c("supreme_src_obj",
+                           "supreme_src_yaml")
+               ))
 
 })
 

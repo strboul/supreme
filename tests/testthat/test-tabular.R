@@ -1,9 +1,8 @@
 
 context("test-tabular")
 
-test_that("supreme_to_df", {
-  yaml_model <- src_yaml("example-model.yaml")
-  expect_equal(supreme_to_df(yaml_model),
+test_that("as.data.frame with src_yaml", {
+  expect_equal(as.data.frame(supreme(src_yaml(example_yaml()))),
                structure(
                  list(
                    name = c(
