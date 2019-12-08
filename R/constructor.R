@@ -1,15 +1,13 @@
 
-#' Constructor call for entities
+#' The main constructor call for all `module entities`
 #'
 #' Parse language objects from `module entities`.
 #'
-#' @param x a list keeping module entities.
+#' @param x a list storing module entities.
 #'
 #' @noRd
 entity_constructor <- function(x) {
-  if (!is_module_entities(x)) {
-    ncstopf("input not module entities, instead: '%s'", class(x), internal = TRUE)
-  }
+  stopifnot(is_module_entities(x))
   res <- list()
   for (i in seq_along(x)) {
     entity <- x[[i]]
@@ -17,14 +15,30 @@ entity_constructor <- function(x) {
     entity_body <- entity[["body"]][[1]]
     which_components <- which(sapply(entity_body, is_shiny_server_component))
     for (c in which_components) {
-      f_body <- entity_body[[c]]
-      name <- find_block_assignment_name(f_body)
-      calling_modules <- find_block_calling_modules(f_body)
-      out <- list(
-        name = name,
-        calling_modules = calling_modules,
-        src = src
-      )
+
+      fun_block <- entity_body[[c]]
+
+      name <- find_block_assignment_name(fun_block)
+      # TODO input <-, output <-, return etc.
+      calling_modules <- find_block_calling_modules(fun_block)
+
+      ## FIXME: workaround until adding ui to calling_modules:
+      wa_calling_modules <- lapply(calling_modules, function(x) {
+        elem <- list(NULL)
+        names(elem) <- x
+        elem
+      })
+
+      ## add fields:
+      out <- list(name = name)
+      if (length(calling_modules) > 0) {
+        out <- c(out, list(calling_modules = wa_calling_modules))
+      }
+      if (length(src) > 0) {
+        out <- c(out, list(src = src))
+      }
+
+      ## assign to result:
       res[[length(res) + 1L]] <- out
     }
   }
@@ -32,10 +46,6 @@ entity_constructor <- function(x) {
 }
 
 is_module_entities <- function(x) {
-  if (is_list(x) && inherits(x, "module_entities")) {
-    TRUE
-  } else {
-    FALSE
-  }
+  is_list(x) && inherits(x, "supreme_module_entities")
 }
 
