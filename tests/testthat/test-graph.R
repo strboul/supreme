@@ -1,9 +1,13 @@
 
 context("test-graph")
 
-test_that("graph test", {
+test_that("graph s3 class test", {
   expect_s3_class(
     graph(supreme(src_file(example_app_path()))),
+    c("nomnoml", "htmlwidget")
+  )
+  expect_s3_class(
+    graph(supreme(src_yaml(example_yaml()))),
     c("nomnoml", "htmlwidget")
   )
   expect_s3_class(
@@ -14,6 +18,16 @@ test_that("graph test", {
     graph(supreme(src_env(example_environment()))),
     c("nomnoml", "htmlwidget")
   )
+})
+
+test_that("graph test", {
+
+  expect_error(
+    graph(supreme(src_yaml(example_yaml())), fields = c("input", "output", "none", "mone")),
+    regexp = "[supreme] unknown fields supplied: \"none\", \"mone\"",
+    fixed = TRUE
+  )
+
 })
 
 test_that("graph_create_general_directives", {
