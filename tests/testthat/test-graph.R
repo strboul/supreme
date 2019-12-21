@@ -131,6 +131,7 @@ test_that("graph_create_edge", {
 test_that("test graph styles", {
 
   sp <- supreme(src_yaml(example_yaml()))
+
   expect_s3_class(
     graph(sp, styles = list(
       "server" = list(fill = "#ff0", "underline", "bold"),
@@ -141,13 +142,47 @@ test_that("test graph styles", {
 
   expect_error(
     graph(sp, styles = list("xx")),
+    regexp = "[supreme] `styles` must be a \"named list\" object",
+    fixed = TRUE
+  )
+
+  expect_error(
+    graph(sp, styles = list(server = "xx")),
     regexp = "[supreme] objects inside the `styles` argument must be a list, see the element: 1",
     fixed = TRUE
   )
 
   expect_error(
-    graph(sp, styles = list("a_non_existing_module" = list("dashed"))),
+    graph(sp, styles = list(a_non_existing_module = list("dashed"))),
     regexp = "[supreme] module names specified in `styles` cannot be found: \"a_non_existing_module\"",
+    fixed = TRUE
+  )
+
+})
+
+
+test_that("test graph options", {
+
+  sp <- supreme(src_yaml(example_yaml()))
+
+  expect_s3_class(
+    graph(sp, options = list(
+      direction = "right",
+      fontSize = 10,
+      title = "Model application"
+    )),
+    c("nomnoml", "htmlwidget")
+  )
+
+  ## non default overriding options:
+  expect_s3_class(
+    graph(sp, options = list(bendSize = 5)),
+    c("nomnoml", "htmlwidget")
+  )
+
+  expect_error(
+    graph(sp, options = list(1)),
+    regexp = "[supreme] `options` must be a \"named list\" object",
     fixed = TRUE
   )
 
