@@ -24,7 +24,7 @@ test_that("graph test", {
 
   expect_error(
     graph(supreme(src_yaml(example_yaml())), fields = c("input", "output", "none", "mone")),
-    regexp = "[supreme] unknown fields supplied: \"none\", \"mone\"",
+    regexp = "[supreme] unknown `fields` supplied: \"none\", \"mone\"",
     fixed = TRUE
   )
 
@@ -125,5 +125,31 @@ test_that("graph_create_edge", {
   )
   expect_equal(graph_create_edge(x[[1]]), "[childModuleA]->[NULL]")
   expect_null(graph_create_edge(x[[2]]))
+})
+
+
+test_that("test graph styles", {
+
+  sp <- supreme(src_yaml(example_yaml()))
+  expect_s3_class(
+    graph(sp, styles = list(
+      "server" = list(fill = "#ff0", "underline", "bold"),
+      "module_modal_dialog" = list(fill = "lightblue", "dashed", visual = "note")
+    )),
+    c("nomnoml", "htmlwidget")
+  )
+
+  expect_error(
+    graph(sp, styles = list("xx")),
+    regexp = "[supreme] objects inside the `styles` argument must be a list, see the element: 1",
+    fixed = TRUE
+  )
+
+  expect_error(
+    graph(sp, styles = list("a_non_existing_module" = list("dashed"))),
+    regexp = "[supreme] module names specified in `styles` cannot be found: \"a_non_existing_module\"",
+    fixed = TRUE
+  )
+
 })
 
