@@ -3,6 +3,7 @@
 ### GRAPH UTILS ----
 ### ----------------------------------------------------------------- ###
 
+
 #' @examples
 #' (dir <- graph_create_general_directives(
 #' list(direction = "down", font = "Arial", fontSize = 11, padding = 8)
@@ -98,6 +99,7 @@ centre_graph_strings <- function(x, quotes = "\u2063") {
 ### ----------------------------------------------------------------- ###
 ### CREATE NODE ----
 ### ----------------------------------------------------------------- ###
+
 
 graph_create_node <- function(x, classifier = NULL, centre = TRUE) {
 
@@ -195,38 +197,40 @@ graph_create_edge <- function(x) {
 #' Filters the input `x` list by modifying the input list in place.
 #' @noRd
 graph_filter_fields <- function(x, fields) {
-  if (!is.character(fields)) {
-    fields <- as.character(fields)
-  }
   req_fields <- getOption("SUPREME_MODEL_REQUIRED_FIELDS")
-  opt_fields <- getOption("SUPREME_MODEL_OPTIONAL_FIELDS")
-  all_fields <- c(req_fields, opt_fields)
-  check_opt_fields <- fields %in% all_fields
-  if (!all(check_opt_fields)) {
-    ncstopf(
-      "unknown fields supplied: %s",
-      paste(paste0("\"", fields[!check_opt_fields], "\""), collapse = ", ")
-    )
-  }
   excepts <- which(!names(x) %in% c(req_fields, fields))
   x[excepts] <- NULL
   x
 }
 
 
-graph_construct <- function(x, fields) {
+#' Set graph styles for a particular `entity`
+#'
+#' @description
+#' The default_style is always added.
+#' @noRd
+graph_set_styles <- function(entity_name, entity_style) {
+  default_style <- list("align" = "center", "bold")
+  style <- if (!is.null(entity_style)) {
+    c(default_style, entity_style)
+  } else {
+    default_style
+  }
+  graph_generate_custom_classifier(entity_name, style)
+}
+
+
+graph_construct <- function(x, fields, styles) {
 
   do.call(pasten, lapply(seq_along(x), function(i) {
 
     entity <- x[[i]]
-    custom_classifier <- graph_generate_custom_classifier(
-      entity[["name"]],
-      styles = list("align" = "center", "bold"))
+    entity_name <- entity[["name"]]
+    entity_style <- styles[[entity_name]]
 
-    if (identical(custom_classifier$original, entity[["name"]])) {
+    custom_classifier <- graph_set_styles(entity_name, entity_style)
+    if (identical(custom_classifier$original, entity_name)) {
       custom_classifier_name <- custom_classifier$classifier
-    } else {
-      ncstopf("something really went wrong", internal = TRUE)
     }
 
     ## create node elements:
@@ -275,6 +279,62 @@ graph_render <- function(construct) {
 }
 
 
+### ----------------------------------------------------------------- ###
+### GRAPH ----
+### ----------------------------------------------------------------- ###
+
+
+#' Validates the "fields" argument of the `graph` call
+#'
+#' @param x object returned from the `fields` argument.
+#' @noRd
+graph_fields_validator <- function(x) {
+  if (!is.character(x)) {
+    ncstopf("`fields` argument must be a character vector")
+  }
+  req_fields <- getOption("SUPREME_MODEL_REQUIRED_FIELDS")
+  opt_fields <- getOption("SUPREME_MODEL_OPTIONAL_FIELDS")
+  all_fields <- c(req_fields, opt_fields)
+  check_opt_fields <- x %in% all_fields
+  if (!all(check_opt_fields)) {
+    ncstopf(
+      "unknown `fields` supplied: %s",
+      paste(paste0("\"", x[!check_opt_fields], "\""), collapse = ", ")
+    )
+  }
+  invisible(TRUE)
+}
+
+
+#' Validates the "styles" argument of the `graph` call
+#'
+#' @param x object returned from the `styles` argument.
+#' @param data the data element of the supreme object.
+#' @noRd
+graph_styles_validator <- function(x, data) {
+  if (!is_list(x) && !is_named_list(x)) {
+    ncstopf("`styles` must be a \"named list\" object")
+  }
+  sub_list <- vapply(x, is_list, logical(1))
+  if (!all(sub_list)) {
+    ncstopf(
+      "objects inside the `styles` argument must be a list, see the element: %s",
+      which(!sub_list)
+    )
+  }
+  styles_names <- names(x)
+  module_names <- sapply(data, `[[`, "name")
+  module_names_check <- styles_names %in% module_names
+  if (!all(module_names_check)) {
+    ncstopf(
+      "module names specified in `styles` cannot be found: %s",
+      paste(paste0("\"", styles_names[!module_names_check], "\""), collapse = ", ")
+    )
+  }
+  invisible(TRUE)
+}
+
+
 #' Make a graph of modules
 #'
 #' @description
@@ -284,21 +344,44 @@ graph_render <- function(construct) {
 #' @param fields name of the fields to include in the graph. By default, the required
 #'   fields such as the "name" field always visible. There are no ways to exclude
 #'   the required fields. This parameter is set to `NULL` as default.
+#' @param styles a named list to apply custom styles on the graph nodes. A full list
+#'  of the available styles can be seen from this link:
+#'  \url{https://github.com/skanaar/nomnoml#custom-classifier-styles}
 #'
+#' @details
+#' The graph call uses the `nomnoml` tool to draw a UML diagram of the Shiny
+#' application.
+#'
+#' @references
+#' \href{https://github.com/skanaar/nomnoml}{nomnoml: The sassy UML diagram renderer}
 #' @examples
 #' path <- example_yaml()
 #' sp <- supreme(src_yaml(path))
 #' graph(sp)
-#' ## Only return the certain fields:
-#' graph(sp, fields = "name")
+#'
+#' ## Filter fields, only return the certain fields in the graph entities:
 #' graph(sp, fields = c("input", "return"))
+#'
+#' ## Style entites:
+#' graph(sp, styles = list(
+#'  "server" = list(fill = "#ff0", "underline", "bold"),
+#'  "module_modal_dialog" = list(fill = "lightblue", "dashed", visual = "note")
+#' ))
+#'
+#' ## Style entities having a word "tab" in it:
+#' sp_df <- as.data.frame(sp) # turn supreme object to data.frame
+#' tab_modules <- sp_df$name[grep("_tab_", sp_df$name)]
+#' styles <- lapply(seq_along(tab_modules), function(x) list(fill = "orange"))
+#' names(styles) <- tab_modules
+#' graph(sp, styles = styles)
+#'
 #' @export
-graph <- function(x, fields = NULL) {
-  if (!is_supreme(x)) {
-    ncstopf("cannot graph a non-supreme object")
-  }
+graph <- function(x, fields = NULL, styles = NULL) {
+  if (!is_supreme(x)) ncstopf("cannot graph a non-supreme object")
   sp_data <- x$data
-  constructs <- graph_construct(sp_data, fields)
+  if (!is.null(fields)) graph_fields_validator(fields)
+  if (!is.null(styles)) graph_styles_validator(styles, sp_data)
+  constructs <- graph_construct(sp_data, fields, styles)
   graph_render(constructs)
 }
 
