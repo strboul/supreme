@@ -16,7 +16,7 @@ graph_create_general_directives <- function(directives) {
   }
   out <- do.call(pastenc, lapply(seq_along(directives), function(i) {
     dr <- directives[i]
-    paste0("#", names(dr), ": ", dr[[1]])
+    paste0("#", names(dr), ": ", dr[[1L]])
   }))
   out
 }
@@ -67,8 +67,12 @@ graph_generate_custom_classifier <- function(classifier.name, styles = NULL) {
 }
 
 
-#' This creates a comment in the graph body that may be helpful for debugging.
+#' Create a comment in the graph text body
 #'
+#' @description
+#' The comments are helpful during graph debugging processes.
+#'
+#' @param comment a character object.
 #' @param sep_lines adds separation lines to make commentted lines more visually
 #' appealing.
 #' @noRd
@@ -76,7 +80,7 @@ create_graph_comment <- function(comment, sep_lines = FALSE) {
   stopifnot(is.character(comment))
   out <- paste("//", comment)
   if (sep_lines) {
-    sep_lines_txt <- paste(rep("=", 8), collapse = "")
+    sep_lines_txt <- paste(rep("=", 8L), collapse = "")
     out <- paste("//", sep_lines_txt, comment, sep_lines_txt)
   }
   out
@@ -89,7 +93,7 @@ create_graph_comment <- function(comment, sep_lines = FALSE) {
 #' @noRd
 centre_graph_strings <- function(x, quotes = "\u2063") {
   if (is.null(x)) return(x)
-  if (!length(x) > 0) return(NULL)
+  if (!length(x) > 0L) return(NULL)
   stopifnot(is.character(x))
   centred <- format(x, justify = "centre")
   paste(quotes, centred, quotes)
@@ -97,7 +101,7 @@ centre_graph_strings <- function(x, quotes = "\u2063") {
 
 
 ### ----------------------------------------------------------------- ###
-### CREATE NODE ----
+### NODES & EDGES ----
 ### ----------------------------------------------------------------- ###
 
 
@@ -194,6 +198,11 @@ graph_create_edge <- function(x) {
 }
 
 
+### ----------------------------------------------------------------- ###
+### GRAPH HELPERS ----
+### ----------------------------------------------------------------- ###
+
+
 #' Filters the input `x` list by modifying the input list in place.
 #' @noRd
 graph_filter_fields <- function(x, fields) {
@@ -220,10 +229,31 @@ graph_set_styles <- function(entity_name, entity_style) {
 }
 
 
-graph_construct <- function(x, fields, styles) {
+#' Set global graph options
+#'
+#' @description
+#' The user specified options overrides the default options but the default
+#' options are always added.
+#' @noRd
+graph_set_graph_options <- function(options) {
+  default <- list(direction = "down",
+                  font = "Courier New",
+                  arrowSize = 0.5,
+                  fontSize = 11,
+                  padding = 8)
+  graph_options <- if (!is.null(options)) {
+    diffs <- setdiff(names(default), names(options))
+    c(options, default[diffs])
+  } else {
+    default
+  }
+  graph_create_general_directives(graph_options)
+}
+
+
+graph_construct <- function(x, fields, styles, options) {
 
   do.call(pasten, lapply(seq_along(x), function(i) {
-
     entity <- x[[i]]
     entity_name <- entity[["name"]]
     entity_style <- styles[[entity_name]]
@@ -247,25 +277,17 @@ graph_construct <- function(x, fields, styles) {
     }
     out$edge <- graph_create_edge(entity)
 
-    paste(
-      out$comment,
-      out$classifier,
-      out$node,
-      out$edge,
-      "\n",
-      sep = "\n"
-    )
-  })) -> sub_body
+    paste(out$comment,
+          out$classifier,
+          out$node,
+          out$edge,
+          "\n",
+          sep = "\n")
+  })) -> entity_bodies
 
-  directives <- graph_create_general_directives(list(
-    direction = "down",
-    font = "Courier New",
-    arrowSize = 0.5,
-    fontSize = 11,
-    padding = 8
-  ))
+  graph_options <- graph_set_graph_options(options)
 
-  body <- list(directives, "", sub_body)
+  body <- list(graph_options, "", entity_bodies)
   out <- do.call(pastenc, body)
   structure(out, class = "supreme_graph_construct")
 }
@@ -312,7 +334,7 @@ graph_fields_validator <- function(x) {
 #' @param data the data element of the supreme object.
 #' @noRd
 graph_styles_validator <- function(x, data) {
-  if (!is_list(x) && !is_named_list(x)) {
+  if (!(is_list(x) && is_named_list(x))) {
     ncstopf("`styles` must be a \"named list\" object")
   }
   sub_list <- vapply(x, is_list, logical(1))
@@ -335,18 +357,33 @@ graph_styles_validator <- function(x, data) {
 }
 
 
-#' Make a graph of modules
+#' Validates the "options" argument of the `graph` call
+#'
+#' @param x object returned from the `options` argument.
+#' @noRd
+graph_options_validator <- function(x) {
+  if (!(is_list(x) && is_named_list(x))) {
+    ncstopf("`options` must be a \"named list\" object")
+  }
+  invisible(TRUE)
+}
+
+
+#' Make a UML graph of Shiny modules
 #'
 #' @description
-#' The call graph creates a *UML-like graph* from your *Shiny* application.
+#' Creates a *UML-like* graph from your 'Shiny application' developed with modules.
 #'
 #' @param x a `supreme` object.
-#' @param fields name of the fields to include in the graph. By default, the required
+#' @param fields optional. name of the fields to include in the graph. By default, the required
 #'   fields such as the "name" field always visible. There are no ways to exclude
 #'   the required fields. This parameter is set to `NULL` as default.
-#' @param styles a named list to apply custom styles on the graph nodes. A full list
-#'  of the available styles can be seen from this link:
-#'  \url{https://github.com/skanaar/nomnoml#custom-classifier-styles}
+#' @param styles optional. a named list to apply custom styles on the graph nodes. A full list
+#'  of the available styles can be seen from:
+#'  \href{https://github.com/skanaar/nomnoml#custom-classifier-styles}{nomnoml: Custom classifier styles}
+#' @param options optional. custom options for the whole graph. A full list
+#'  of the available options can be seen from:
+#'  \href{https://github.com/skanaar/nomnoml#directives}{nomnoml: Directives}
 #'
 #' @details
 #' The graph call uses the `nomnoml` tool to draw a UML diagram of the Shiny
@@ -368,20 +405,27 @@ graph_styles_validator <- function(x, data) {
 #'  "module_modal_dialog" = list(fill = "lightblue", "dashed", visual = "note")
 #' ))
 #'
-#' ## Style entities having a word "tab" in it:
+#' # Style entities having a word "tab" in it:
 #' sp_df <- as.data.frame(sp) # turn supreme object to data.frame
 #' tab_modules <- sp_df$name[grep("_tab_", sp_df$name)]
 #' styles <- lapply(seq_along(tab_modules), function(x) list(fill = "orange"))
 #' names(styles) <- tab_modules
 #' graph(sp, styles = styles)
 #'
+#' ## Set graph options:
+#' graph(sp, options = list(
+#'   direction = "right",
+#'   fontSize = 10,
+#'   title = "Model application"
+#' ))
 #' @export
-graph <- function(x, fields = NULL, styles = NULL) {
+graph <- function(x, fields = NULL, styles = NULL, options = NULL) {
   if (!is_supreme(x)) ncstopf("cannot graph a non-supreme object")
   sp_data <- x$data
   if (!is.null(fields)) graph_fields_validator(fields)
   if (!is.null(styles)) graph_styles_validator(styles, sp_data)
-  constructs <- graph_construct(sp_data, fields, styles)
+  if (!is.null(options)) graph_options_validator(options)
+  constructs <- graph_construct(sp_data, fields, styles, options)
   graph_render(constructs)
 }
 
