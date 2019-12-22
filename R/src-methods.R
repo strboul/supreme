@@ -77,64 +77,12 @@ src_yaml <- function(file = NULL, text = NULL) {
 }
 
 
-#' Read \R expressions
-#'
-#' @param x an \R expression.
-#' @family source functions
-#' @export
-src_expr <- function(x) {
-  if (!length(x) == 1L) {
-    ncstopf("expression length must be one, instead of: %s", length(x))
-  }
-  obj <- .make_module_entities_from_expression(x)
-  out <- entity_constructor(obj)
-  structure(out, class = c("supreme_src_obj", "supreme_src_expr"))
-}
-
-
-#' Read an \R package
-#'
-#' The package should contain some Shiny application.
-#'
-#' @param x a package name as character (must be installed in the system).
-#' @details
-#' The function coerces input to be a character.
-#' @family source functions
-#' @export
-src_pkg <- function(x) {
-  if (!is.character(x)) x <- as.character(x)
-  if (!is_package_exist(x)) {
-    ncstopf("package '%s' not found.", x)
-  }
-  obj <- .make_src_pkg(x)
-  out <- entity_constructor(obj)
-  structure(out, class = c("supreme_src_obj", "supreme_src_pkg"))
-}
-
-
-#' Read \R environment
-#'
-#' @param x an \R environment.
-#' @family source functions
-#' @export
-src_env <- function(x) {
-  if (!is.environment(x)) {
-    ncstopf("input must be environment, not:", typeof(x))
-  }
-  obj <- .make_src_env(x)
-  out <- entity_constructor(obj)
-  structure(out, class = c("supreme_src_obj", "supreme_src_env"))
-}
-
 #' @export
 print.supreme_src_obj <- function(x, ...) {
   cls <- setdiff(class(x), "supreme_src_obj")
   switch (cls,
     "supreme_src_file" = "file",
     "supreme_src_yaml" = "yaml",
-    "supreme_src_expr" = "expression",
-    "supreme_src_env" = "environment",
-    "supreme_src_pkg" = "package",
     NULL
   ) -> type
   stopifnot(!is.null(type))
@@ -192,77 +140,6 @@ print.supreme_src_obj <- function(x, ...) {
   structure(out, class = "supreme_module_entities")
 }
 
-
-#' Make module entities from file paths
-#'
-#' @param x file paths.
-#' @noRd
-.make_module_entities_from_expression <- function(x) {
-  out <- list(list(body = x, src = NULL))
-  structure(out, class = "supreme_module_entities")
-}
-
-
-#' Make module entities from packages
-#'
-#' (Packages are essentially environments)
-#'
-#' @importFrom utils packageName
-#' @noRd
-.make_src_pkg <- function(pkg.name) {
-  stopifnot(is.character(pkg.name))
-  ns <- asNamespace(pkg.name)
-  ## verify package name
-  stopifnot(length(utils::packageName(asNamespace(pkg.name))) > 0L)
-  entities <- .make_module_entities_from_environment(ns)
-  out <- list(list(body = entities, src = paste("package", pkg.name, sep = ":")))
-  structure(out, class = "supreme_module_entities")
-}
-
-
-#' Make module entities from environment objects
-#'
-#' @noRd
-.make_src_env <- function(envir) {
-  stopifnot(is.environment(envir))
-  entities <- .make_module_entities_from_environment(envir)
-  out <- list(list(body = entities, src = NULL))
-  structure(out, class = "supreme_module_entities")
-}
-
-
-#' Make module entities from an environment
-#'
-#' @param x an environment.
-#' @details
-#' This call does not take all objects from an environment. Objects from a given
-#' environment will be eliminated:
-#' 1. if it is not a function,
-#' 2. (it is a function), but if it is not a Shiny component.
-#' @noRd
-.make_module_entities_from_environment <- function(x) {
-  stopifnot(is.environment(x))
-  objs <- mget(ls(x, all.names = TRUE), envir = x)
-  funs <- Filter(is.function, objs)
-  server_components <- Filter(is_shiny_server_component, funs)
-  exprs <- vector("list", length(server_components))
-  for (i in seq_along(server_components)) {
-    elem <- server_components[i]
-    elem.name <- names(elem)
-    elem.sub <- elem[[1L]]
-    Arguments <- formals(elem.sub)
-    Body <- body(elem.sub)
-    Function <- substitute({name <- fun}, list(
-      name = as.name(elem.name),
-      fun = as.function(x = c(Arguments, Body))
-    ))[[2L]]
-    # TODO maybe tlist?
-    exprs[[length(exprs) + 1L]] <- Function
-  }
-  exprs <- as.call(c(as.name("{"), exprs))
-  exprs <- as.expression(exprs)
-  exprs
-}
 
 ### ----------------------------------------------------------------- ###
 ### VERIFY YAML ----
