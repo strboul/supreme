@@ -27,8 +27,8 @@ test_that("as.data.frame with src_yaml", {
                      "transactions_table",
                      NA_character_
                    ),
-                   return = c(NA, NA, NA, "transactions_keys",
-                              NA),
+                   return = structure(c(NA, NA, NA, "transactions_keys",
+                                        NA), class = "AsIs"),
                    calling_modules = structure(
                      list(
                        list(
@@ -54,10 +54,7 @@ test_that("as.data.frame with src_yaml", {
                  row.names = c(NA,-5L),
                  class = "data.frame"
                ))
-})
 
-
-test_that("as.data.frame.supreme S3 method", {
   model <- "
   - name: childModuleA
     input: [input.data, reactive]
@@ -76,7 +73,7 @@ test_that("as.data.frame.supreme S3 method", {
                      c("input.data", "reactive"), "selected.model"
                    ), class = "AsIs"),
                    output = structure(c(NA_character_, NA_character_), class = "AsIs"),
-                   return = c(NA_character_, NA_character_),
+                   return = structure(c(NA_character_, NA_character_), class = "AsIs"),
                    calling_modules = structure(list(list(
                      list(grandChildModule1 = NULL)
                    ), NA_character_), class = "AsIs"),
@@ -85,5 +82,11 @@ test_that("as.data.frame.supreme S3 method", {
                  row.names = c(NA,-2L),
                  class = "data.frame"
                ))
+
+})
+
+
+test_that("as.data.frame with src_file", {
+  # TODO
 })
 

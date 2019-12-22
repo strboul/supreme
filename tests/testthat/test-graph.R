@@ -20,6 +20,7 @@ test_that("graph s3 class test", {
   )
 })
 
+
 test_that("graph test", {
 
   expect_error(
@@ -93,7 +94,7 @@ test_that("graph_create_node", {
   expect_equal(
     unlist(strsplit(node, "\\|")),
     c("[<childmoduleayjemqlsiwnahcgo> childModuleA ", " ▹ input.data;▹ reactive ",
-      " ○ output1;○ output2 ", " ◻ \"ret\" ", " grandChildModule1Server;<grandChildModule1UI>;grandChildModule2Server;<grandChildModule2UI>]"
+      " ○ output1;○ output2 ", " ◻ ret ", " grandChildModule1Server;<grandChildModule1UI>;grandChildModule2Server;<grandChildModule2UI>]"
     )
   )
 
