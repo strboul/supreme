@@ -1,7 +1,8 @@
 
 #' The main constructor call for all `module entities`
 #'
-#' Parse language objects from `module entities`.
+#' @description
+#' Parses language objects from `module entities`.
 #'
 #' @param x a list storing module entities.
 #'
@@ -14,13 +15,14 @@ entity_constructor <- function(x) {
     src <- entity[["src"]]
     entity_body <- entity[["body"]][[1]]
     which_components <- which(sapply(entity_body, is_shiny_server_component))
+
     for (c in which_components) {
 
       fun_block <- entity_body[[c]]
 
-      name <- find_block_assignment_name(fun_block)
-      # TODO input <-, output <-, return etc.
-      calling_modules <- find_block_calling_modules(fun_block)
+      name <- find_binding_name(fun_block)
+      # TODO input, output, return
+      calling_modules <- find_calling_modules(fun_block)
 
       ## FIXME: workaround until adding ui to calling_modules:
       wa_calling_modules <- lapply(calling_modules, function(x) {

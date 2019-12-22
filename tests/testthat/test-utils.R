@@ -14,9 +14,3 @@ test_that("testing ncstopf", {
   expect_error(f(1))
 })
 
-test_that("is_named_list", {
-  expect_false(is_named_list(list(1, 2)))
-  expect_false(is_named_list(list(A = 1, 2)))
-  expect_true(is_named_list(list(A = 1, B = 2)))
-})
-
