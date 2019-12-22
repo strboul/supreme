@@ -14,12 +14,11 @@ Imports:
     yaml,
     nomnoml
 Suggests: 
-    testthat,
+    testthat (>= 2.1.0),
     shiny,
     covr,
     knitr,
-    rmarkdown,
-    magrittr
+    rmarkdown
 Language: en-US
 LazyData: true
 Encoding: UTF-8
