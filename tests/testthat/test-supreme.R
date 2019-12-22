@@ -1,5 +1,5 @@
 
-context("test-supreme")
+context("test-supreme: Integration tests")
 
 test_that("supreme with source yaml", {
   yaml_path <- example_yaml()

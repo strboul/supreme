@@ -28,6 +28,17 @@ is_expression <- function(x) {
 }
 
 
+#' Checks whether a list is named
+#'
+#' @param x a list object.
+#' @rdname objcheck
+#' @noRd
+is_named_list <- function(x) {
+  stopifnot(is_list(x))
+  !(is.null(names(x)) || any(names(x) == ""))
+}
+
+
 #' Checks the symbol of a call (the first element)
 #'
 #' @param x a valid \R expression.
@@ -68,6 +79,20 @@ is_expr_sym <- function(x) {
 
 #' @rdname objsymcheck
 #' @noRd
+is_dollar_sym <- function(x) {
+  is.symbol(x) && identical(x, quote(`$`))
+}
+
+
+#' @rdname objsymcheck
+#' @noRd
+is_double_bracket_sym <- function(x) {
+  is.symbol(x) && identical(x, quote(`[[`))
+}
+
+
+#' @rdname objsymcheck
+#' @noRd
 is_func_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`function`))
 }
@@ -75,8 +100,29 @@ is_func_sym <- function(x) {
 
 #' @rdname objsymcheck
 #' @noRd
+is_if_sym <- function(x) {
+  is.symbol(x) && identical(x, quote(`if`))
+}
+
+
+#' @rdname objsymcheck
+#' @noRd
 is_callModule_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`callModule`))
+}
+
+
+#' @rdname objsymcheck
+#' @noRd
+is_output_sym <- function(x) {
+  is.symbol(x) && identical(x, quote(`output`))
+}
+
+
+#' @rdname objsymcheck
+#' @noRd
+is_return_sym <- function(x) {
+  is.symbol(x) && identical(x, quote(`return`))
 }
 
 
@@ -92,21 +138,11 @@ NULL
 #' @noRd
 is_shiny_server_component <- function(x) {
   if (is.language(x) || is.function(x)) {
-    fun_formals <- find_formals(x)
+    fun_formals <- find_inputs(x)
   } else {
     return(FALSE)
   }
   shiny_compulsory_formals <- c("input", "output", "session")
   all(shiny_compulsory_formals %in% fun_formals)
-}
-
-
-#' Checks whether a list is named
-#'
-#' @param x a list object.
-#' @noRd
-is_named_list <- function(x) {
-  stopifnot(is_list(x))
-  !(is.null(names(x)) || any(names(x) == ""))
 }
 

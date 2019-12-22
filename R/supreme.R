@@ -21,6 +21,7 @@ supreme <- function(x) {
   structure(ret, class = "supreme")
 }
 
+
 #' @export
 print.supreme <- function(x, ...) {
   dta <- x[["data"]]
@@ -47,9 +48,11 @@ print.supreme <- function(x, ...) {
   invisible(NULL)
 }
 
+
 is_supreme <- function(x) {
   inherits(x, "supreme")
 }
+
 
 is_source_object <- function(x) {
   inherits(x, "supreme_src_obj")
