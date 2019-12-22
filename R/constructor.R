@@ -21,7 +21,13 @@ entity_constructor <- function(x) {
       fun_block <- entity_body[[c]]
 
       name <- find_binding_name(fun_block)
-      # TODO input, output, return
+
+      inputs <- find_inputs(fun_block)
+      ## exclude the compulsory Shiny input fields:
+      inputs <- setdiff(inputs, c("input", "output", "session"))
+
+      outputs <- find_outputs(fun_block)
+      returns <- find_returns(fun_block)
       calling_modules <- find_calling_modules(fun_block)
 
       ## FIXME: workaround until adding ui to calling_modules:
@@ -31,12 +37,21 @@ entity_constructor <- function(x) {
         elem
       })
 
-      ## add fields:
+      ## Add fields:
       out <- list(name = name)
-      if (length(calling_modules) > 0) {
+      if (length(inputs) > 0L) {
+        out <- c(out, list(input = inputs))
+      }
+      if (length(outputs) > 0L) {
+        out <- c(out, list(output = outputs))
+      }
+      if (length(returns) > 0L) {
+        out <- c(out, list(return = returns))
+      }
+      if (length(calling_modules) > 0L) {
         out <- c(out, list(calling_modules = wa_calling_modules))
       }
-      if (length(src) > 0) {
+      if (length(src) > 0L) {
         out <- c(out, list(src = src))
       }
 

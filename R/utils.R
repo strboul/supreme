@@ -42,11 +42,27 @@ ncstopf <- function(..., internal = FALSE, single.line = FALSE) {
   stop(desc, call. = FALSE)
 }
 
+
 #' Paste by separating new lines
 #' @noRd
 pasten <- function(...) paste(..., sep = "\n")
 
+
 #' Paste by separating new lines and collapsing empty string
 #' @noRd
 pastenc <- function(...) paste(..., sep = "\n", collapse = "")
+
+
+#' Checks if file paths exist and throws an (supreme) error unless otherwise
+#'
+#' @param x a file path.
+#' @noRd
+check_paths_exist <- function(x) {
+  tryCatch(
+    file.exists(as.character(x)),
+    error = function(e) {
+      ncstopf("cannot read file: %s", conditionMessage(e))
+    }
+  )
+}
 
