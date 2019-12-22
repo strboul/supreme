@@ -18,8 +18,6 @@ supreme(src_yaml(env))
 }
 \seealso{
 Other source examples: 
-\code{\link{example_app_path}()},
-\code{\link{example_environment}()},
-\code{\link{example_expression}()}
+\code{\link{example_app_path}()}
 }
 \concept{source examples}

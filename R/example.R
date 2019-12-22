@@ -47,32 +47,3 @@ example_yaml <- function() {
   yaml
 }
 
-
-#' Get environment to `supreme` example
-#'
-#' @inherit example_description details
-#' @examples
-#' env <- example_environment()
-#' supreme(src_env(env))
-#' @family source examples
-#' @export
-example_environment <- function() {
-  env <- new.env()
-  sapply(rev(example_app_path()), function(x) source(x, env))
-  env
-}
-
-
-#' Get expression to `supreme` example
-#'
-#' @inherit example_description details
-#' @examples
-#' expr <- example_expression()
-#' supreme(src_expr(expr))
-#' @family source examples
-#' @export
-example_expression <- function() {
-  expr <- .read_srcfile(example_app_path())
-  expr
-}
-

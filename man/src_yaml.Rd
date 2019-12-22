@@ -32,9 +32,6 @@ src_yaml(text = model)
 }
 \seealso{
 Other source functions: 
-\code{\link{src_env}()},
-\code{\link{src_expr}()},
-\code{\link{src_file}()},
-\code{\link{src_pkg}()}
+\code{\link{src_file}()}
 }
 \concept{source functions}

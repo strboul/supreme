@@ -10,14 +10,6 @@ test_that("graph s3 class test", {
     graph(supreme(src_yaml(example_yaml()))),
     c("nomnoml", "htmlwidget")
   )
-  expect_s3_class(
-    graph(supreme(src_expr(example_expression()))),
-    c("nomnoml", "htmlwidget")
-  )
-  expect_s3_class(
-    graph(supreme(src_env(example_environment()))),
-    c("nomnoml", "htmlwidget")
-  )
 })
 
 
