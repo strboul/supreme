@@ -119,8 +119,7 @@ graph_create_node <- function(x, classifier = NULL, centre = TRUE) {
 
   node$input <- .node_create_multi_vars_field(x[["input"]], bullet = "triangular")
   node$output <- .node_create_multi_vars_field(x[["output"]], bullet = "circle")
-
-  node$return <- .node_create_single_var_field(x[["return"]], bullet = "square")
+  node$return <- .node_create_multi_vars_field(x[["return"]], bullet = "square")
 
   node$calling_modules <- .node_create_calling_modules_field(
     calling_modules = x[["calling_modules"]],
@@ -153,18 +152,10 @@ graph_create_node <- function(x, classifier = NULL, centre = TRUE) {
 }
 
 
-.node_create_single_var_field <- function(e, bullet, quote = TRUE) {
-  bullet_sym <- getOption("SUPREME_GRAPH_BULLET_SYMBOLS")[[bullet]]
-  if (!is.null(e)) {
-    if (quote) e <- paste0("\"", e, "\"")
-    e <- paste(bullet_sym, e)
-    e
-  } else {
-    ""
-  }
-}
-
-
+#' @description
+#' Multi vars field in the sense that:
+#' `getOption("SUPREME_MODEL_MULTI_VAR_FIELDS")`
+#' @noRd
 .node_create_multi_vars_field <- function(e, bullet, quote = FALSE) {
   bullet_sym <- getOption("SUPREME_GRAPH_BULLET_SYMBOLS")[[bullet]]
   if (!is.null(e)) {
