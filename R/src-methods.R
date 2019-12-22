@@ -14,8 +14,7 @@
 #' @family source functions
 #' @export
 src_file <- function(x) {
-  tryCatch({ file.exists(as.character(x)) }, error = function(e)
-    ncstopf("cannot read file: %s", conditionMessage(e)))
+  check_paths_exist(x)
   obj <- .make_module_entities_from_paths(x)
   out <- entity_constructor(obj)
   structure(out, class = c("supreme_src_obj", "supreme_src_file"))
