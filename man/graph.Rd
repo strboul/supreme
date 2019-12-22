@@ -2,20 +2,60 @@
 % Please edit documentation in R/graph.R
 \name{graph}
 \alias{graph}
-\title{Make a graph of modules}
+\title{Make a UML graph of Shiny modules}
 \usage{
-graph(x)
+graph(x, fields = NULL, styles = NULL, options = NULL)
 }
 \arguments{
 \item{x}{a \code{supreme} object.}
+
+\item{fields}{optional. name of the fields to include in the graph. By default, the required
+fields such as the "name" field always visible. There are no ways to exclude
+the required fields. This parameter is set to \code{NULL} as default.}
+
+\item{styles}{optional. a named list to apply custom styles on the graph nodes. A full list
+of the available styles can be seen from:
+\href{https://github.com/skanaar/nomnoml#custom-classifier-styles}{nomnoml: Custom classifier styles}}
+
+\item{options}{optional. custom options for the whole graph. A full list
+of the available options can be seen from:
+\href{https://github.com/skanaar/nomnoml#directives}{nomnoml: Directives}}
 }
 \description{
-The call graph creates a UML like graph of your Shiny application.
+Creates a \emph{UML-like} graph from your 'Shiny application' developed with modules.
+}
+\details{
+The graph call uses the \code{nomnoml} tool to draw a UML diagram of the Shiny
+application.
 }
 \examples{
-\dontrun{
-path <- example_app_path()
-supr <- supreme(src_file(path))
-graph(supr)
+path <- example_yaml()
+sp <- supreme(src_yaml(path))
+graph(sp)
+
+## Filter fields, only return the certain fields in the graph entities:
+graph(sp, fields = c("input", "return"))
+
+## Style entites:
+graph(sp, styles = list(
+ "server" = list(fill = "#ff0", "underline", "bold"),
+ "module_modal_dialog" = list(fill = "lightblue", "dashed", visual = "note")
+))
+
+# Style entities having a word "tab" in it:
+sp_df <- as.data.frame(sp) # turn supreme object to data.frame
+tab_modules <- sp_df$name[grep("_tab_", sp_df$name)]
+styles <- lapply(seq_along(tab_modules), function(x) list(fill = "orange"))
+names(styles) <- tab_modules
+graph(sp, styles = styles)
+
+## Set graph options:
+graph(sp, options = list(
+  direction = "right",
+  fontSize = 10,
+  title = "Model application"
+))
 }
+\references{
+\href{https://github.com/skanaar/nomnoml}{nomnoml: The sassy UML diagram renderer}
 }
