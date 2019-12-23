@@ -19,10 +19,14 @@ knitr::opts_chunk$set(
 
 # supreme <a href='https://github.com/strboul/supreme/'><img src='https://raw.githubusercontent.com/strboul/supreme/master/inst/media/logo.png' align="right" height="135"></a>
 
-[![Repo status](https://www.repostatus.org/badges/latest/active.svg)](https://github.com/strboul/supreme) [![Travis build status](https://travis-ci.org/strboul/supreme.svg?branch=master)](https://travis-ci.org/strboul/supreme) [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/strboul/supreme?branch=master&svg=true)](https://ci.appveyor.com/project/strboul/supreme) [![Coverage status](https://codecov.io/gh/strboul/supreme/branch/master/graph/badge.svg)](https://codecov.io/github/strboul/supreme?branch=master)
+[![Travis build status](https://travis-ci.org/strboul/supreme.svg?branch=master)](https://travis-ci.org/strboul/supreme)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/strboul/supreme?branch=master&svg=true)](https://ci.appveyor.com/project/strboul/supreme)
+[![CRAN status badge](https://www.r-pkg.org/badges/version/supreme)](https://cran.r-project.org/package=supreme)
+[![CRAN mirror downloads](https://cranlogs.r-pkg.org/badges/supreme)](https://www.r-pkg.org/pkg/supreme)
+[![Coverage status](https://codecov.io/gh/strboul/supreme/branch/master/graph/badge.svg)](https://codecov.io/github/strboul/supreme?branch=master)
 
 *supreme* is a modeling tool helping you better structure Shiny applications
-developed with modules
+developed with modules.
 
 Therefore, you are able to:
 
@@ -32,7 +36,16 @@ Therefore, you are able to:
 
 ## Installation
 
-```{r, eval=FALSE}
+You can install the released version from
+[CRAN](https://cran.r-project.org/package=supreme):
+
+``` r
+install.packages("supreme")
+```
+
+Or get the development version from [GitHub](https://github.com/strboul/supreme):
+
+```r
 # install.packages("devtools")
 devtools::install_github("strboul/supreme")
 ```
@@ -41,12 +54,14 @@ devtools::install_github("strboul/supreme")
 
 ### Existing applications
 
-For your existing application, you can use `src_file()` call that reads your application from files.
+For your existing application, you can use `src_file()` call that reads your
+application from files.
 
 *supreme* package comes with an example path containing a dummy Shiny application
-created with modules for testing issues.
+created with modules for testing issues (in `example_app_path()`).
 
-After the application has been read, create a *supreme* object from the read model object:
+After the application has been read,
+create a *supreme* object from the model object:
 
 ```{r}
 library(supreme)
@@ -55,17 +70,13 @@ obj <- supreme(src_file(path))
 obj
 ```
 
-If you want to run *supreme* on your application that is stored in a different format (as a package, environment etc.), please see the `?src_file` documentation page that has information about the other options to read your application as *supreme* source model objects.
-
-See the generated *supreme* object in tabular form (as `data.frame` or `tibble`):
+See the generated *supreme* object in tabular form a.k.a. `data.frame`:
 
 ```{r}
-df <- as.data.frame(obj)
-tbbl <- tibble::as_tibble(df)
-tbbl
+as.data.frame(obj)
 ```
 
-Visualize the module structure:
+Finally, visualize the module structure:
 
 ```{r supreme-graph-example}
 graph(obj)
@@ -75,45 +86,37 @@ graph(obj)
 
 ### Creating YAML model objects
 
-Model definition with *YAML* is a handy to design a new application from scratch or 
-just design the specific parts of applications. Planning ahead with model tool can 
-really be beneficial before going wild on implementation.
+Model definition with *YAML* is a handy to design a **new application** from
+scratch or just design the specific parts of applications. Planning ahead with
+model tool can really be beneficial before going wild on implementation.
 
 ```{r, echo=FALSE, results='asis'}
-model <- paste(readLines(file.path("tests", "testthat", "yaml-test", "example-model.yaml")), collapse = "\n")
+model <- paste(readLines(example_yaml()), collapse = "\n")
 cat(sprintf("```yaml\n%s```\n", model))
 ```
 
-```{r}
-library(supreme)
-model_yaml <- src_yaml(text = model)
-obj <- supreme(model_yaml)
-tibble::as_tibble(as.data.frame(obj))
-```
+There are some special rules when creating model objects with *YAML*:
 
-There are some special rules when creating model objects with *YAML*: 
-
-+ Each entity in the model must have 
-  `r mmy::list_en_end(paste0("*", getOption("SUPREME_MODEL_REQUIRED_FIELDS"), "*"))` 
-  fields.
++ Each entity in the model must have a *name* field.
 
 + The entities can have optional fields, which are
   `r mmy::list_en_end(paste0("*", getOption("SUPREME_MODEL_OPTIONAL_FIELDS"), "*"))`.
 
-+ The fields 
++ The fields
   `r mmy::list_en_end(paste0("*", getOption("SUPREME_MODEL_MULTI_VAR_FIELDS"), "*"))`
-  can have mutliple elements. The others can only have a single element.
+  can have mutliple elements means that these fields can contain an array in the
+  YAML. The other fields can only have a single element.
 
-Any other field, which is not known by the supreme modal object 
-(like a `shape: star`), added to the model
-definition is not allowed and it will throw an error.
++ Any other field, which is not known by the *supreme* modal object, is not
+  allowed and it will throw an error.
 
-Finally, we can visualize the supreme mode object we created above from *YAML* model:
-```{r yaml-graph}
-graph(obj)
+After all, use `src_yaml()` to read modeling from the YAML file:
+```{r}
+model_yaml <- src_yaml(text = model)
+obj <- supreme(model_yaml)
 ```
 
-See the next session to understand how this [model language](#model language) works.
+See the next section to understand how the [model language](#model language) works.
 
 ### The model language
 
@@ -124,7 +127,7 @@ function of a Shiny application.
 <br/>
 
 ```{r out-diagram, echo=FALSE, out.width='90%', fig.align='center'}
-knitr::include_graphics("inst/media/supreme-diagram.png")
+knitr::include_graphics(file.path("inst", "media", "supreme-diagram.png"))
 ```
 
 <br/>
@@ -133,35 +136,40 @@ A graph entity consists of five main fields:
 
 1. Module name
 
-2. Module inputs (except the defaults *input*, *output*, *session*)
+1. Module inputs (except the defaults *input*, *output*, *session*)
 
-3. Module outputs
+1. Module outputs
 
-3. Return from the module
+1. Module returns
 
-4. Modules called by the module
+1. Calling modules, which are modules called by the module
 
-## Current limitations
+## Known limitations
 
-+ Although it's possible to create a Shiny application by only providing `input` and `output`
-arguments in the server side, *supreme* will not read any Shiny server side component
-missing a `session` argument. That's reasonable decision because modules cannot work without `session` argument and
-supreme is a package designed to work with Shiny modules.
++ Although it's possible to create a Shiny application by only providing `input`
+  and `output` arguments in the server side, *supreme* will not read any Shiny
+  server side component missing a `session` argument. That's reasonable decision
+  because modules cannot work without `session` argument and supreme is a
+  package designed to work with Shiny modules.
 
-+ *supreme* will not properly parse the source code of your application if server
-side component is created with `shinyServer()`, which is kind of soft-deprecated
-after a very early Shiny version `0.10`.
++ For the module returns, all return values in a module should explicitly be
+  wrapped in `return()` call.
 
-+ Some idiosyncratic Shiny application code may not be parsed as intended. For such cases,
-it would be great if you open an issue describing the situation with a reproducible example.
++ *supreme* will not properly parse the source code of your application if
+  server side component is created with `shinyServer()`, which is kind of
+  soft-deprecated after a very early Shiny version `0.10`.
+
++ Some idiosyncratic Shiny application code may not be parsed as intended. For
+  such cases, it would be great if you open an issue describing the situation
+  with a reproducible example.
 
 ## Acknowledgements
 
-+ [R Core Team](https://www.r-project.org/): 
++ [R Core Team](https://www.r-project.org/):
   *supreme* package is brought to life thanks to *R* allowing *abstract
   syntax trees* (AST) that is used to practice static analysis on the code.
 
-+ [datamodelr](https://github.com/bergant/datamodelr): 
++ [datamodelr](https://github.com/bergant/datamodelr):
   Inspiring work for creating modelling language
 
 + [shinypod](https://github.com/ijlyttle/shinypod):
