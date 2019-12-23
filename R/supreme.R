@@ -2,23 +2,16 @@
 #' Create a supreme object
 #'
 #' @param x a valid source input.
-#' @examples \dontrun{
+#' @examples
 #' path <- example_app_path()
 #' supr <- supreme(src_file(path))
-#' }
 #' @export
 supreme <- function(x) {
-  if(!is_source_object(x)) {
+  if (!is_source_object(x)) {
     ncstopf("the provided input cannot be turned into a supreme object")
   }
   ret <- list(
-    components = list(
-      server_side = NULL,
-      ui_side = NULL
-    ),
-    data = list(
-      x
-    ),
+    data = unclass(x),
     source_input = class(x)
   )
   if (!length(ret$data[[1]]) > 0) {
@@ -27,13 +20,13 @@ supreme <- function(x) {
   structure(ret, class = "supreme")
 }
 
+
 #' @export
 print.supreme <- function(x, ...) {
-  dta <- x$data[[1]]
+  dta <- x[["data"]]
   len.dta <- length(dta)
   nms <- vapply(seq_along(dta), function(i) dta[[i]][["name"]], character(1))
-  len.nms <- length(nms)
-  nms.disp <- if (len.nms > 4L) {
+  nms.disp <- if (length(nms) > 4L) {
     c(nms[seq(4L)], "...")
   } else {
     nms
@@ -54,11 +47,13 @@ print.supreme <- function(x, ...) {
   invisible(NULL)
 }
 
+
 is_supreme <- function(x) {
   inherits(x, "supreme")
 }
 
+
 is_source_object <- function(x) {
-  inherits(x, "src_obj")
+  inherits(x, "supreme_src_obj")
 }
 

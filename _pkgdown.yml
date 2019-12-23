@@ -1,34 +1,8 @@
-reference:
-- title: All functions
-  desc: ~
-  contents:
-  - '`as.data.frame.supreme`'
-  - '`example_app_path`'
-  - '`example_environment`'
-  - '`example_package`'
-  - '`graph`'
-  - '`src_env`'
-  - '`src_expr`'
-  - '`src_file`'
-  - '`src_pkg`'
-  - '`src_yaml`'
-  - '`supreme`'
-
-articles:
-- title: All vignettes
-  desc: ~
-  contents:
-  - '`getting-started`'
-  - '`visualize-supreme-objects`'
-
 navbar:
   structure:
     left:
     - home
-    - intro
     - reference
-    - articles
-    - tutorials
     - news
     right:
       - icon: fa-github fa-lg
@@ -40,18 +14,7 @@ navbar:
     reference:
       text: Reference
       href: reference/index.html
-    articles:
-      text: Articles
-      menu:
-      - text: Getting started with supreme
-        href: articles/getting-started.html
-      - text: Visualize 'supreme' objects
-        href: articles/visualize-supreme-objects.html
     news:
-      text: Changelog
+      text: News
       href: news/index.html
-
-template:
-  params:
-    bootswatch: cosmo
 

@@ -1,45 +1,87 @@
 
-#' Constructor call for entities
+#' The main constructor call for all `module entities`
 #'
-#' Parse language objects from `module entities`.
+#' @description
+#' Parses language objects from `module entities`.
 #'
-#' @param x a list keeping module entities.
+#' @param x a list storing module entities.
 #'
 #' @noRd
 entity_constructor <- function(x) {
-  if (!is_module_entities(x)) {
-    ncstopf("input not module entities, instead: '%s'", class(x), internal = TRUE)
-  }
-  required.fields <- getOption("SUPREME_MODEL_REQUIRED_FIELDS")
-  optional.fields <- getOption("SUPREME_MODEL_OPTIONAL_FIELDS")
-  fields <- c(required.fields, optional.fields)
+  stopifnot(is_supreme_module_entities(x))
+
   res <- list()
   for (i in seq_along(x)) {
+
     entity <- x[[i]]
     src <- entity[["src"]]
-    entity.body <- entity[["body"]][[1]]
-    which.components <- which(sapply(entity.body, is_shiny_server_component))
-    for (c in which.components) {
-      f.body <- entity.body[[c]]
-      name <- find_block_assignment_name(f.body)
-      calling_modules <- find_block_calling_modules(f.body)
-      out <- list(
-        type = "module",
-        name = name,
-        calling_modules = calling_modules,
-        src = src
-      )
-      res[[length(res)+1L]] <- out
+    entity_body <- entity[["body"]][[1]]
+    which_components <- which(sapply(entity_body, is_shiny_server_component))
+
+    for (c in which_components) {
+
+      fun_block <- entity_body[[c]]
+
+      name <- find_binding_name(fun_block)
+
+      inputs <- find_inputs(fun_block)
+      ## exclude the compulsory Shiny input fields:
+      inputs <- setdiff(inputs, c("input", "output", "session"))
+
+      outputs <- find_outputs(fun_block)
+      returns <- find_returns(fun_block)
+      calling_modules <- find_calling_modules(fun_block)
+
+      ## Add fields:
+      out <- list(name = name)
+      if (length(inputs) > 0L) {
+        out <- c(out, list(input = inputs))
+      }
+      if (length(outputs) > 0L) {
+        out <- c(out, list(output = outputs))
+      }
+      if (length(returns) > 0L) {
+        out <- c(out, list(return = returns))
+      }
+      if (length(calling_modules) > 0L) {
+        out <- c(out, list(calling_modules = calling_modules))
+      }
+      if (length(src) > 0L) {
+        out <- c(out, list(src = src))
+      }
+
+      ## assign to result:
+      res[[length(res) + 1L]] <- out
     }
   }
+  res <- structure(res, class = "supreme_entity_constructor")
+  check_duplicate_module_names(res)
   res
 }
 
-is_module_entities <- function(x) {
-  if (is_list(x) && inherits(x, "module_entities")) {
-    TRUE
-  } else {
-    FALSE
+
+check_duplicate_module_names <- function(x) {
+  stopifnot(is_supreme_entity_constructor(x))
+  mod_names <- sapply(x, `[[`, "name")
+  if (anyDuplicated(mod_names) > 0) {
+    ncstopf(
+      "duplicated module names in the source: %s",
+      paste(
+        paste0("'",
+               unique(mod_names[duplicated(mod_names)]),
+               "'"),
+        collapse = ", ")
+    )
   }
+}
+
+
+is_supreme_entity_constructor <- function(x) {
+  is_list(x) && inherits(x, "supreme_entity_constructor")
+}
+
+
+is_supreme_module_entities <- function(x) {
+  is_list(x) && inherits(x, "supreme_module_entities")
 }
 

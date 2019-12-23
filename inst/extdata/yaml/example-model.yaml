@@ -1,0 +1,35 @@
+- name: server
+  calling_modules:
+    - items_tab_module_server: ItemsTab
+    - customers_tab_module_server: CustomersTab
+    - transactions_tab_module_server: TransactionsTab
+  src: app.R
+
+- name: customers_tab_module_server
+  input: customers_list
+  output:
+    - paid_customers_table
+    - free_customers_table
+  src: module-customers.R
+
+- name: items_tab_module_server
+  input:
+    - items_list
+    - is_fired
+  calling_modules:
+    - module_modal_dialog: ~
+  src: module-items.R
+
+- name: transactions_tab_module_server
+  input:
+    - table
+    - button_clicked
+  output: transactions_table
+  return: transactions_keys
+  src: module-transactions.R
+
+- name: module_modal_dialog
+  input:
+    - text
+  src: module-utils.R
+

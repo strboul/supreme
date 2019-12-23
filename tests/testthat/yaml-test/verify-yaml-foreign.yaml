@@ -1,5 +1,0 @@
-- type: module
-  name: grandChildModule1
-  input: [data, trigger.btn]
-  calling_modules: reusableModuleLoading
-  foreign_input: ~
