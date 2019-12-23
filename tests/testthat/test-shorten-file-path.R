@@ -1,6 +1,4 @@
 
-context("test-shorten-file-path")
-
 test_that("can uniquely shorten relative file paths", {
 
   all_unique <- c(

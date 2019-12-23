@@ -1,6 +1,4 @@
 
-context("test-yaml")
-
 example_model <- example_yaml()
 
 str_model <- "

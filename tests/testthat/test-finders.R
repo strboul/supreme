@@ -12,13 +12,6 @@ test_that("find_binding_name", {
 
 test_that("find_inputs", {
 
-  file <- file.path("data", "module-output.Rtest")
-  p <- .read_srcfile(file)
-  expect_equal(
-    find_inputs(p[[1]][[5]]),
-    c("input", "output", "session", "data", "left", "right")
-  )
-
   example1 <- expression({
     someModule <- function(input, output, session, data, button) {
     }
@@ -148,10 +141,6 @@ test_that("find_calling_modules", {
     find_calling_modules(expr1[[1]]),
     c("childModule1Server", "childModule2Server", "someModule")
   )
-
-
-  file1 <- .read_srcfile("data/without-any-calling-module.Rtest")
-  expect_null(find_calling_modules(file1[[1]]))
 
 })
 
