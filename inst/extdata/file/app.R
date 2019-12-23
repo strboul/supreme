@@ -27,7 +27,7 @@ ui <- fluidPage(
   )
 )
 
-server <- function(input, output, session) {
+server <- function(input, output, session) { # some comment
 
   customers_data <- data.frame(
     id = seq(1e3),
@@ -44,11 +44,14 @@ server <- function(input, output, session) {
              items_list = items_data,
              is_fired = TRUE)
   callModule(customers_tab_module_server, "CustomersTab", customers_list = customers_data)
+  ## explanatory comment..
   callModule(id = "TransactionsTab", module = transactions_tab_module_server,
              table = transactions_data,
              button_clicked = TRUE)
 
 }
 
-shinyApp(ui, server)
+shinyApp(ui, server) # comment1
+
+# a comment at the end of the file
 
