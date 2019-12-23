@@ -1,19 +1,10 @@
 
-context("test-example")
+context("test-example: the examples are the equivalents")
 
 skip("till fixed")
 
-file <- src_file(example_app_path())
-yaml <- src_yaml(example_yaml())
-
-# Remove 'src' field for these tests because they aren't relevant.
-remove_src_field <- function(x) lapply(x, function(e) { e[["src"]] <- NULL; e })
-
-file_ <- remove_src_field(file)
-yaml_ <- remove_src_field(yaml)
-
-supreme_file <- supreme(file)
-supreme_yaml <- supreme(yaml)
+supreme_file <- supreme(src_file(example_app_path()))
+supreme_yaml <- supreme(src_yaml(example_yaml()))
 
 #' Custom expectation for the examples
 #'
@@ -43,16 +34,18 @@ expect_example_equivalent <- function(object, expected) {
   }
 }
 
-test_that("example src_* outputs are equivalent", {
-  expect_example_equivalent(file_, yaml_)
+
+test_that("example supreme$data outputs are equivalent", {
+  expect_example_equivalent(supreme_file$data, supreme_yaml$data)
 })
 
-test_that("example as.data.frame.supreme outputs are equal", {
 
-  ## remove the 'src' column, we don't need to check..
-  supreme_file_df_ <- subset(as.data.frame(supreme_file), select = -c(src))
-  supreme_yaml_df_ <- subset(as.data.frame(supreme_yaml), select = -c(src))
+test_that("example as.data.frame outputs are equal", {
+  expect_equal(as.data.frame(supreme_file), as.data.frame(supreme_yaml))
+})
 
-  expect_equal(supreme_file_df_, supreme_yaml_df_)
+
+test_that("example supreme graphs are equal (vdiffr)", {
 
 })
+

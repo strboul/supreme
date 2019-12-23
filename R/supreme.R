@@ -12,7 +12,7 @@ supreme <- function(x) {
     ncstopf("the provided input cannot be turned into a supreme object")
   }
   ret <- list(
-    data = x,
+    data = unclass(x),
     source_input = class(x)
   )
   if (!length(ret$data[[1]]) > 0) {

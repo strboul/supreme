@@ -1,18 +1,4 @@
 
-context("test-graph")
-
-test_that("graph s3 class test", {
-  expect_s3_class(
-    graph(supreme(src_file(example_app_path()))),
-    c("nomnoml", "htmlwidget")
-  )
-  expect_s3_class(
-    graph(supreme(src_yaml(example_yaml()))),
-    c("nomnoml", "htmlwidget")
-  )
-})
-
-
 test_that("graph test", {
 
   expect_error(
@@ -121,17 +107,23 @@ test_that("graph_create_edge", {
 })
 
 
-test_that("test graph styles", {
+test_that("test graph styles (vdiffr)", {
+
+  # sp <- supreme(src_yaml(example_yaml()))
+  #
+  # expect_s3_class(
+  #   graph(sp, styles = list(
+  #     "server" = list(fill = "#ff0", "underline", "bold"),
+  #     "module_modal_dialog" = list(fill = "lightblue", "dashed", visual = "note")
+  #   )),
+  #   c("nomnoml", "htmlwidget")
+  # )
+})
+
+
+test_that("test graph styles - errors", {
 
   sp <- supreme(src_yaml(example_yaml()))
-
-  expect_s3_class(
-    graph(sp, styles = list(
-      "server" = list(fill = "#ff0", "underline", "bold"),
-      "module_modal_dialog" = list(fill = "lightblue", "dashed", visual = "note")
-    )),
-    c("nomnoml", "htmlwidget")
-  )
 
   expect_error(
     graph(sp, styles = list("xx")),
@@ -154,24 +146,31 @@ test_that("test graph styles", {
 })
 
 
-test_that("test graph options", {
+test_that("test graph options (vdiffr)", {
+
+  # sp <- supreme(src_yaml(example_yaml()))
+  #
+  # expect_s3_class(
+  #   graph(sp, options = list(
+  #     direction = "right",
+  #     fontSize = 10,
+  #     title = "Model application"
+  #   )),
+  #   c("nomnoml", "htmlwidget")
+  # )
+  #
+  # ## non default overriding options:
+  # expect_s3_class(
+  #   graph(sp, options = list(bendSize = 5)),
+  #   c("nomnoml", "htmlwidget")
+  # )
+
+})
+
+
+test_that("test graph options - errors", {
 
   sp <- supreme(src_yaml(example_yaml()))
-
-  expect_s3_class(
-    graph(sp, options = list(
-      direction = "right",
-      fontSize = 10,
-      title = "Model application"
-    )),
-    c("nomnoml", "htmlwidget")
-  )
-
-  ## non default overriding options:
-  expect_s3_class(
-    graph(sp, options = list(bendSize = 5)),
-    c("nomnoml", "htmlwidget")
-  )
 
   expect_error(
     graph(sp, options = list(1)),

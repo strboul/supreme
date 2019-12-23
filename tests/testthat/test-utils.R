@@ -1,6 +1,4 @@
 
-context("test-utils")
-
 test_that("testing ncstopf", {
   f <- function(x) g(x)
   g <- function(x) h(x)

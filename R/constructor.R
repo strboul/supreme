@@ -8,9 +8,11 @@
 #'
 #' @noRd
 entity_constructor <- function(x) {
-  stopifnot(is_module_entities(x))
+  stopifnot(is_supreme_module_entities(x))
+
   res <- list()
   for (i in seq_along(x)) {
+
     entity <- x[[i]]
     src <- entity[["src"]]
     entity_body <- entity[["body"]][[1]]
@@ -59,10 +61,34 @@ entity_constructor <- function(x) {
       res[[length(res) + 1L]] <- out
     }
   }
+  res <- structure(res, class = "supreme_entity_constructor")
+  check_duplicate_module_names(res)
   res
 }
 
-is_module_entities <- function(x) {
+
+check_duplicate_module_names <- function(x) {
+  stopifnot(is_supreme_entity_constructor(x))
+  mod_names <- sapply(x, `[[`, "name")
+  if (anyDuplicated(mod_names) > 0) {
+    ncstopf(
+      "duplicated module names in the source: %s",
+      paste(
+        paste0("'",
+               unique(mod_names[duplicated(mod_names)]),
+               "'"),
+        collapse = ", ")
+    )
+  }
+}
+
+
+is_supreme_entity_constructor <- function(x) {
+  is_list(x) && inherits(x, "supreme_entity_constructor")
+}
+
+
+is_supreme_module_entities <- function(x) {
   is_list(x) && inherits(x, "supreme_module_entities")
 }
 
