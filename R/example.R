@@ -1,12 +1,4 @@
 
-#' Example description
-#'
-#' @details
-#' Please note that all examples give the same output.
-#'
-#' @name example_description
-NULL
-
 #' Get paths to `supreme` example
 #'
 #' Contains the paths of the Shiny application that is a fully-fledged example
@@ -15,6 +7,8 @@ NULL
 #' @param file file names. If no file names are put (which `path` is `NULL`), then
 #'   all the example file paths will be listed.
 #'
+#' @details
+#' Please note that all examples give the same output.
 #' @inherit example_description details
 #' @examples
 #' files <- example_app_path(c("app", "module-customers"))
@@ -35,6 +29,8 @@ example_app_path <- function(file = NULL) {
 
 #' Get YAML to `supreme` example
 #'
+#' @details
+#' Please note that all examples give the same output.
 #' @inherit example_description details
 #' @examples
 #' yaml <- example_yaml()
