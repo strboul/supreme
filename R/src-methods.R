@@ -118,6 +118,8 @@ print.supreme_src_obj <- function(x, ...) {
     lines
   })
   lijnen <- unlist(lijnen)
+  ## Remove commented lines:
+  lijnen <- lijnen[-grep("^#", lijnen)]
   ## Wrap`{`, `}` quotes in between as the system is designed around exprs"
   lines <- paste("{", paste(lijnen, collapse = "\n"), "}")
   parse(text = lines)
