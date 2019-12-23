@@ -31,7 +31,7 @@ src_file <- function(x) {
 #' @examples
 #' ## Read from a file:
 #' path <- example_yaml()
-#' src_yaml(file)
+#' src_yaml(path)
 #'
 #' ## Read from an (text) object:
 #' model <- "

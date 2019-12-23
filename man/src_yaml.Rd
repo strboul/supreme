@@ -17,7 +17,7 @@ Reads an object or a file in YAML format and returns a model YAML object.
 \examples{
 ## Read from a file:
 path <- example_yaml()
-src_yaml(file)
+src_yaml(path)
 
 ## Read from an (text) object:
 model <- "

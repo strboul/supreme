@@ -171,68 +171,45 @@ find_returns <- function(x) {
 #' + arguments: arguments are passed into the module function
 #'  (`input`, `output`, `session` arguments
 #'  are "always" the default ones)
+#' @importFrom stats setNames
 #' @noRd
 find_calling_modules <- function(x) {
 
   .find_modules_from_block <- function(x) {
     if (is.call(x)) {
-      if (is.symbol(x[[1L]])) {
-        if (is_func_sym(x[[1L]])) {
-          Recall(x[[3L]])
-        } else if (is_left_assign_sym(x[[1]])) {
-          Recall(x[[3L]])
-        } else if (is_expr_sym(x[[1L]])) {
-          if (!length(x) > 1L) {
-            return(NULL)
-          }
-          for (i in seq(2L, length(x))) {
-            if (is.call(x[[i]])) {
-              if (is_callModule_sym(x[[i]][[1L]])) {
-                mod_names <- names(x[[i]])
-                mod_names_inds <- if (!is.null(mod_names)) {
-                  module <- which(mod_names == "module")
-                  if (!length(module) == 0L) {
-                    module
-                  } else {
-                    2L
-                  }
-                } else {
-                  2L
-                }
-                value <- as.character(x[[i]][[mod_names_inds]])
-                res[[length(res) + 1L]] <<- value
-              } else {
-                if (is.call(x[[i]])) {
-                  Recall(x[[i]])
-                }
-              }
-            } else {
-              return(NULL)
-            }
-          }
-        } else if (is_callModule_sym(x[[1L]])) {
-          mod_names <- names(x)
-          mod_names_inds <- if (!is.null(mod_names)) {
-            module <- which(mod_names == "module")
-            if (!length(module) == 0L) {
-              module
-            } else {
-              2L
-            }
+      if (is_callModule_sym(x[[1L]])) {
+        ## shiny::callModule 'module' arg:
+        mod_module_name <- names(x)
+        mod_module_name_ind <- if (!is.null(mod_module_name)) {
+          mod_module <- which(mod_module_name == "module")
+          if (length(mod_module) > 0L) {
+            mod_module
           } else {
             2L
           }
-          value <- as.character(x[[mod_names_inds]])
-          res[[length(res) + 1L]] <<- value
         } else {
-          if (length(x) >= 2L) {
-            if (is.call(x[[2L]])) {
-              Recall(x[[2L]])
-            } else {
-              return(NULL)
-            }
-          }
+          2L
         }
+        ## shiny::callModule 'id' arg:
+        mod_id_name <- names(x)
+        mod_id_name_ind <- if (!is.null(mod_id_name)) {
+          mod_id <- which(mod_id_name == "id")
+          if (length(mod_id) > 0L) {
+            mod_id
+          } else {
+            3L
+          }
+        } else {
+          3L
+        }
+        module_value <- as.character(x[[mod_module_name_ind]])
+        id_value <- if (!is.null(x[[mod_id_name_ind]])) {
+          as.character(x[[mod_id_name_ind]])
+        }
+        value <- stats::setNames(list(id_value), module_value)
+        res[[length(res) + 1L]] <<- value
+      } else {
+        unlist(lapply(x, .find_modules_from_block))
       }
     } else if (is.function(x)) {
       bod <- as.list(x)
@@ -244,7 +221,7 @@ find_calling_modules <- function(x) {
   res <- list()
   .find_modules_from_block(x)
   if (length(res) > 0L) {
-    unlist(res)
+    res
   } else {
     NULL
   }

@@ -110,7 +110,7 @@ test_that("find_returns", {
 
 test_that("find_calling_modules", {
 
-  expr1 <- expression({
+  example1 <- expression({
     moduleA <- function(input, output, session, data) {
       observe({
         req(data())
@@ -134,12 +134,28 @@ test_that("find_calling_modules", {
     }
 
     normalFunction <- function(x) x + 2
-
   })
 
   expect_equal(
-    find_calling_modules(expr1[[1]]),
-    c("childModule1Server", "childModule2Server", "someModule")
+    find_calling_modules(example1[[1]]),
+    list(
+      list(childModule1Server = "childModule1UI"),
+      list(childModule2Server = "childModule2UI"),
+      list(someModule = "someModuleUI")
+    )
+  )
+
+  example2 <- expression({
+    moduleWithoutUIPart <- function(input, output, session) {
+      callModule(moduleServer, NULL)
+    }
+  })
+
+  expect_equal(
+    find_calling_modules(example2[[1]]),
+    list(
+      list(moduleServer = NULL)
+    )
   )
 
 })

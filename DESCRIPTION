@@ -10,6 +10,7 @@ Authors@R:
 Version: 0.2.0
 License: MIT + file LICENSE
 Imports:
+    stats,
     utils,
     yaml,
     nomnoml
@@ -18,7 +19,8 @@ Suggests:
     shiny,
     covr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    digest (>= 0.6.23)
 Language: en-US
 LazyData: true
 Encoding: UTF-8
