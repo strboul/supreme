@@ -57,22 +57,8 @@ find_outputs <- function(x) {
           value <- as.character(x[[3L]])
           res[[length(res) + 1L]] <<- value
         }
-      } else if (is_left_assign_sym(x[[1L]])) {
-        for (i in seq(2L, length(x))) {
-          if (is.call(x[[i]])) {
-            Recall(x[[i]])
-          }
-        }
-      } else if (is_func_sym(x[[1L]])) {
-        Recall(x[[3L]])
-      } else if (is_expr_sym(x[[1L]])) {
-        for (i in seq(2L, length(x))) {
-          if (is.call(x[[i]])) {
-            Recall(x[[i]])
-          }
-        }
       } else {
-        NULL
+        unlist(lapply(x, .find_outputs_from_block))
       }
     } else {
       NULL
@@ -122,22 +108,8 @@ find_returns <- function(x) {
           value <- if (is.null(x[[2L]])) "NULL" else as.character(x[[2L]])
           res[[length(res) + 1L]] <<- value
         }
-      } else if (is_expr_sym(x[[1L]]) || is_if_sym(x[[1L]])) {
-        for (i in seq(2L, length(x))) {
-          if (is.call(x[[i]])) {
-            Recall(x[[i]])
-          }
-        }
-      } else if (is_left_assign_sym(x[[1]])) {
-        for (i in seq(2L, length(x))) {
-          if (is.call(x[[i]])) {
-            Recall(x[[i]])
-          }
-        }
-      } else if (is_func_sym(x[[1L]])) {
-        Recall(x[[3L]])
       } else {
-        NULL
+        unlist(lapply(x, .find_returns_from_block))
       }
     } else {
       NULL
@@ -175,46 +147,42 @@ find_returns <- function(x) {
 #' @noRd
 find_calling_modules <- function(x) {
 
+  .extract_callModule_arg_ind <- function(x, arg_name, default_arg_ind) {
+    mod_arg_name <- names(x)
+    mod_arg_name_ind <- if (!is.null(mod_arg_name)) {
+      mod_arg <- which(mod_arg_name == arg_name)
+      if (length(mod_arg) > 0L) {
+        mod_arg
+      } else {
+        default_arg_ind
+      }
+    } else {
+      default_arg_ind
+    }
+    mod_arg_name_ind
+  }
+
   .find_modules_from_block <- function(x) {
     if (is.call(x)) {
       if (is_callModule_sym(x[[1L]])) {
+
         ## shiny::callModule 'module' arg:
-        mod_module_name <- names(x)
-        mod_module_name_ind <- if (!is.null(mod_module_name)) {
-          mod_module <- which(mod_module_name == "module")
-          if (length(mod_module) > 0L) {
-            mod_module
-          } else {
-            2L
-          }
-        } else {
-          2L
-        }
+        mod_module_name_ind <- .extract_callModule_arg_ind(x, "module", 2L)
         ## shiny::callModule 'id' arg:
-        mod_id_name <- names(x)
-        mod_id_name_ind <- if (!is.null(mod_id_name)) {
-          mod_id <- which(mod_id_name == "id")
-          if (length(mod_id) > 0L) {
-            mod_id
-          } else {
-            3L
-          }
-        } else {
-          3L
-        }
+        mod_id_name_ind <- .extract_callModule_arg_ind(x, "id", 3L)
+
         module_value <- as.character(x[[mod_module_name_ind]])
         id_value <- if (!is.null(x[[mod_id_name_ind]])) {
           as.character(x[[mod_id_name_ind]])
         }
+
         value <- stats::setNames(list(id_value), module_value)
         res[[length(res) + 1L]] <<- value
       } else {
         unlist(lapply(x, .find_modules_from_block))
       }
-    } else if (is.function(x)) {
-      bod <- as.list(x)
-      bod.len <- length(bod)
-      Recall(bod[[bod.len]])
+    } else {
+      NULL
     }
   }
 
@@ -225,33 +193,5 @@ find_calling_modules <- function(x) {
   } else {
     NULL
   }
-}
-
-
-#' Find code a block
-#'
-#' @param x an \R language object.
-#' @param bname the block name to look for.
-#' @noRd
-.find_block <- function(x, bname) {
-  res <- list()
-  if (is.call(x)) {
-    if (is_expr_sym(x[[1L]])) {
-      for (i in seq(2L, length(x))) {
-        if (is_left_assign_sym(x[[i]][[1L]])) {
-          if (is.symbol(x[[i]][[2L]])) {
-            if (x[[i]][[2L]] == bname) {
-              res[[length(res) + 1L]] <- x[[i]][[3L]]
-            }
-          }
-        }
-      }
-    }
-  } else if (is_list(x)) {
-    invisible(NULL)
-  } else {
-    res <- unlist(lapply(x, function(b) .find_block(b, bname)))
-  }
-  res
 }
 
