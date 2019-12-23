@@ -1,0 +1,23 @@
+- name: server
+  input:
+    - ax
+    - by
+    - cz
+  output:
+    - O1
+    - O2
+  return: rv
+  calling_modules:
+    - reusableModule: ~
+
+- name: reusableModule
+  input:
+    - a
+    - b
+  output:
+    - OO1
+    - OO2
+    - OO3
+  return:
+    - RV1
+    - RV2

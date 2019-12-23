@@ -42,23 +42,27 @@ ncstopf <- function(..., internal = FALSE, single.line = FALSE) {
   stop(desc, call. = FALSE)
 }
 
+
 #' Paste by separating new lines
 #' @noRd
 pasten <- function(...) paste(..., sep = "\n")
+
 
 #' Paste by separating new lines and collapsing empty string
 #' @noRd
 pastenc <- function(...) paste(..., sep = "\n", collapse = "")
 
-#' @param x package name.
+
+#' Checks if file paths exist and throws an (supreme) error unless otherwise
+#'
+#' @param x a file path.
 #' @noRd
-is_package_exist <- function(x) {
-  stopifnot(is.character(x))
-  pkg <- find.package(x, quiet = TRUE)
-  if (length(pkg) >= 1L) {
-    TRUE
-  } else {
-    FALSE
-  }
+check_paths_exist <- function(x) {
+  tryCatch(
+    file.exists(as.character(x)),
+    error = function(e) {
+      ncstopf("cannot read file: %s", conditionMessage(e))
+    }
+  )
 }
 

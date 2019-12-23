@@ -1,29 +1,29 @@
 Package: supreme
-Title: Structure your Shiny application developed with modules
-Description: supreme helps you structure your Shiny application developed with 
-    modules. Possible to 1. model and visualize your existing application or design 
-    a new one from scratch; 2. keep track of your modules that are either placed 
-    in the different parts or reused in multiple places in your existing 
-    application.
+Title: Structure Shiny application developed with modules
+Version: 0.2.0
 Authors@R: 
     person("Metin", "Yazici", email = "stradivariusboul+r@gmail.com", role = c("aut", "cre", "cph"))
-Version: 0.2.0
+Description: supreme is a modeling tool helping you better structure 'Shiny' 
+    applications developed with modules. You are able to: 1. Visualize relationship
+    of modules in existing applications 2. Design new applications from scratch.
 License: MIT + file LICENSE
+URL: https://strboul.github.io/supreme/
+BugReports: https://github.com/strboul/supreme/issues
 Imports:
+    stats,
     utils,
-    yaml,
-    nomnoml,
-    devtools
+    yaml (>= 2.2.0),
+    nomnoml
 Suggests: 
-    testthat,
+    testthat (>= 2.1.0),
     shiny,
     covr,
     knitr,
     rmarkdown,
-    magrittr
+    digest (>= 0.6.23)
+VignetteBuilder: knitr
 Language: en-US
 LazyData: true
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.1.1
-VignetteBuilder: knitr
+RoxygenNote: 7.0.2

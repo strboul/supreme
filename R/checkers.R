@@ -20,11 +20,24 @@ is_list <- function(x) {
   is.list(x) && !is.data.frame(x)
 }
 
+
 #' @rdname objcheck
 #' @noRd
 is_expression <- function(x) {
   is.expression(x) && is.language(x)
 }
+
+
+#' Checks whether a list is named
+#'
+#' @param x a list object.
+#' @rdname objcheck
+#' @noRd
+is_named_list <- function(x) {
+  stopifnot(is_list(x))
+  !(is.null(names(x)) || any(names(x) == ""))
+}
+
 
 #' Checks the symbol of a call (the first element)
 #'
@@ -49,11 +62,13 @@ is_expression <- function(x) {
 #' @noRd
 NULL
 
+
 #' @rdname objsymcheck
 #' @noRd
 is_left_assign_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`<-`))
 }
+
 
 #' @rdname objsymcheck
 #' @noRd
@@ -61,17 +76,55 @@ is_expr_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`{`))
 }
 
+
+#' @rdname objsymcheck
+#' @noRd
+is_dollar_sym <- function(x) {
+  is.symbol(x) && identical(x, quote(`$`))
+}
+
+
+#' @rdname objsymcheck
+#' @noRd
+is_double_bracket_sym <- function(x) {
+  is.symbol(x) && identical(x, quote(`[[`))
+}
+
+
 #' @rdname objsymcheck
 #' @noRd
 is_func_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`function`))
 }
 
+
+#' @rdname objsymcheck
+#' @noRd
+is_if_sym <- function(x) {
+  is.symbol(x) && identical(x, quote(`if`))
+}
+
+
 #' @rdname objsymcheck
 #' @noRd
 is_callModule_sym <- function(x) {
   is.symbol(x) && identical(x, quote(`callModule`))
 }
+
+
+#' @rdname objsymcheck
+#' @noRd
+is_output_sym <- function(x) {
+  is.symbol(x) && identical(x, quote(`output`))
+}
+
+
+#' @rdname objsymcheck
+#' @noRd
+is_return_sym <- function(x) {
+  is.symbol(x) && identical(x, quote(`return`))
+}
+
 
 #' Shiny expression checkers
 #'
@@ -80,15 +133,16 @@ is_callModule_sym <- function(x) {
 #' @noRd
 NULL
 
+
 #' @rdname shinyexprcheck
 #' @noRd
 is_shiny_server_component <- function(x) {
   if (is.language(x) || is.function(x)) {
-    fun.formals <- find_formals(x)
+    fun_formals <- find_inputs(x)
   } else {
     return(FALSE)
   }
-  shiny.compulsory.formals <- c("input", "output", "session")
-  all(shiny.compulsory.formals %in% fun.formals)
+  shiny_compulsory_formals <- c("input", "output", "session")
+  all(shiny_compulsory_formals %in% fun_formals)
 }
 

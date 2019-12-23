@@ -14,7 +14,15 @@ all the example file paths will be listed.}
 Contains the paths of the Shiny application that is a fully-fledged example
 endeavors to demonstrate all the features \code{supreme} has.
 }
-\examples{
-example_app_path()
-example_app_path(c("app", "module-customers"))
+\details{
+Please note that all examples give the same output.
 }
+\examples{
+files <- example_app_path(c("app", "module-customers"))
+supreme(src_file(files))
+}
+\seealso{
+Other source examples: 
+\code{\link{example_yaml}()}
+}
+\concept{source examples}

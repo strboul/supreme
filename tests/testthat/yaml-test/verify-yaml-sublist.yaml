@@ -1,5 +1,0 @@
-- type: module
-  name: childModuleA
-  input: [input.data, reactive]
-  calling_modules:
-    - moduleName: A
