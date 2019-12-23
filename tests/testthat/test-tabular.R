@@ -85,59 +85,57 @@ test_that("as.data.frame with src_yaml", {
 
 
 test_that("as.data.frame with src_file", {
-  expect_equal(as.data.frame(supreme(src_file(
-    example_app_path()
-  ))),
-  structure(
-    list(
-      name = c(
-        "server",
-        "customers_tab_module_server",
-        "items_tab_module_server",
-        "transactions_tab_module_server",
-        "module_modal_dialog"
-      ),
-      input = list(
-        NA_character_,
-        "customers_list",
-        c("items_list", "is_fired"),
-        c("table", "button_clicked"),
-        "text"
-      ),
-      output = list(
-        NA_character_,
-        c("paid_customers_table",
-          "free_customers_table"),
-        NA_character_,
-        "transactions_table",
-        NA_character_
-      ),
-      return = structure(c(NA, NA, NA, "transactions_keys",
-                           NA), class = "AsIs"),
-      calling_modules = structure(
-        list(
-          list(list(
-            list(items_tab_module_server = NULL),
-            list(customers_tab_module_server = NULL),
-            list(transactions_tab_module_server = NULL)
-          )),
-          NA_character_,
-          list(list(module_modal_dialog = NULL)),
-          NA_character_,
-          NA_character_
-        ),
-        class = "AsIs"
-      ),
-      src = c(
-        "app.R",
-        "module-customers.R",
-        "module-items.R",
-        "module-transactions.R",
-        "module-utils.R"
-      )
-    ),
-    row.names = c(NA,-5L),
-    class = "data.frame"
-  ))
+  expect_equal(as.data.frame(supreme(src_file(example_app_path()))),
+               structure(
+                 list(
+                   name = c(
+                     "server",
+                     "customers_tab_module_server",
+                     "items_tab_module_server",
+                     "transactions_tab_module_server",
+                     "module_modal_dialog"
+                   ),
+                   input = list(
+                     NA_character_,
+                     "customers_list",
+                     c("items_list", "is_fired"),
+                     c("table", "button_clicked"),
+                     "text"
+                   ),
+                   output = list(
+                     NA_character_,
+                     c("paid_customers_table",
+                       "free_customers_table"),
+                     NA_character_,
+                     "transactions_table",
+                     NA_character_
+                   ),
+                   return = structure(c(NA, NA, NA, "transactions_keys",
+                                        NA), class = "AsIs"),
+                   calling_modules = structure(
+                     list(
+                       list(
+                         list(items_tab_module_server = "ItemsTab"),
+                         list(customers_tab_module_server = "CustomersTab"),
+                         list(transactions_tab_module_server = "TransactionsTab")
+                       ),
+                       NA_character_,
+                       list(list(module_modal_dialog = NULL)),
+                       NA_character_,
+                       NA_character_
+                     ),
+                     class = "AsIs"
+                   ),
+                   src = c(
+                     "app.R",
+                     "module-customers.R",
+                     "module-items.R",
+                     "module-transactions.R",
+                     "module-utils.R"
+                   )
+                 ),
+                 row.names = c(NA,-5L),
+                 class = "data.frame"
+               ))
 })
 

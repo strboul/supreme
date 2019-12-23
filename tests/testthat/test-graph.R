@@ -107,20 +107,6 @@ test_that("graph_create_edge", {
 })
 
 
-test_that("test graph styles (vdiffr)", {
-
-  # sp <- supreme(src_yaml(example_yaml()))
-  #
-  # expect_s3_class(
-  #   graph(sp, styles = list(
-  #     "server" = list(fill = "#ff0", "underline", "bold"),
-  #     "module_modal_dialog" = list(fill = "lightblue", "dashed", visual = "note")
-  #   )),
-  #   c("nomnoml", "htmlwidget")
-  # )
-})
-
-
 test_that("test graph styles - errors", {
 
   sp <- supreme(src_yaml(example_yaml()))
@@ -146,28 +132,6 @@ test_that("test graph styles - errors", {
 })
 
 
-test_that("test graph options (vdiffr)", {
-
-  # sp <- supreme(src_yaml(example_yaml()))
-  #
-  # expect_s3_class(
-  #   graph(sp, options = list(
-  #     direction = "right",
-  #     fontSize = 10,
-  #     title = "Model application"
-  #   )),
-  #   c("nomnoml", "htmlwidget")
-  # )
-  #
-  # ## non default overriding options:
-  # expect_s3_class(
-  #   graph(sp, options = list(bendSize = 5)),
-  #   c("nomnoml", "htmlwidget")
-  # )
-
-})
-
-
 test_that("test graph options - errors", {
 
   sp <- supreme(src_yaml(example_yaml()))
@@ -178,5 +142,48 @@ test_that("test graph options - errors", {
     fixed = TRUE
   )
 
+})
+
+
+test_that("test graph styles (test nomnoml text with hashing)", {
+  {
+    set.seed(2019)
+    graph_supreme_yaml <- graph(supreme(src_yaml(example_yaml())), styles = list(
+      "server" = list(fill = "#ff0", "underline", "bold"),
+      "module_modal_dialog" = list(fill = "lightblue", "dashed", visual = "note")
+    ))
+  }
+  expect_identical(
+    digest::digest(graph_supreme_yaml[["x"]][["code"]]),
+    "61d9668320ade0fb7dc4c4ac4df6731c"
+  )
+})
+
+
+test_that("test graph options (test nomnoml text with hashing)", {
+  {
+    set.seed(2019)
+    graph_supreme_yaml1 <- graph(
+      supreme(src_yaml(example_yaml())),
+      options = list(
+        direction = "right",
+        fontSize = 10,
+        title = "Model application"
+      ))
+  }
+  expect_identical(
+    digest::digest(graph_supreme_yaml1[["x"]][["code"]]),
+    "35959c082d2c35ec4a23a88c6ee25b7c"
+  )
+  ## non default overriding options:
+  {
+    set.seed(2019)
+    graph_supreme_yaml2 <- graph(supreme(src_yaml(example_yaml())),
+                                 options = list(bendSize = 5))
+  }
+  expect_identical(
+    digest::digest(graph_supreme_yaml2[["x"]][["code"]]),
+    "68c8e21654b250c61a386400bab6a391"
+  )
 })
 

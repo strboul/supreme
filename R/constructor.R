@@ -32,13 +32,6 @@ entity_constructor <- function(x) {
       returns <- find_returns(fun_block)
       calling_modules <- find_calling_modules(fun_block)
 
-      ## FIXME: workaround until adding ui to calling_modules:
-      wa_calling_modules <- lapply(calling_modules, function(x) {
-        elem <- list(NULL)
-        names(elem) <- x
-        elem
-      })
-
       ## Add fields:
       out <- list(name = name)
       if (length(inputs) > 0L) {
@@ -51,7 +44,7 @@ entity_constructor <- function(x) {
         out <- c(out, list(return = returns))
       }
       if (length(calling_modules) > 0L) {
-        out <- c(out, list(calling_modules = wa_calling_modules))
+        out <- c(out, list(calling_modules = calling_modules))
       }
       if (length(src) > 0L) {
         out <- c(out, list(src = src))

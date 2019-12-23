@@ -14,7 +14,7 @@ Please note that all examples give the same output.
 }
 \examples{
 yaml <- example_yaml()
-supreme(src_yaml(env))
+supreme(src_yaml(yaml))
 }
 \seealso{
 Other source examples: 

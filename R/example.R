@@ -38,7 +38,7 @@ example_app_path <- function(file = NULL) {
 #' @inherit example_description details
 #' @examples
 #' yaml <- example_yaml()
-#' supreme(src_yaml(env))
+#' supreme(src_yaml(yaml))
 #' @family source examples
 #' @export
 example_yaml <- function() {

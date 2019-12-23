@@ -26,7 +26,7 @@ test_that("supreme with src_file", {
                    list(
                      name = "server",
                      output = "summary",
-                     calling_modules = list(list(linkedScatter = NULL)),
+                     calling_modules = list(list(linkedScatter = "scatters")),
                      src = "module-output.Rtest"
                    )
                  ),
@@ -46,20 +46,19 @@ test_that("supreme with src_file", {
                    list(
                      name = "server",
                      calling_modules = list(
-                       list(SomeTabServer = NULL),
-                       list(BarPlotPanelServer = NULL),
-                       list(CustomerListPanelServer = NULL),
-                       list(ObservedPanelServer = NULL),
-                       list(ConditionalItemsServer = NULL),
-                       list(ConditionalConditionalItems1Server = NULL),
-                       list(ConditionalConditionalItems2Server = NULL),
-                       list(DetailsButtonServer = NULL)
+                       list(SomeTabServer = "SomeTab"),
+                       list(BarPlotPanelServer = "BarPlotPanel"),
+                       list(CustomerListPanelServer = "CustomerListPanel"),
+                       list(ObservedPanelServer = "ObservedPanel"),
+                       list(ConditionalItemsServer = "ConditionalItems"),
+                       list(ConditionalConditionalItems1Server = "ConditionalConditionalItems1"),
+                       list(ConditionalConditionalItems2Server = "ConditionalConditionalItems2"),
+                       list(DetailsButtonServer = "DetailsButton")
                      ),
                      src = "server-exprs-elems.Rtest"
                    )
                  ),
-                 source_input = c("supreme_src_obj",
-                                  "supreme_src_file")
+                 source_input = c("supreme_src_obj", "supreme_src_file")
                ), class = "supreme"))
 
 
@@ -109,16 +108,6 @@ test_that("supreme with src_yaml", {
 })
 
 
-test_that("graph supreme with src_file (vdiffr)", {
-
-})
-
-
-test_that("graph supreme with src_yaml (vdiffr)", {
-
-})
-
-
 test_that("supreme print methods", {
 
   sp_yaml <- supreme(src_yaml(example_yaml()))
@@ -152,6 +141,34 @@ test_that("supreme print methods", {
   expect_equal(
     trimws(paste(utils::capture.output(s2), collapse = " ")),
     "A supreme model object 2 entities: displayImages, checkInbox"
+  )
+})
+
+
+test_that("graph supreme with src_file (test nomnoml code with hashing)", {
+  {set.seed(2019); graph_module_output <- graph(supreme(src_file(module_output)))}
+  expect_identical(
+    digest::digest(graph_module_output[["x"]][["code"]]),
+    "388797085036f53e161312556152a241"
+  )
+  {set.seed(2019); graph_server_exprs_elems <- graph(supreme(src_file(server_exprs_elems)))}
+  expect_identical(
+    digest::digest(graph_server_exprs_elems[["x"]][["code"]]),
+    "0a58099ab0f9dc0d6d8de7803693e6a9"
+  )
+  {set.seed(2019); graph_without_any_calling_module <- graph(supreme(src_file(without_any_calling_module)))}
+  expect_identical(
+    digest::digest(graph_without_any_calling_module[["x"]][["code"]]),
+    "292b57c14f07c439457a35716768be50"
+  )
+})
+
+
+test_that("graph supreme with src_yaml (test nomnoml code with hashing)", {
+  {set.seed(2019); graph_cycle_modules <- graph(supreme(src_yaml(cycle_modules)))}
+  expect_identical(
+    digest::digest(graph_cycle_modules[["x"]][["code"]]),
+    "89d03e1bae867f8474bc76ebf1fbfe35"
   )
 })
 
