@@ -57,6 +57,19 @@ test_that("find_outputs", {
   })
   expect_equal(find_outputs(example2[[1]]), c("tbl", "controllers"))
 
+  example3 <- expression({
+    outputInsideExprs <- function(input, output, session) {
+      if (pass) {
+        if (cond) {
+          output$Table <- renderTable({})
+        } else {
+          output[["Controllers"]] <- renderUI({})
+        }
+      }
+    }
+  })
+  expect_equal(find_outputs(example3[[1]]), c("Table", "Controllers"))
+
 })
 
 
