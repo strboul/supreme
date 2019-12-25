@@ -2,7 +2,7 @@
 % Please edit documentation in R/tabular.R
 \name{as.data.frame.supreme}
 \alias{as.data.frame.supreme}
-\title{Turn supreme data into a data frame}
+\title{Turn supreme data into a \code{data.frame}}
 \usage{
 \method{as.data.frame}{supreme}(x, ...)
 }
@@ -12,12 +12,10 @@
 \item{...}{additional arguments to be passed to or from methods.}
 }
 \description{
-Turn supreme data into a data frame
+Turn supreme data into a \code{data.frame}
 }
 \examples{
-\dontrun{
 paths <- example_app_path()
-Object <- supreme(src_file(paths))
-as.data.frame(Object)
-}
+sp <- supreme(src_file(paths))
+as.data.frame(sp)
 }

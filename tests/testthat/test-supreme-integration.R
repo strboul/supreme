@@ -172,3 +172,12 @@ test_that("graph supreme with src_yaml (test nomnoml code with hashing)", {
   )
 })
 
+
+test_that("supreme error", {
+  expect_error(
+    supreme(1),
+    "[supreme] the provided input cannot be turned into a supreme object",
+    fixed = TRUE
+  )
+})
+

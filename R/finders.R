@@ -1,4 +1,37 @@
 
+#' Notes about the 'computing on the language'
+#'
+#' @details
+#' + If the class of a list element equals to "\{", that means the element is an
+#' "expr". Open it up. Every "expr" contains multiple number of list elements
+#' but the number of these list elements is unknown. The number of elements is
+#' depended upon the number of statements between curly braces in an expression.
+#'
+#' + If an object is a "symbol" (or "name"), it's a leaf which doesn't have any
+#' child elements.
+#'
+#' + In parsing \R code, recursive case is the type of "call" which it has
+#' always some more elements under. Base cases are more than one, such as symbol
+#' and constants (character, integer, numeric etc).
+#'
+#' + Recursive functions have two cases:
+#'   - Base case: the part terminating the recursion (can still have more than
+#'     one elements inside but they are not a `call`).
+#'   - Recursive case: the part keep recursion occurring.
+#'
+#' + If an object is a `call`, that's never a 'leaf' (terminal node); therefore,
+#' a recursion (either with `Recall` or `lapply(x, <fun_name>)`) should be
+#' placed in order to go deep down the list.
+#'
+#' + If an object is a `pairlist`, it's technically a `list`, but not a
+#' `call`. Pairlist contains argument names of functions and their default
+#' values. Use `names()` to extract argument names. Get inside to each list
+#' element in order to extract individual argument values.
+#'
+#' @noRd
+NULL
+
+
 #' Find binding name of a function
 #'
 #' @param x an \R language object.
@@ -72,7 +105,6 @@ find_outputs <- function(x) {
   } else {
     NULL
   }
-
 }
 
 

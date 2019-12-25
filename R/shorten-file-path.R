@@ -57,7 +57,7 @@ shorten_src_file_path <- function(x) {
     traversed <- sapply(bases.unique_dups, function(uniq) {
       uniq.inds <- bases %in% uniq
       uniq.taken <- x[uniq.inds]
-      splitted <- strsplit(uniq.taken, split = .Platform$file.sep)
+      splitted <- strsplit(uniq.taken, split = .Platform[["file.sep"]])
       .make_unique_relative_path(splitted, bases[uniq.inds], vector("character"), 1L)
     }, USE.NAMES = FALSE)
     out <- c(out, unlist(traversed))

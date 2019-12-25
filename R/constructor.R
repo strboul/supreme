@@ -16,7 +16,7 @@ entity_constructor <- function(x) {
     entity <- x[[i]]
     src <- entity[["src"]]
     entity_body <- entity[["body"]][[1]]
-    which_components <- which(sapply(entity_body, is_shiny_server_component))
+    which_components <- which(vapply(entity_body, is_shiny_server_component, logical(1)))
 
     for (c in which_components) {
 
@@ -62,6 +62,7 @@ entity_constructor <- function(x) {
 
 check_duplicate_module_names <- function(x) {
   stopifnot(is_supreme_entity_constructor(x))
+  ## sapply->vapply failed because sometimes names are NULL
   mod_names <- sapply(x, `[[`, "name")
   if (anyDuplicated(mod_names) > 0) {
     ncstopf(

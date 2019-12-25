@@ -1,26 +1,18 @@
 
-#' Turn supreme data into a data frame
+#' Turn supreme data into a `data.frame`
 #'
 #' @param x a `supreme` object.
 #' @param ... additional arguments to be passed to or from methods.
-#' @examples \dontrun{
+#' @examples
 #' paths <- example_app_path()
-#' Object <- supreme(src_file(paths))
-#' as.data.frame(Object)
-#' }
+#' sp <- supreme(src_file(paths))
+#' as.data.frame(sp)
 #' @export
 as.data.frame.supreme <- function(x, ...) {
-  if (!is_supreme(x)) {
-    ncstopf("cannot coerce a non-supreme object")
-  }
-  supreme_to_df(x$data)
+  supreme_to_df(x[["data"]])
 }
 
 
-#' Turn supreme data into a data.frame
-#'
-#' @param x an object.
-#' @noRd
 supreme_to_df <- function(x) {
 
   req_fields <- getOption("SUPREME_MODEL_REQUIRED_FIELDS")
