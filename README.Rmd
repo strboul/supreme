@@ -127,7 +127,7 @@ function of a Shiny application.
 <br/>
 
 ```{r out-diagram, echo=FALSE, out.width='90%', fig.align='center'}
-knitr::include_graphics(file.path("inst", "media", "supreme-diagram.png"))
+knitr::include_graphics("https://raw.githubusercontent.com/strboul/supreme/master/inst/media/supreme-diagram.png")
 ```
 
 <br/>

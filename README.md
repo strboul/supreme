@@ -173,7 +173,7 @@ of a module or the main `server` function of a Shiny application.
 
 <br/>
 
-<img src="inst/media/supreme-diagram.png" width="90%" style="display: block; margin: auto;" />
+<img src="https://raw.githubusercontent.com/strboul/supreme/master/inst/media/supreme-diagram.png" width="90%" style="display: block; margin: auto;" />
 
 <br/>
 
