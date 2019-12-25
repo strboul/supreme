@@ -149,7 +149,7 @@ There are some special rules when creating model objects with *YAML*:
     *return*, *calling\_modules* and *src*.
 
   - The fields *input*, *output*, *return* and *calling\_modules* can
-    have mutliple elements means that these fields can contain an array
+    have multiple elements means that these fields can contain an array
     in the YAML. The other fields can only have a single element.
 
   - Any other field, which is not known by the *supreme* modal object,
@@ -210,14 +210,14 @@ A graph entity consists of five main fields:
     intended. For such cases, it would be great if you open an issue
     describing the situation with a reproducible example.
 
-## Acknowledgements
+## Acknowledgment
 
   - [R Core Team](https://www.r-project.org/): *supreme* package is
     brought to life thanks to *R* allowing *abstract syntax trees* (AST)
     that is used to practice static analysis on the code.
 
   - [datamodelr](https://github.com/bergant/datamodelr): Inspiring work
-    for creating modelling language
+    for creating modeling language
 
   - [shinypod](https://github.com/ijlyttle/shinypod): Interesting
     thoughts regarding the implementation of Shiny modules

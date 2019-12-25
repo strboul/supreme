@@ -11,9 +11,7 @@
 #' @noRd
 graph_create_general_directives <- function(directives) {
   stopifnot(is_list(directives))
-  if (!is_named_list(directives)) {
-    ncstopf("directive names must be properly named", internal = TRUE)
-  }
+  stopifnot(is_named_list(directives))
   out <- do.call(pastenc, lapply(seq_along(directives), function(i) {
     dr <- directives[i]
     paste0("#", names(dr), ": ", dr[[1L]])
@@ -40,10 +38,10 @@ graph_generate_custom_classifier <- function(classifier.name, styles = NULL) {
     }
   }, character(1))
   sanitized.name <- .graph_classifier_sanitize_name(classifier.name)
-  out <- paste0("#.", sanitized.name$result, ": ", paste(list.styles, collapse = " "))
+  out <- paste0("#.", sanitized.name[["result"]], ": ", paste(list.styles, collapse = " "))
   list(
     original = classifier.name,
-    classifier = sanitized.name$result,
+    classifier = sanitized.name[["result"]],
     classifier.str = out
   )
 }
@@ -172,6 +170,7 @@ graph_create_edge <- function(x) {
   if (is.null(x[["calling_modules"]])) return(NULL)
   edge <- list()
   edge$name <- x[["name"]]
+  ## sapply->vapply failed because sometimes names are NULL
   edge$calling_modules <- sapply(x[["calling_modules"]], names)
   .edge_generate_string_edge(edge)
 }
@@ -242,7 +241,7 @@ graph_set_graph_options <- function(options) {
 }
 
 
-graph_construct <- function(x, fields, styles, options) {
+graph_constructor <- function(x, fields, styles, options) {
 
   do.call(pasten, lapply(seq_along(x), function(i) {
     entity <- x[[i]]
@@ -250,8 +249,8 @@ graph_construct <- function(x, fields, styles, options) {
     entity_style <- styles[[entity_name]]
 
     custom_classifier <- graph_set_styles(entity_name, entity_style)
-    if (identical(custom_classifier$original, entity_name)) {
-      custom_classifier_name <- custom_classifier$classifier
+    if (identical(custom_classifier[["original"]], entity_name)) {
+      custom_classifier_name <- custom_classifier[["classifier"]]
     }
 
     ## create node elements:
@@ -280,14 +279,14 @@ graph_construct <- function(x, fields, styles, options) {
 
   body <- list(graph_options, "", entity_bodies)
   out <- do.call(pastenc, body)
-  structure(out, class = "supreme_graph_construct")
+  structure(out, class = "supreme_graph_constructor")
 }
 
 
 #' @importFrom nomnoml nomnoml
 #' @noRd
 graph_render <- function(construct) {
-  stopifnot(inherits(construct, "supreme_graph_construct"))
+  stopifnot(inherits(construct, "supreme_graph_constructor"))
   nomnoml::nomnoml(construct)
 }
 
@@ -336,6 +335,7 @@ graph_styles_validator <- function(x, data) {
     )
   }
   styles_names <- names(x)
+  ## sapply->vapply failed because sometimes names are NULL
   module_names <- sapply(data, `[[`, "name")
   module_names_check <- styles_names %in% module_names
   if (!all(module_names_check)) {
@@ -412,11 +412,11 @@ graph_options_validator <- function(x) {
 #' @export
 graph <- function(x, fields = NULL, styles = NULL, options = NULL) {
   if (!is_supreme(x)) ncstopf("cannot graph a non-supreme object")
-  sp_data <- x$data
+  sp_data <- x[["data"]]
   if (!is.null(fields)) graph_fields_validator(fields)
   if (!is.null(styles)) graph_styles_validator(styles, sp_data)
   if (!is.null(options)) graph_options_validator(options)
-  constructs <- graph_construct(sp_data, fields, styles, options)
+  constructs <- graph_constructor(sp_data, fields, styles, options)
   graph_render(constructs)
 }
 
