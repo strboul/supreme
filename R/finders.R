@@ -203,7 +203,7 @@ find_calling_modules <- function(x) {
         ## shiny::callModule 'id' arg:
         mod_id_name_ind <- .extract_callModule_arg_ind(x, "id", 3L)
 
-        module_value <- as.character(x[[mod_module_name_ind]])
+        module_value <- deparse(x[[mod_module_name_ind]])
         id_value <- if (!is.null(x[[mod_id_name_ind]])) {
           as.character(x[[mod_id_name_ind]])
         }
