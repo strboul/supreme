@@ -6,6 +6,7 @@ module_output <- file.path("integration-data", "module-output.Rtest")
 multiple_server_definition <- file.path("integration-data", "multiple-server-definition.Rtest")
 server_exprs_elems <- file.path("integration-data", "server-exprs-elems.Rtest")
 without_any_calling_module <- file.path("integration-data", "without-any-calling-module.Rtest")
+module_with_namespaced_fun <- file.path("integration-data", "module-with-namespaced-fun.Rtest")
 
 ## src_yaml
 cycle_modules <- file.path("integration-data", "cycle-modules.yaml")
@@ -169,6 +170,15 @@ test_that("graph supreme with src_yaml (test nomnoml code with hashing)", {
   expect_identical(
     digest::digest(graph_cycle_modules[["x"]][["code"]]),
     "89d03e1bae867f8474bc76ebf1fbfe35"
+  )
+})
+
+
+test_that("graph supreme with namespaced function (test nomnoml code with hashing)", {
+  {set.seed(2019); graph_namespaced_fun <- graph(supreme(src_file(module_with_namespaced_fun )))}
+  expect_identical(
+    digest::digest(graph_namespaced_fun[["x"]][["code"]]),
+    "c51adba30c6169e41a2aa6390d0de34b"
   )
 })
 
