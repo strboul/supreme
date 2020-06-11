@@ -17,6 +17,9 @@ src_file <- function(x) {
   check_paths_exist(x)
   obj <- .make_module_entities_from_paths(x)
   out <- entity_constructor(obj)
+  if (!length(out) > 0L) {
+    ncstopf("cannot parse the file.")
+  }
   structure(out, class = c("supreme_src_obj", "supreme_src_file"))
 }
 
