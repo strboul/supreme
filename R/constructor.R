@@ -8,6 +8,7 @@
 #'
 #' @noRd
 entity_constructor <- function(x) {
+
   stopifnot(is_supreme_module_entities(x))
 
   res <- list()
