@@ -1,14 +1,15 @@
 
 context("test-supreme: Integration tests")
 
-## src_file
+# integration-data paths
 module_output <- file.path("integration-data", "module-output.Rtest")
 multiple_server_definition <- file.path("integration-data", "multiple-server-definition.Rtest")
 server_exprs_elems <- file.path("integration-data", "server-exprs-elems.Rtest")
 without_any_calling_module <- file.path("integration-data", "without-any-calling-module.Rtest")
 module_with_namespaced_fun <- file.path("integration-data", "module-with-namespaced-fun.Rtest")
+server_without_session_arg <- file.path("integration-data", "server-without-session-arg.Rtest")
 
-## src_yaml
+# src_yaml
 cycle_modules <- file.path("integration-data", "cycle-modules.yaml")
 
 test_that("supreme with src_file", {
@@ -150,17 +151,17 @@ test_that("graph supreme with src_file (test nomnoml code with hashing)", {
   {set.seed(2019); graph_module_output <- graph(supreme(src_file(module_output)))}
   expect_identical(
     digest::digest(graph_module_output[["x"]][["code"]]),
-    "388797085036f53e161312556152a241"
+    "696db21a45f9dedc84524c8d28b7142c"
   )
   {set.seed(2019); graph_server_exprs_elems <- graph(supreme(src_file(server_exprs_elems)))}
   expect_identical(
     digest::digest(graph_server_exprs_elems[["x"]][["code"]]),
-    "0a58099ab0f9dc0d6d8de7803693e6a9"
+    "542c09b280acf8048065b77d36f3557f"
   )
   {set.seed(2019); graph_without_any_calling_module <- graph(supreme(src_file(without_any_calling_module)))}
   expect_identical(
     digest::digest(graph_without_any_calling_module[["x"]][["code"]]),
-    "292b57c14f07c439457a35716768be50"
+    "c16c3390c84bc187cf79d6a264c96746"
   )
 })
 
@@ -169,7 +170,7 @@ test_that("graph supreme with src_yaml (test nomnoml code with hashing)", {
   {set.seed(2019); graph_cycle_modules <- graph(supreme(src_yaml(cycle_modules)))}
   expect_identical(
     digest::digest(graph_cycle_modules[["x"]][["code"]]),
-    "89d03e1bae867f8474bc76ebf1fbfe35"
+    "f4c657a99b2debecd55406471c765c83"
   )
 })
 
@@ -178,7 +179,7 @@ test_that("graph supreme with namespaced function (test nomnoml code with hashin
   {set.seed(2019); graph_namespaced_fun <- graph(supreme(src_file(module_with_namespaced_fun )))}
   expect_identical(
     digest::digest(graph_namespaced_fun[["x"]][["code"]]),
-    "c51adba30c6169e41a2aa6390d0de34b"
+    "72475a0144b2d66ddeb7633bbb6030e0"
   )
 })
 
@@ -191,3 +192,11 @@ test_that("supreme error", {
   )
 })
 
+
+test_that("supreme error - Shiny server module not found", {
+  expect_error(
+    src_file(server_without_session_arg),
+    "[supreme] cannot parse the file.",
+    fixed = TRUE
+  )
+})

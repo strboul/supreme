@@ -14,9 +14,6 @@ supreme <- function(x) {
     data = unclass(x),
     source_input = class(x)
   )
-  if (!length(ret[["data"]][[1L]]) > 0L) {
-    warning("0 (zero) entities found in the source.", call. = FALSE)
-  }
   structure(ret, class = "supreme")
 }
 
