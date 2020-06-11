@@ -155,7 +155,7 @@ test_that("test graph styles (test nomnoml text with hashing)", {
   }
   expect_identical(
     digest::digest(graph_supreme_yaml[["x"]][["code"]]),
-    "61d9668320ade0fb7dc4c4ac4df6731c"
+    "6bca5905defae1eafb12cbe00be94535"
   )
 })
 
@@ -173,7 +173,7 @@ test_that("test graph options (test nomnoml text with hashing)", {
   }
   expect_identical(
     digest::digest(graph_supreme_yaml1[["x"]][["code"]]),
-    "35959c082d2c35ec4a23a88c6ee25b7c"
+    "c1dfc6d6a1850cdcc1255b40d9abfc00"
   )
   ## non default overriding options:
   {
@@ -183,7 +183,7 @@ test_that("test graph options (test nomnoml text with hashing)", {
   }
   expect_identical(
     digest::digest(graph_supreme_yaml2[["x"]][["code"]]),
-    "68c8e21654b250c61a386400bab6a391"
+    "c37cf2642a9482a603013937890ff516"
   )
 })
 
