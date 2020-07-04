@@ -2,7 +2,7 @@
 % Please edit documentation in R/src-methods.R
 \name{src_yaml}
 \alias{src_yaml}
-\title{Read a YAML file containing model}
+\title{Read a YAML file containing a model}
 \usage{
 src_yaml(file = NULL, text = NULL)
 }
@@ -10,6 +10,9 @@ src_yaml(file = NULL, text = NULL)
 \item{file}{file path to a YAML file.}
 
 \item{text}{a YAML formatted character string.}
+}
+\value{
+A \code{src_yaml} object.
 }
 \description{
 Reads an object or a file in YAML format and returns a model YAML object.

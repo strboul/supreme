@@ -2,15 +2,15 @@
 % Please edit documentation in R/example.R
 \name{example_yaml}
 \alias{example_yaml}
-\title{Get YAML to \code{supreme} example}
+\title{Get YAML to supreme example}
 \usage{
 example_yaml()
 }
-\description{
-Get YAML to \code{supreme} example
+\value{
+a character vector containing the YAML file path for the example.
 }
-\details{
-Please note that all examples give the same output.
+\description{
+Get YAML to supreme example
 }
 \examples{
 yaml <- example_yaml()

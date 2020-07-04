@@ -1,4 +1,8 @@
 
+# supreme 1.1.0 (2020-07-05)
+
++ Preparation for the CRAN submission.
+
 # supreme 1.0.0 (2019-12-25)
 
 + Refactored the `find_*` calls
