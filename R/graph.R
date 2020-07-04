@@ -366,15 +366,17 @@ graph_options_validator <- function(x) {
 #' Creates a *UML-like* graph from your 'Shiny application' developed with modules.
 #'
 #' @param x a `supreme` object.
-#' @param fields optional. name of the fields to include in the graph. By default, the required
-#'   fields such as the "name" field always visible. There are no ways to exclude
-#'   the required fields. This parameter is set to `NULL` as default.
-#' @param styles optional. a named list to apply custom styles on the graph nodes. A full list
-#'  of the available styles can be seen from:
-#'  \href{https://github.com/skanaar/nomnoml#custom-classifier-styles}{nomnoml: Custom classifier styles}
+#' @param fields optional. name of the fields to include in the graph. The
+#' possible values can be found at `getOption("SUPREME_MODEL_REQUIRED_FIELDS")`
+#' and `getOption("SUPREME_MODEL_OPTIONAL_FIELDS")`. By default, the required
+#' fields such as the "name" field always visible. There are no ways to
+#' exclude the required fields. This parameter is set to `NULL` as default.
+#' @param styles optional. a named list to apply custom styles on the graph
+#' nodes. A full list of the available styles can be seen from:
+#' \href{https://github.com/skanaar/nomnoml#custom-classifier-styles}{nomnoml: Custom classifier styles}
 #' @param options optional. custom options for the whole graph. A full list
-#'  of the available options can be seen from:
-#'  \href{https://github.com/skanaar/nomnoml#directives}{nomnoml: Directives}
+#' of the available options can be seen from:
+#' \href{https://github.com/skanaar/nomnoml#directives}{nomnoml: Directives}
 #'
 #' @details
 #' The graph call uses the `nomnoml` tool to draw a UML diagram of the Shiny

@@ -9,12 +9,14 @@ graph(x, fields = NULL, styles = NULL, options = NULL)
 \arguments{
 \item{x}{a \code{supreme} object.}
 
-\item{fields}{optional. name of the fields to include in the graph. By default, the required
-fields such as the "name" field always visible. There are no ways to exclude
-the required fields. This parameter is set to \code{NULL} as default.}
+\item{fields}{optional. name of the fields to include in the graph. The
+possible values can be found at \code{getOption("SUPREME_MODEL_REQUIRED_FIELDS")}
+and \code{getOption("SUPREME_MODEL_OPTIONAL_FIELDS")}. By default, the required
+fields such as the "name" field always visible. There are no ways to
+exclude the required fields. This parameter is set to \code{NULL} as default.}
 
-\item{styles}{optional. a named list to apply custom styles on the graph nodes. A full list
-of the available styles can be seen from:
+\item{styles}{optional. a named list to apply custom styles on the graph
+nodes. A full list of the available styles can be seen from:
 \href{https://github.com/skanaar/nomnoml#custom-classifier-styles}{nomnoml: Custom classifier styles}}
 
 \item{options}{optional. custom options for the whole graph. A full list

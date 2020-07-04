@@ -26,5 +26,5 @@ Suggests:
 Language: en-US
 LazyData: true
 Encoding: UTF-8
+RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
