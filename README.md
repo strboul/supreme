@@ -3,6 +3,8 @@
 
 # supreme <a href='https://github.com/strboul/supreme/'><img src='https://raw.githubusercontent.com/strboul/supreme/master/inst/media/logo.png' align="right" height="135"></a>
 
+<!-- badges: start -->
+
 [![Travis build
 status](https://travis-ci.org/strboul/supreme.svg?branch=master)](https://travis-ci.org/strboul/supreme)
 [![AppVeyor build
@@ -13,15 +15,14 @@ badge](https://www.r-pkg.org/badges/version/supreme)](https://cran.r-project.org
 downloads](https://cranlogs.r-pkg.org/badges/supreme)](https://www.r-pkg.org/pkg/supreme)
 [![Coverage
 status](https://codecov.io/gh/strboul/supreme/branch/master/graph/badge.svg)](https://codecov.io/github/strboul/supreme?branch=master)
+<!-- badges: end -->
 
-*supreme* is a modeling tool helping you better structure Shiny
-applications developed with modules.
-
-As [Shiny](https://shiny.rstudio.com/) applications get bigger, it
-becomes more difficult to track the changes and to have a clear overview
-of the module hierarchy. supreme is a tool to help developers visualize
-the structure of their Shiny applications developed with
-[modules](https://shiny.rstudio.com/articles/modules.html).
+As a ‘[Shiny](https://shiny.rstudio.com/) application’, developed with
+‘[Shiny modules](https://shiny.rstudio.com/articles/modules.html)’,
+gets bigger, it becomes more difficult to track the relationships and to
+have a clear overview of the module hierarchy. supreme is a tool to help
+developers visualize the structure of their ‘Shiny applications’
+developed with modules.
 
 Therefore, you are able to:
 
@@ -29,30 +30,15 @@ Therefore, you are able to:
 
 2.  **Design** *new applications* from scratch
 
-## Installation
-
-You can install the released version from
-[CRAN](https://cran.r-project.org/package=supreme):
-
-``` r
-install.packages("supreme")
-```
-
-Or get the development version from
-[GitHub](https://github.com/strboul/supreme):
-
-``` r
-# install.packages("devtools")
-devtools::install_github("strboul/supreme")
-```
-
 ## Usage
 
 ### 0\. The model language
 
-<br/>
+<p align="center">
 
 <img src="https://raw.githubusercontent.com/strboul/supreme/master/inst/media/supreme-diagram.png" width="90%" style="display: block; margin: auto;" />
+
+</p>
 
 <br/>
 
@@ -77,7 +63,7 @@ obj <- supreme(src_file(path))
 graph(obj)
 ```
 
-<img src="man/figures/README-unnamed-chunk-1-1.png" width="100%" />
+<img src="man/figures/README-supreme-graph-example-1.png" width="100%" />
 
 <br>
 
@@ -124,14 +110,14 @@ There are some special rules when creating model objects with *YAML*:
 
   - Each entity in the model must have a *name* field.
 
-  - The entities can have optional fields, which are defined in
+  - The entities can have optional fields, which are defined in the
     `getOption("SUPREME_MODEL_OPTIONAL_FIELDS")`
 
-  - The fields defined in `getOption("SUPREME_MODEL_MULTI_VAR_FIELDS")`
-    can have multiple elements. It means that these fields can be
-    expressed as an array.
+  - The fields defined in the
+    `getOption("SUPREME_MODEL_MULTI_VAR_FIELDS")` can have multiple
+    elements. It means that these fields can be expressed as an array.
 
-After all, use `src_yaml()` to read modeling from the YAML file:
+<!-- end list -->
 
 ``` r
 model_yaml <- src_yaml(text = model)
@@ -161,6 +147,23 @@ obj <- supreme(model_yaml)
   - Some idiosyncratic Shiny application code may not be parsed as
     intended. For such cases, it would be great if you open an issue
     describing the situation with a reproducible example.
+
+## Installation
+
+You can install the released version from
+[CRAN](https://cran.r-project.org/package=supreme):
+
+``` r
+install.packages("supreme")
+```
+
+Or get the development version from
+[GitHub](https://github.com/strboul/supreme):
+
+``` r
+# install.packages("devtools")
+devtools::install_github("strboul/supreme")
+```
 
 ## Acknowledgment
 
