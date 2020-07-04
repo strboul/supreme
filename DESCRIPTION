@@ -1,5 +1,5 @@
 Package: supreme
-Title: Structure 'Shiny Applications' Developed with Modules
+Title: Modeling Tool for 'Shiny Applications' Developed with Modules
 Version: 1.1.0
 Authors@R:
   person("Metin", "Yazici", email = "stradivariusboul+r@gmail.com", role = c("aut", "cre", "cph"))
@@ -10,15 +10,15 @@ License: MIT + file LICENSE
 URL: https://strboul.github.io/supreme/
 BugReports: https://github.com/strboul/supreme/issues
 Depends:
-  R (>= 3.6.3)
+  R (>= 3.6.0)
 Imports:
   stats,
   utils,
   yaml (>= 2.2.0),
-  nomnoml
+  nomnoml,
+  shiny (>= 1.4.0)
 Suggests:
   testthat (>= 2.1.0),
-  shiny,
   covr,
   knitr,
   rmarkdown,

@@ -49,13 +49,11 @@ knitr::include_graphics("https://raw.githubusercontent.com/strboul/supreme/maste
 ```
 </p>
 
-<br/>
-
 A graph consists of five main fields:
 
-1. Module name
+1. Module name (always required)
 
-1. Module inputs (except the defaults *input*, *output*, *session*)
+1. Module inputs (except the defaults: *input*, *output*, *session*)
 
 1. Module outputs
 
@@ -99,25 +97,23 @@ obj <- supreme(model_yaml)
 
 ## Known limitations
 
-+ All the possible limitations comes from the fact that supreme is designed to
-  perform static analysis on your code.
-
-+ Although it's possible to create a Shiny application by only providing `input`
-  and `output` arguments in the server side, *supreme* will not read any Shiny
-  server side component missing a `session` argument. That's reasonable decision
-  because modules cannot work without `session` argument and supreme is a
-  package designed to work with Shiny modules.
-
-+ For the module returns, all return values in a module should explicitly be
-  wrapped in `return()` calls.
-
 + *supreme* will not properly parse the source code of your application if
   server side component is created with `shinyServer()`, which is
   soft-deprecated after a very early Shiny version of `0.10`.
 
-+ Some idiosyncratic Shiny application code may not be parsed as intended. For
-  such cases, it would be great if you open an issue describing the situation
-  with a reproducible example.
++ Similarly, although it's possible to create a Shiny application by only
+  providing `input` and `output` arguments in the server side, *supreme* will
+  not read any Shiny server side component missing a `session` argument. That's
+  reasonable decision because modules cannot work without a `session` argument.
+
++ For the module returns, all return values in a module should explicitly be
+  wrapped in `return()` calls.
+
++ All the possible limitations comes from the fact that supreme is designed to
+  perform static analysis on your code. Thus, some idiosyncratic Shiny
+  application code may not be parsed as intended. For such cases, it would be
+  great if you open an issue describing the situation with a reproducible
+  example.
 
 ## Installation
 
