@@ -9,6 +9,9 @@ src_file(x)
 \arguments{
 \item{x}{a file path.}
 }
+\value{
+A \code{src_file} object.
+}
 \description{
 Read files contain at least one Shiny application.
 }

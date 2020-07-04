@@ -1,26 +1,28 @@
 Package: supreme
-Title: Structure Shiny Application Developed with Modules
-Version: 1.0.1
+Title: Structure 'Shiny Applications' Developed with Modules
+Version: 1.1.0
 Authors@R:
-    person("Metin", "Yazici", email = "stradivariusboul+r@gmail.com", role = c("aut", "cre", "cph"))
+  person("Metin", "Yazici", email = "stradivariusboul+r@gmail.com", role = c("aut", "cre", "cph"))
 Description: A modeling tool helping users better structure 'Shiny applications'
-    developed with modules. Users are able to: 1. Visualize relationship of modules
-    in existing applications 2. Design new applications from scratch.
+  developed with 'Shiny' modules. Users are able to: 1. Visualize relationship
+  of modules in existing applications 2. Design new applications from scratch.
 License: MIT + file LICENSE
 URL: https://strboul.github.io/supreme/
 BugReports: https://github.com/strboul/supreme/issues
+Depends:
+  R (>= 3.6.3)
 Imports:
-    stats,
-    utils,
-    yaml (>= 2.2.0),
-    nomnoml
+  stats,
+  utils,
+  yaml (>= 2.2.0),
+  nomnoml
 Suggests:
-    testthat (>= 2.1.0),
-    shiny,
-    covr,
-    knitr,
-    rmarkdown,
-    digest (>= 0.6.23)
+  testthat (>= 2.1.0),
+  shiny,
+  covr,
+  knitr,
+  rmarkdown,
+  digest (>= 0.6.23)
 Language: en-US
 LazyData: true
 Encoding: UTF-8

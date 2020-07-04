@@ -380,30 +380,32 @@ graph_options_validator <- function(x) {
 #' The graph call uses the `nomnoml` tool to draw a UML diagram of the Shiny
 #' application.
 #'
+#' @return a `supreme` graph.
 #' @references
 #' \href{https://github.com/skanaar/nomnoml}{nomnoml: The sassy UML diagram renderer}
 #' @examples
+#' # create a graph:
 #' path <- example_yaml()
 #' sp <- supreme(src_yaml(path))
 #' graph(sp)
 #'
-#' ## Filter fields, only return the certain fields in the graph entities:
+#' # filter fields, only return the certain fields in the graph entities:
 #' graph(sp, fields = c("input", "return"))
 #'
-#' ## Style entites:
+#' # style entites:
 #' graph(sp, styles = list(
 #'  "server" = list(fill = "#ff0", "underline", "bold"),
 #'  "module_modal_dialog" = list(fill = "lightblue", "dashed", visual = "note")
 #' ))
 #'
-#' # Style entities having a word "tab" in it:
+#' # style entities having a word "tab" in it:
 #' sp_df <- as.data.frame(sp) # turn supreme object to data.frame
 #' tab_modules <- sp_df$name[grep("_tab_", sp_df$name)]
 #' styles <- lapply(seq_along(tab_modules), function(x) list(fill = "orange"))
 #' names(styles) <- tab_modules
 #' graph(sp, styles = styles)
 #'
-#' ## Set graph options:
+#' # set graph options:
 #' graph(sp, options = list(
 #'   direction = "right",
 #'   fontSize = 10,

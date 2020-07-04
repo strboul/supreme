@@ -2,7 +2,7 @@
 % Please edit documentation in R/example.R
 \name{example_app_path}
 \alias{example_app_path}
-\title{Get paths to \code{supreme} example}
+\title{Get paths to supreme example}
 \usage{
 example_app_path(file = NULL)
 }
@@ -10,12 +10,12 @@ example_app_path(file = NULL)
 \item{file}{file names. If no file names are put (which \code{path} is \code{NULL}), then
 all the example file paths will be listed.}
 }
-\description{
-Contains the paths of the Shiny application that is a fully-fledged example
-endeavors to demonstrate all the features \code{supreme} has.
+\value{
+a character vector containing the R file path for the example.
 }
-\details{
-Please note that all examples give the same output.
+\description{
+The example Shiny application to demonstrate all the capabilities of what
+\code{supreme} offers.
 }
 \examples{
 files <- example_app_path(c("app", "module-customers"))

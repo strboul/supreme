@@ -1,4 +1,3 @@
-
 ### ----------------------------------------------------------------- ###
 ### PUBLIC ----
 ### ----------------------------------------------------------------- ###
@@ -8,6 +7,8 @@
 #' Read files contain at least one Shiny application.
 #'
 #' @param x a file path.
+#'
+#' @return A `src_file` object.
 #' @examples
 #' paths <- example_app_path()
 #' s <- supreme(src_file(paths))
@@ -24,12 +25,13 @@ src_file <- function(x) {
 }
 
 
-#' Read a YAML file containing model
+#' Read a YAML file containing a model
 #'
 #' Reads an object or a file in YAML format and returns a model YAML object.
 #'
 #' @param file file path to a YAML file.
 #' @param text a YAML formatted character string.
+#' @return A `src_yaml` object.
 #'
 #' @examples
 #' ## Read from a file:

@@ -17,6 +17,12 @@ status](https://codecov.io/gh/strboul/supreme/branch/master/graph/badge.svg)](ht
 *supreme* is a modeling tool helping you better structure Shiny
 applications developed with modules.
 
+As [Shiny](https://shiny.rstudio.com/) applications get bigger, it
+becomes more difficult to track the changes and to have a clear overview
+of the module hierarchy. supreme is a tool to help developers visualize
+the structure of their Shiny applications developed with
+[modules](https://shiny.rstudio.com/articles/modules.html).
+
 Therefore, you are able to:
 
 1.  **Visualize** relationship of modules in *existing applications*
@@ -42,67 +48,40 @@ devtools::install_github("strboul/supreme")
 
 ## Usage
 
-### Existing applications
+### 0\. The model language
 
-For your existing application, you can use `src_file()` call that reads
-your application from files.
+<br/>
 
-*supreme* package comes with an example path containing a dummy Shiny
-application created with modules for testing issues (in
-`example_app_path()`).
+<img src="https://raw.githubusercontent.com/strboul/supreme/master/inst/media/supreme-diagram.png" width="90%" style="display: block; margin: auto;" />
 
-After the application has been read, create a *supreme* object from the
-model object:
+<br/>
+
+A graph consists of five main fields:
+
+1.  Module name
+
+2.  Module inputs (except the defaults *input*, *output*, *session*)
+
+3.  Module outputs
+
+4.  Module returns
+
+5.  Calling modules, which are modules called a the module
+
+### 1\. Model graph for existing applications
 
 ``` r
 library(supreme)
 path <- example_app_path()
 obj <- supreme(src_file(path))
-obj
-#> A supreme model object
-#> 5 entities: server, customers_tab_module_server, items_tab_module_server, transactions_tab_module_server, ...
-```
-
-See the generated *supreme* object in tabular form a.k.a. `data.frame`:
-
-``` r
-as.data.frame(obj)
-#>                             name                 input
-#> 1                         server                    NA
-#> 2    customers_tab_module_server        customers_list
-#> 3        items_tab_module_server  items_list, is_fired
-#> 4 transactions_tab_module_server table, button_clicked
-#> 5            module_modal_dialog                  text
-#>                                       output            return calling_modules
-#> 1                                         NA              <NA>    list(ite....
-#> 2 paid_customers_table, free_customers_table              <NA>              NA
-#> 3                                         NA              <NA>    list(mod....
-#> 4                         transactions_table transactions_keys              NA
-#> 5                                         NA              <NA>              NA
-#>                     src
-#> 1                 app.R
-#> 2    module-customers.R
-#> 3        module-items.R
-#> 4 module-transactions.R
-#> 5        module-utils.R
-```
-
-Finally, visualize the module structure:
-
-``` r
 graph(obj)
 ```
 
-<img src="man/figures/README-supreme-graph-example-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-1-1.png" width="100%" />
 
 <br>
 
-### Creating YAML model objects
-
-Model definition with *YAML* is a handy to design a **new application**
-from scratch or just design the specific parts of applications. Planning
-ahead with model tool can really be beneficial before going wild on
-implementation.
+### 2\. Model new applications
 
 ``` yaml
 - name: server
@@ -145,15 +124,12 @@ There are some special rules when creating model objects with *YAML*:
 
   - Each entity in the model must have a *name* field.
 
-  - The entities can have optional fields, which are *input*, *output*,
-    *return*, *calling\_modules* and *src*.
+  - The entities can have optional fields, which are defined in
+    `getOption("SUPREME_MODEL_OPTIONAL_FIELDS")`
 
-  - The fields *input*, *output*, *return* and *calling\_modules* can
-    have multiple elements means that these fields can contain an array
-    in the YAML. The other fields can only have a single element.
-
-  - Any other field, which is not known by the *supreme* modal object,
-    is not allowed and it will throw an error.
+  - The fields defined in `getOption("SUPREME_MODEL_MULTI_VAR_FIELDS")`
+    can have multiple elements. It means that these fields can be
+    expressed as an array.
 
 After all, use `src_yaml()` to read modeling from the YAML file:
 
@@ -162,34 +138,10 @@ model_yaml <- src_yaml(text = model)
 obj <- supreme(model_yaml)
 ```
 
-See the next section to understand how the [model
-language](#model%20language) works.
-
-### The model language
-
-A *supreme* object is consisted by *entities*. An *“entity”* denotes
-here that a Shiny server component is allowed to either be a server side
-of a module or the main `server` function of a Shiny application.
-
-<br/>
-
-<img src="https://raw.githubusercontent.com/strboul/supreme/master/inst/media/supreme-diagram.png" width="90%" style="display: block; margin: auto;" />
-
-<br/>
-
-A graph entity consists of five main fields:
-
-1.  Module name
-
-2.  Module inputs (except the defaults *input*, *output*, *session*)
-
-3.  Module outputs
-
-4.  Module returns
-
-5.  Calling modules, which are modules called by the module
-
 ## Known limitations
+
+  - All the possible limitations comes from the fact that supreme is
+    designed to perform static analysis on your code.
 
   - Although it’s possible to create a Shiny application by only
     providing `input` and `output` arguments in the server side,
@@ -199,12 +151,12 @@ A graph entity consists of five main fields:
     designed to work with Shiny modules.
 
   - For the module returns, all return values in a module should
-    explicitly be wrapped in `return()` call.
+    explicitly be wrapped in `return()` calls.
 
   - *supreme* will not properly parse the source code of your
     application if server side component is created with
-    `shinyServer()`, which is kind of soft-deprecated after a very early
-    Shiny version `0.10`.
+    `shinyServer()`, which is soft-deprecated after a very early Shiny
+    version of `0.10`.
 
   - Some idiosyncratic Shiny application code may not be parsed as
     intended. For such cases, it would be great if you open an issue

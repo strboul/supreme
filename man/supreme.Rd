@@ -9,10 +9,13 @@ supreme(x)
 \arguments{
 \item{x}{a valid source input.}
 }
+\value{
+a \code{supreme} object.
+}
 \description{
 Create a supreme object
 }
 \examples{
 path <- example_app_path()
-supr <- supreme(src_file(path))
+supreme(src_file(path))
 }

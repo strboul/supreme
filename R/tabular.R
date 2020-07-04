@@ -2,13 +2,13 @@
 #' Turn supreme data into a `data.frame`
 #'
 #' @param x a `supreme` object.
-#' @param ... additional arguments to be passed to or from methods.
+#' @return a `data.frame`.
 #' @examples
 #' paths <- example_app_path()
 #' sp <- supreme(src_file(paths))
 #' as.data.frame(sp)
 #' @export
-as.data.frame.supreme <- function(x, ...) {
+as.data.frame.supreme <- function(x) {
   supreme_to_df(x[["data"]])
 }
 
