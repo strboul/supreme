@@ -73,6 +73,7 @@ is_func_sym <- function(x) {
 #' @rdname objsymcheck
 #' @noRd
 is_callModule_sym <- function(x) {
+  is_callModule_exist_in_shiny()
   is.symbol(x) && identical(x, quote(`callModule`))
 }
 
@@ -109,5 +110,17 @@ is_shiny_server_component <- function(x) {
   }
   shiny_compulsory_formals <- c("input", "output", "session")
   all(shiny_compulsory_formals %in% fun_formals)
+}
+
+#' Checks if `shiny::callModule` function exists (and exported) in Shiny package
+#' @noRd
+is_callModule_exist_in_shiny <- function() {
+  has_callmodule <- exists("callModule", where = asNamespace("shiny"), mode = "function")
+  if (!has_callmodule) {
+    ncstopf(
+      "your 'Shiny' version (%s) doesn't seem to have `callModule` function.",
+      utils::packageVersion("shiny")
+    )
+  }
 }
 
