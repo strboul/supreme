@@ -1,11 +1,12 @@
 Package: supreme
-Title: Modeling Tool for 'Shiny Applications' Developed with Modules
+Title: Modeling Tool for 'Shiny' Applications Developed with Modules
 Version: 1.1.0
 Authors@R:
   person("Metin", "Yazici", email = "stradivariusboul+r@gmail.com", role = c("aut", "cre", "cph"))
-Description: A modeling tool helping users better structure 'Shiny applications'
-  developed with 'Shiny' modules. Users are able to: 1. Visualize relationship
-  of modules in existing applications 2. Design new applications from scratch.
+Description: A modeling tool helping users better structure 'Shiny'
+  applications developed with 'Shiny' modules. Users are able to: 1. Visualize
+  relationship of modules in existing applications 2. Design new applications
+  from scratch.
 License: MIT + file LICENSE
 URL: https://strboul.github.io/supreme/
 BugReports: https://github.com/strboul/supreme/issues
