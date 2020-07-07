@@ -1,13 +1,14 @@
 
 # supreme 1.1.0 (2020-07-05)
 
-+ Preparation for the CRAN submission.
++ Preparation for [CRAN](https://cran.r-project.org/package=supreme).
+
 
 # supreme 1.0.0 (2019-12-25)
 
 + Refactored the `find_*` calls
 
-+ Improved graph facility: introduced shapes for different fields e.g. input, output, 
++ Improved graph facility: introduced shapes for different fields e.g. input, output,
   return
 
 + Made graphing more customizable: allowed to choose fields, styles etc.
