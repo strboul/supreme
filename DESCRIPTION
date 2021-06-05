@@ -1,6 +1,6 @@
 Package: supreme
 Title: Modeling Tool for 'Shiny' Applications Developed with Modules
-Version: 1.1.0
+Version: 1.1.1
 Authors@R:
   person("Metin", "Yazici", email = "name@example.com", role = c("aut", "cre", "cph"))
 Description: A modeling tool helping users better structure 'Shiny'

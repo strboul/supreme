@@ -1,3 +1,7 @@
+# supreme 1.1.1 (2021-06-05)
+
++ Add a warning note in the README that supreme isn't compatible with the new 
+  `moduleServer` syntax.
 
 # supreme 1.1.0 (2020-07-05)
 

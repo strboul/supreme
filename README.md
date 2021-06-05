@@ -1,6 +1,3 @@
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # supreme <a href='https://github.com/strboul/supreme/'><img src='https://raw.githubusercontent.com/strboul/supreme/master/inst/media/logo.png' align="right" height="135"></a>
 
 <!-- badges: start -->
@@ -29,6 +26,10 @@ Therefore, you are able to:
 1.  **Visualize** relationship of modules in *existing applications*
 
 2.  **Design** *new applications* from scratch
+
+---
+
+:warning: supreme isn't yet compatible with the new `moduleServer` syntax introduced in the Shiny version `1.5.0` :warning:
 
 ## Usage
 
